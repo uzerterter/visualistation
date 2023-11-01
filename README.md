@@ -38,7 +38,7 @@ We will be using the following technologies to build our website:
 1. Clone this repository
 
 ```
-git clone https://gitlab.lrz.de/2324iv08/traffic_visualization.git
+git clone https://gitlab.lrz.de/iv2324-projects/team08.git
 ```
 
 2. Install necessary dependencies
