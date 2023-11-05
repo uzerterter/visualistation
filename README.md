@@ -5,44 +5,83 @@ This README.md provides an overview of our university project for the Informatio
 ## Authors & Contributors
 
 - Product Owner
-  - Lara Moric
+    - Lara Moric
 - SCRUM Master
-  - Ludwig Degenhardt
+    - Ludwig Degenhardt
 - Developers
+  - Chief of Design
+    - Linus Stetter
   - Andrian Melnikov
   - Rebecca Fendt
-  - Linus Stetter
+    
 
 ## Project Description
 
-### Dataset 
+### Dataset
 
-### Goals 
+- [Traffic Genesis](https://www-genesis.destatis.de/genesis//online?operation=table&code=46181-0015&bypass=true&levelindex=0&levelid=1697718366080#abreadcrumb)
+- supplementary datasets
 
-### Technologies 
+### Goals
+
+1. Visualizing the relationship between traffic data and economic factors in the individual german federal states
+2. Making visualizations interactive and exciting applying various concepts from the lecture
+3. Ensuring clarity and accessibility through intelligent, appealing design
+
+### Technologies
 
 We will be using the following technologies to build our website:
 
 - **Frontend**
-  - Javascript/Typescript for functionalities
-  - D3.js for data visualization
-- **Backend**
-- **Data Storage**
+    - Svelte with Javascript for functionalities
+    - D3.js for data visualization
+- **Data**
+  - Python Pandas for data manipulation
 - **Version Control**
-  - GitLab for collaborative development
+    - GitLab for collaborative development
 - **SCRUM**
-  - Trello for task management
+    - Trello for task management
 
 ## Installation
 
 1. Clone this repository
 
-```
-git clone https://gitlab.lrz.de/iv2324-projects/team08.git
-```
+    ```bash
+    git clone https://gitlab.lrz.de/iv2324-projects/team08.git
+    ```
 
 2. Install necessary dependencies
 
-3. ...
+    ```bash
+    npm install
+    ```
+
+3. Start a development server
+
+    ```bash
+    npm run dev
+
+    # or start the server and open the app in a new browser tab
+    npm run dev -- --open
+    ```
+
+4. Build the App
+
+    To build your library:
+
+    ```bash
+    npm run package
+    ```
+
+    To create a production version of your showcase app:
+
+    ```bash
+    npm run build
+    ```
+
+    You can preview the production build with `npm run preview`.
+
+    > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
 
 ## License
+
