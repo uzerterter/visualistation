@@ -1,3 +1,6 @@
+#gitlab pages
+/public
+
 #svelte
 /build
 /dist
@@ -66,7 +69,7 @@ venv/
 *.tsbuildinfo
 
 # JavaScript
-*.js
+# *.js
 
 # MongoDB
 data/
