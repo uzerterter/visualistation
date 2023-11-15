@@ -17,7 +17,7 @@
 
     /* Default state style */
     .state {
-        fill: #F77F00;
+        fill: #FCBF49;
         stroke: #fff;
         stroke-width: 1.25px;
         opacity: 0.85;
@@ -25,11 +25,11 @@
 
     /* Hover state style for individual states */
     .state:hover {
-        fill: #FCBF49;
+        fill: #F77F00;
     }
 
     .state.active {
-        fill: #FCBF49;
+        fill: #F77F00;
     }
 
 </style>
@@ -104,7 +104,7 @@
                 var centroid = geoPath.centroid(d),
                     x = +centroid[0],
                     y = +centroid[1],
-                    k = 1.75;
+                    k = 1.4;   // scaling factor
                 focused = d;
 
                 // Apply the zoom transform to the map
