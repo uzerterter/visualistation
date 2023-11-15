@@ -16,7 +16,7 @@
     }
 
     /* Default state style */
-    .feature {
+    .state {
         fill: #F77F00;
         stroke: #fff;
         stroke-width: 1.25px;
@@ -24,19 +24,14 @@
     }
 
     /* Hover state style for individual states */
-    .feature:hover {
+    .state:hover {
         fill: #FCBF49;
     }
 
-    .feature.active {
+    .state.active {
         fill: #FCBF49;
     }
 
-    #states {
-        fill: none;
-        stroke: #777;
-        stroke-width: 0.5px;
-    }
 </style>
 
 <body>
@@ -93,7 +88,7 @@
                 .data(collection.features)
                 .enter()
                 .append("path")
-                .attr("class", "feature")
+                .attr("class", "state")
                 .attr("d", geoPath)
                 .on("click", function(d) {
                     clickPath(d); // Call clickPath function when a path is clicked
