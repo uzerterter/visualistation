@@ -1,4 +1,5 @@
 <script>
+    import '../../styles/global.css';
     let group = "group08"
     let pagename = "about page"
     import TestComponent from '$lib/test_component.svelte';
