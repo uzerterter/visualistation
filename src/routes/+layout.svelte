@@ -1,7 +1,7 @@
 <script>
     import '../styles/global.css';
-    import { page } from '$app/stores';
-
+    import { page } from '$app/stores';    
+    import { base } from '$app/paths';
 </script>
 
 <header>
@@ -13,11 +13,11 @@
             </div>
             <ul class="navbar-links">
                 {#each [
-                    { href: '{base}/', label: 'Home' },
-                    { href: '{base}/team', label: 'Team' },
+                    { href: '/', label: 'Home' },
+                    { href: '/team', label: 'Team' },
                     // Add more links as needed
                   ] as { href, label }}
-                    <a href={href} class:active={$page.route.id === href}>{label}</a>
+                    <a href={base}{href} class:active={$page.route.id === href}>{label}</a>
                   {/each}
             </ul>
         </div>
