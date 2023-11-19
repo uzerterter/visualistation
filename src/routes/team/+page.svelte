@@ -3,10 +3,11 @@
     let group = "group08"
     let pagename = "about page"
     import TestComponent from '$lib/test_component.svelte';
+    import { base } from '$app/paths';
 </script>
 
 <h1>This is {group}'s {pagename}</h1>
-<h3>Take me <a href="/">home</a></h3>
+<h3>Take me <a href="{base}/">home</a></h3>
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 <TestComponent testCompName="test component on the about page" />
 
