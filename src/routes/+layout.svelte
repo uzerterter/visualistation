@@ -13,8 +13,8 @@
             </div>
             <ul class="navbar-links">
                 {#each [
-                    { href: '/', label: 'Home' },
-                    { href: '/team', label: 'Team' },
+                    { href: '.', label: 'Home' },
+                    { href: 'team', label: 'Team' },
                     // Add more links as needed
                   ] as { href, label }}
                     <a href={href} class:active={$page.route.id === href}>{label}</a>
