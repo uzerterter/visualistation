@@ -1,0 +1,23 @@
+/* Variables for the installation */
+:root {
+    --colorscheme-blue: #003049;
+    --colorscheme-red: #d62828;
+    --colorscheme-orange: #f77f00;
+    --colorscheme-yellow: #fcbf49;
+    --colorscheme-sand: #eae2b7;
+    --colorscheme-grey: #F5F5F5;
+  }
+
+/* Global styles for the installation */
+body {
+    font-family: 'Poppins-Black', sans-serif;
+    background-color: var(--colorscheme-grey);
+    /* font-family: 'Poppins-Light', sans-serif; */
+    /* Additional global styles can be added here */
+    margin: 0 0;
+  }
+
+#main {
+    padding-left: 10%;
+    padding-right: 10%;
+  }
