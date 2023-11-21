@@ -121,6 +121,8 @@
 </script>
   
 <style>
+
+  /* possible styles for default, hover and active federal states*/
   .state {
     fill: #FCBF49;
     stroke: #fff;
