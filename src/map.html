@@ -4,10 +4,12 @@
 
 <style>
     body {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-    }
+        display: flex;
+        justify-content: center; /* Center children horizontally */
+        align-items: center; /* Center children vertically */
+        height: 100vh; /* Full viewport height */
+        margin: 0; /* Remove default margin */
+        }
 
     svg {
         width: 100vw; /* 100% of viewport width */
@@ -39,16 +41,33 @@
     <div id="map"></div>
 
     <script>
-        var width = 1650,
-            height = 920,
+
+
+        var width = window.innerWidth,
+            height = window.innerHeight,
             margin = { top: 0, left: 0, right: 0, bottom: 0 },
             geoPath;
 
+        var focused = null;
+
+        // _____________________________________________
+
+        // Define your specific functions for each state here
+
+        function function1() {
+            console.log("Function for state 1 called");
+            // Implement functionality
+        }
+
+        function function12() {
+            console.log("Function for state 12 called");
+        }
+
+        // _____________________________________________
+
         var svg = d3.select("body")
             .append("svg")
-            .attr("width", width)
-            .attr("height", height)
-            .attr("margin", margin);
+
 
         var g = svg.append("g")
             .append("g")
@@ -93,42 +112,69 @@
                 .on("click", function(d) {
                     clickPath(d); // Call clickPath function when a path is clicked
                 });
+
+
         });
 
+        function handleStateClick(stateId) {
+            var stateFunctionMap = {
+                1: function1,
+                12: function12,
+                // Map other state IDs to their respective functions
+            };
+
+            if (stateFunctionMap[stateId]) {
+                stateFunctionMap[stateId]();
+            } else {
+                console.log("No specific function for state ID " + stateId);
+            }
+        }
+
         function clickPath(d) {
+            var stateId = d.properties.ID_1; // Get the state ID from the data
+
             if (focused === d) {
                 // If the same state is clicked again, reset the zoom
                 resetZoom();
             } else {
-                // Calculate the new scale and translate values
+                // Calculate the new scale and translate values for zooming in
                 var centroid = geoPath.centroid(d),
-                    x = +centroid[0],
-                    y = +centroid[1],
-                    k = 1.4;   // scaling factor
+                    x = centroid[0],
+                    y = centroid[1],
+                    k = 1.5;   // scaling factor
                 focused = d;
 
                 // Apply the zoom transform to the map
                 g.transition()
-                    .duration(1000)
-                    .attr("transform", "translate(" + (width / 2) + "," + (height / 2) + ")scale(" + k + ")translate(" + (-x) + "," + (-y) + ")")
-                    .style("stroke-width", 1.75 / k + "px");
-            }
-            
+                    .duration(750)
+                    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+                    .style("stroke-width", 1.5 / k + "px");
 
-            // Handle other actions related to the state click here
+                // Call the function for the specific state
+                handleStateClick(stateId);
+            }
+
+            // Handle the class for active state
             g.selectAll("path")
-            .classed("active", focused && function (d) { return d === focused; });
+                .classed("active", focused && function(d) { return d === focused; });
         }
 
         function resetZoom() {
             focused = null;
-
-            // Reset the zoom transform to its initial state
             g.transition()
-                .duration(1000)
-                .attr("transform", "scale(" + 1 + ")translate(" + 0 + "," + 0 + ")")
-                .style("stroke-width", "1px");
+                .duration(750)
+                .attr("transform", "")
+                .style("stroke-width", "1.5px");
+            g.selectAll("path").classed("active", false);
         }
+
+        g.selectAll("path")
+            .data(collection.features)
+            .enter()
+            .append("path")
+            .attr("class", "state")
+            .attr("d", geoPath)
+            .on("click", clickPath); // Bind the clickPath function to the click event
     </script>
 
 </body>
