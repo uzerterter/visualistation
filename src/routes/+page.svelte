@@ -2,6 +2,8 @@
     import '../styles/global.css';
     let group = "group08"
     import TestComponent from '$lib/test_component.svelte';
+    import BarChart from '$lib/components/bar_chart.svelte';
+    import Data from '$lib/data/final_genesis_traffic.json';	
 </script>
 
 
@@ -19,7 +21,9 @@
         </div>
     
         <div class="right-viz"> 
-            
+            <div class="bar-chart-container">
+                <BarChart data={Data}/>
+            </div>
         </div>
     </div>
     <div class="timeline">
@@ -83,6 +87,15 @@
         background-color: var(--colorscheme-sand);
         border-radius: 15px; /* Add rounded borders */
         margin-top: 2vh;
+    }
+
+    .bar-chart-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Center the chart horizontally within the container */
+        justify-content: center; /* Center the chart vertically within the container */
     }
 
 </style>
