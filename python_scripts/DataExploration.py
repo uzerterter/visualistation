@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # %%
+##############################################PATHS OF THE DATASETS#####################################################
 genesis = 'Daten/genesis_traffic.csv'
 income2021 = ('Daten/statistic_id209211_bruttomonatsverdienst-nach-bundeslaendern-und-geschlecht-in-deutschland'
               '-2021.csv')
@@ -61,8 +62,23 @@ civ_sh = 'Daten/inhabitants/statistic_id155171_einwohnerzahl-in-schleswig-holste
 civ_t = 'Daten/inhabitants/statistic_id155172_einwohnerzahl-in-thueringen-bis-2022.csv'
 
 
+##############################################PATHS OF THE DATASETS#####################################################
 # %%
 def count_NaNs_and_export(column_list, NaN_values_list, dataframe, name):
+    """
+    Counts occurrences and calculates percentages of specified NaN values in the given DataFrame columns.
+
+    Parameters:
+    - column_list (list): List of column names in the DataFrame to analyze.
+    - NaN_values_list (list): List of NaN values to count occurrences and calculate percentages for.
+    - dataframe (pd.DataFrame): The DataFrame to analyze.
+    - name (str): The name used for exporting the results to a CSV file.
+
+    Returns:
+    - pd.DataFrame: A DataFrame containing the counts and percentages of NaN values in each specified column.
+                   The DataFrame is also exported to a CSV file with the given 'name'.
+    """
+
     columns = ['Column'] + [f"Occurrences of {value}" for value in NaN_values_list] + [f"Percentage of {value}" for
                                                                                        value in NaN_values_list]
     percentage_occurrences_df = pd.DataFrame(columns=columns)
@@ -89,6 +105,21 @@ def count_NaNs_and_export(column_list, NaN_values_list, dataframe, name):
 # %%
 def process_csv_data(csv_data, skip_last_rows=0, skip_first_columns=0, skip_last_columns=0, column_names=[],
                      skip_rows=0):
+    """
+    Process CSV data and create a DataFrame with specified configurations.
+
+    Parameters:
+    - csv_data (str): The CSV data or the path to the CSV file to be processed.
+    - skip_last_rows (int): Number of rows to skip from the end of the CSV data.
+    - skip_first_columns (int): Number of columns to skip from the beginning of the CSV data.
+    - skip_last_columns (int): Number of columns to skip from the end of the CSV data.
+    - column_names (list): List of column names to use for the DataFrame.
+    - skip_rows (int): Number of rows to skip from the beginning of the CSV data.
+
+    Returns:
+    - pd.DataFrame: A DataFrame containing the processed CSV data based on the specified configurations.
+    """
+
     csv_data = csv_data.replace(',"', ',').replace('",', ',')
     dataframe = pd.read_csv(csv_data, delimiter=',', thousands=None, decimal=',', skiprows=skip_rows)
 
@@ -107,6 +138,16 @@ def process_csv_data(csv_data, skip_last_rows=0, skip_first_columns=0, skip_last
 # %%
 
 def set_name(df, name):
+    """
+    Set a name attribute for a pandas DataFrame.
+
+    Parameters:
+    - df (pd.DataFrame): The pandas DataFrame to which the name attribute will be assigned.
+    - name (str): The name to be assigned to the DataFrame.
+
+    Returns:
+    None
+    """
     df.name = name
 
 
@@ -133,7 +174,7 @@ def fill_up_strings(dataframe, column_name, target_length):
 
 
 # %%
-
+# Export NaN values in genesis traffic dataset as csv-file with percentage of their occurence
 genesis_traffic = pd.read_csv(genesis, sep=";", encoding="ISO-8859-9")
 set_name(genesis_traffic, "genesis_traffic")
 genesis_cols = ['1. Quartal Unternehmen Anzahl',
@@ -150,15 +191,18 @@ genesis_nans = ['-', 'x', '.', '...', '..']
 count_NaNs_and_export(genesis_cols, genesis_nans, genesis_traffic, "genesis_traffic_NaNs")
 
 # %%
+#  Deleting NaN Values [x, -, ..., .] From Genesis Data Set
 for col in genesis_cols:
     for nan in genesis_nans:
         genesis_traffic = genesis_traffic[genesis_traffic[col] != nan]
 
 # %%
+#  Converting Numeral-Value Columns to int46 in Genesis Data Set
 conversion_dict = {col: 'int64' for col in genesis_cols}
 genesis_traffic = genesis_traffic.astype(conversion_dict)
 
 # %%
+################################################  READING IN DATASETS   ################################################
 brutto_income_2021 = pd.read_csv(income2021, sep=",")
 set_name(brutto_income_2021, "brutto_income_2021")
 
@@ -345,9 +389,12 @@ df_civ_sh = process_csv_data(civ_sh, skip_rows=4, skip_first_columns=1, skip_las
                              column_names=["Jahr", "Einwohner"])
 set_name(df_civ_sh, "df_civ_sh")
 
+################################################  READING IN DATASETS   ################################################
+
 # %%
-# preprocessing of data
-# merging datasets
+################################################  PREPROCESSING   ######################################################
+
+# Dictionary with Federal States Abbrevations and Federal State Names
 bundeslaender = {
     "ba": "Bayern",
     "bawu": "Baden-Wuerttemberg",
@@ -367,6 +414,7 @@ bundeslaender = {
     "sh": "Schleswig-Holstein",
 }
 
+# list of all datasets with unemployment data
 datasets_unemployment = [
     df_unemployment_sh,
     df_unemployment_ham,
@@ -385,6 +433,7 @@ datasets_unemployment = [
     df_unemployment_t,
 ]
 
+# list of all datasets with rent-index data
 datasets_rent = [
     df_rent_ba,
     df_rent_bawu,
@@ -404,6 +453,7 @@ datasets_rent = [
     df_rent_sh,
 ]
 
+# list of all datasets with population development data
 datasets_civ = [
     df_civ_ba,
     df_civ_bawu,
@@ -427,38 +477,54 @@ datasets_civ = [
 # %%
 
 def add_bundesland(dataset_list, bundeslaender_dict):
+    """
+    Add a 'Bundesland' column to each DataFrame in the given list based on a provided dictionary.
+
+    Parameters:
+    - dataset_list (list): List of pandas DataFrames to which the 'Bundesland' column will be added.
+    - bundeslaender_dict (dict): Dictionary mapping the last part of DataFrame names to corresponding 'Bundesland' values.
+
+    Returns:
+    None
+    """
     for dataset in dataset_list:
         df_bundesland = dataset.name.split('_')[-1]
         dataset['Bundesland'] = bundeslaender_dict[df_bundesland]
 
 
 # %%
-
+# Add Federal State in own column to datasets in lists of datasets
+# 1. Population Development
+# 2. Unemplyoment Development
+# 3. Rent-Index Development
 add_bundesland(datasets_civ, bundeslaender)
 add_bundesland(datasets_unemployment, bundeslaender)
 add_bundesland(datasets_rent, bundeslaender)
 
 # %%
-
+# Merge all the datasets in the lists from above into one dataset for each list
 df_unemployment = pd.concat(datasets_unemployment, ignore_index=True)
 df_rent = pd.concat(datasets_rent, ignore_index=True)
 df_civ = pd.concat(datasets_civ, ignore_index=True)
 
 # %%
-
+# Converting numeral-values in columns into int64 format in unemployment dataset
 df_unemployment_cols = {'Jahr'}
 conversion_dict = {col: 'int64' for col in df_unemployment_cols}
 df_unemployment = df_unemployment.astype(conversion_dict)
 
 # %%
-
+# Converting numeral-values in columns into int64 format in population development dataset
 df_civ['Einwohner'] = df_civ['Einwohner'].str.replace('.', '')
 df_civ_cols = {'Jahr', 'Einwohner'}
 conversion_dict = {col: 'int64' for col in df_civ_cols}
 df_civ = df_civ.astype(conversion_dict)
 
 # %%
-
+# Converting numeral-values in columns into int64 format in brutto income 2021 dataset
+# 1. Converting to string without losing trailing 0
+# 2. Deleting german format '.' for thousands
+# 3. converting back to int64
 brutto_income_2021['Männer'] = brutto_income_2021['Männer'].apply(lambda x: "{:.3f}".format(x))
 brutto_income_2021['Männer'] = brutto_income_2021['Männer'].str.replace('.', '')
 brutto_income_2021['Männer'] = brutto_income_2021['Männer'].astype(int)
@@ -473,7 +539,10 @@ brutto_income_2021['Insgesamt'] = brutto_income_2021['Insgesamt'].astype(int)
 print(brutto_income_2021)
 
 # %%
-
+# Converting numeral-values in columns into int64 format in brutto income 2016 dataset
+# 1. Converting to string without losing trailing 0
+# 2. Deleting german format '.' for thousands
+# 3. converting back to int64
 brutto_income_2016['Männer'] = brutto_income_2016['Männer'].apply(lambda x: "{:.3f}".format(x))
 brutto_income_2016['Männer'] = brutto_income_2016['Männer'].str.replace('.', '')
 brutto_income_2016['Männer'] = brutto_income_2016['Männer'].astype(int)
@@ -485,7 +554,7 @@ print(brutto_income_2016)
 
 
 # %%
-# VISUALIZATION
+################################################ VISUALIZATION #########################################################
 
 def plot_percentage_over_years(dataframe, title='', y_name='', plot_filename=None):
     sns.set(style="whitegrid")
@@ -527,6 +596,7 @@ plot_percentage_over_years(df_civ,
                            y_name='Einwohner', plot_filename="population")
 
 
+################################################ VISUALIZATION #########################################################
 # %%
 def add_mean_median_std(dataframe, target, helper):
     aggregate_values = dataframe.groupby(helper)[target].agg(['mean', 'median', 'std']).reset_index()
@@ -628,7 +698,7 @@ for row in [median_income, mean_income, std_income]:
 print(copy_2021.tail(4))
 
 # %%
-
+############################################### GENESIS TRAFFIC DATASET ################################################
 final_genesis_traffic = genesis_traffic[["Jahr", "Art", "Bundesland"]].copy()
 
 final_genesis_traffic["Anzahl_Unternehmen"] = (genesis_traffic['1. Quartal Unternehmen Anzahl'] +
@@ -640,11 +710,15 @@ final_genesis_traffic["Befoerderte_Personen_in_1000"] = (genesis_traffic['1. Qua
                                                          genesis_traffic['2. Quartal Beförderte Personen 1000'] +
                                                          genesis_traffic['3. Quartal Beförderte Personen 1000'] +
                                                          genesis_traffic['4. Quartal Beförderte Personen 1000'])
+final_genesis_traffic["Befoerderte_Personen_in_Mrd"] = (
+    final_genesis_traffic["Befoerderte_Personen_in_1000"].apply(lambda x: round((x / 1000000), 3)))
 
 final_genesis_traffic["Personenkilometer_in_1000"] = (genesis_traffic['1. Quartal Personenkilometer 1000'] +
                                                       genesis_traffic['2. Quartal Personenkilometer 1000'] +
                                                       genesis_traffic['3. Quartal Personenkilometer 1000'] +
                                                       genesis_traffic['4. Quartal Personenkilometer 1000'])
+final_genesis_traffic["Personenkilometer_in_Mrd"] = (
+    final_genesis_traffic["Personenkilometer_in_1000"].apply(lambda x: round((x / 1000000), 3)))
 
 final_genesis_traffic.to_csv(f"Daten/final_genesis_traffic.csv", index=True)
 
@@ -674,19 +748,19 @@ germany_df = final_genesis_traffic.groupby(['Jahr', 'Art']).agg({
 }).reset_index()
 
 mean = pd.DataFrame({'Jahr': germany_df['Jahr'], 'Art': germany_df['Art'], 'Bundesland': 'Deutschland_mean',
-                     'Anzahl_Unternehmen': round(germany_df['Anzahl_Unternehmen']['mean'], 2),
-                     'Befoerderte_Personen_in_1000': round(germany_df['Befoerderte_Personen_in_1000']['mean'], 2),
-                     'Personenkilometer_in_1000': round(germany_df['Personenkilometer_in_1000']['mean'], 2)})
+                     'Anzahl_Unternehmen': round(germany_df['Anzahl_Unternehmen']['mean'], 3),
+                     'Befoerderte_Personen_in_1000': round(germany_df['Befoerderte_Personen_in_1000']['mean'], 3),
+                     'Personenkilometer_in_1000': round(germany_df['Personenkilometer_in_1000']['mean'], 3)})
 
 std = pd.DataFrame({'Jahr': germany_df['Jahr'], 'Art': germany_df['Art'], 'Bundesland': 'Deutschland_std',
-                    'Anzahl_Unternehmen': round(germany_df['Anzahl_Unternehmen']['std'], 2),
-                    'Befoerderte_Personen_in_1000': round(germany_df['Befoerderte_Personen_in_1000']['std'], 2),
-                    'Personenkilometer_in_1000': round(germany_df['Personenkilometer_in_1000']['std'], 2)})
+                    'Anzahl_Unternehmen': round(germany_df['Anzahl_Unternehmen']['std'], 3),
+                    'Befoerderte_Personen_in_1000': round(germany_df['Befoerderte_Personen_in_1000']['std'], 3),
+                    'Personenkilometer_in_1000': round(germany_df['Personenkilometer_in_1000']['std'], 3)})
 
 median = pd.DataFrame({'Jahr': germany_df['Jahr'], 'Art': germany_df['Art'], 'Bundesland': 'Deutschland_median',
-                       'Anzahl_Unternehmen': round(germany_df['Anzahl_Unternehmen']['median'], 2),
-                       'Befoerderte_Personen_in_1000': round(germany_df['Befoerderte_Personen_in_1000']['median'], 2),
-                       'Personenkilometer_in_1000': round(germany_df['Personenkilometer_in_1000']['median'], 2)})
+                       'Anzahl_Unternehmen': round(germany_df['Anzahl_Unternehmen']['median'], 3),
+                       'Befoerderte_Personen_in_1000': round(germany_df['Befoerderte_Personen_in_1000']['median'], 3),
+                       'Personenkilometer_in_1000': round(germany_df['Personenkilometer_in_1000']['median'], 3)})
 
 final_genesis_traffic = pd.concat([final_genesis_traffic, mean, std, median], ignore_index=True)
 
@@ -695,3 +769,5 @@ final_genesis_traffic.to_csv(f"Daten/final_genesis_traffic.csv", index=True)
 # %%
 
 final_genesis_traffic.to_json(f"Daten/final_genesis_traffic.json", index=True, orient="table", force_ascii=False)
+
+############################################### GENESIS TRAFFIC DATASET ################################################
