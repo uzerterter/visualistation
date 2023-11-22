@@ -14,14 +14,14 @@
       
   const svg = d3.select("#map")
     .append("svg")
-    .attr("width", "100vw")
-    .attr("height", "100vh")
+    // .attr("width", "100vw")
+    // .attr("height", "100vh")
     .style("background", "#EAE2B7");
 
   g = svg.append("g").attr("id", "states");
 
   // draws the outlines of the federal states from coordinates
-  d3.json("./dataBundesLander.json").then((collection) => {
+  d3.json("data/dataBundesLander.json").then((collection) => {
     const projection = getProjection(collection);
     geoPath = d3.geoPath().projection(projection);
 

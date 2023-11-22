@@ -2,8 +2,8 @@
     import '../styles/global.css';
     let group = "group08"
     import TestComponent from '$lib/test_component.svelte';
+    import Map from '$lib/components/map.svelte';
 </script>
-
 
 
 
@@ -15,7 +15,7 @@
         </div>
     
         <div class="center-viz"> 
-            
+            <Map/>
         </div>
     
         <div class="right-viz"> 
