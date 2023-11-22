@@ -1,4 +1,4 @@
-<div class="barchart-dropdown">
+<div id="barchart-dropdown">
     <!-- DROPDOWN -->
     <select bind:value={selected}>
         {#each dd as d}
@@ -9,12 +9,12 @@
     </select>
     <p/>
 </div>
-<div class="barchart-diagram">
+<div id="barchart-diagram">
     <!-- BAR CHART -->
-    <svg bind:this={svgLocal} class="bar-chart"/>
+    <svg bind:this={svgLocal} id="bar-chart"/>
     <p/>
 </div>
-<div class="barchart-checkboxes">
+<div id="barchart-checkboxes">
     <!-- CHECKBOXES-->
     {#each cc as c, i (c.id)}
     <label style="color:{colors[c.color]}">
@@ -76,6 +76,7 @@ let a = 0
 
     import * as d3 from 'd3'
 	import { onMount } from 'svelte';
+    import {afterUpdate } from 'svelte';
     
     $: data, selected, ccr, updateGraph();
 
@@ -105,9 +106,18 @@ let a = 0
             maxVal = Math.max(x[selected.orig], maxVal)
         }
         //stats = maxVal
+        var parentDiv = document.getElementById("barchart-parent");
+        var checkboxHeight = document.getElementById("barchart-checkboxes").clientHeight;
+        var dropdownHeight = document.getElementById("barchart-dropdown").clientHeight;
+        var width = parentDiv.clientWidth;
+        var height = parentDiv.clientHeight - (checkboxHeight + dropdownHeight);
 
-        const width = 410
-        const height = 280
+        // var width = 410
+        // var height = 280
+
+
+        // const width = $("svg").parent().width();
+        // const height = $("svg").parent().height();
 
         d3.select(svgLocal).selectAll("*").remove();
         
@@ -192,13 +202,13 @@ let a = 0
 </script>
 
 <style>
-    .bar-chart {
+    #bar-chart {
         width: 100%;
         height: 100%;
     }
 
   /* Style for checkboxes */
-  .barchart-checkboxes label {
+  #barchart-checkboxes label {
     display: inline-block;
     margin-right: 15px; /* Adjust as needed for spacing between checkboxes */
   }

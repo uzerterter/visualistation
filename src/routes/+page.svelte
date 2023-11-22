@@ -21,7 +21,7 @@
         </div>
     
         <div class="right-viz viz-border"> 
-            <div class="bar-chart-container">
+            <div class="bar-chart-container"  id="barchart-parent">
                 <BarChart data={Data}/>
             </div>
         </div>
@@ -58,6 +58,9 @@
         display: flex;
         flex-direction: column;
         margin-top: 15vh;
+        flex-direction: column;
+        align-items: center; /* Center the chart horizontally within the container */
+        justify-content: center; /* Center the chart vertically within the container */
     }
 
     .left-viz {
@@ -95,7 +98,7 @@
 
     .bar-chart-container {
         width: 100%;
-        height: 100%;
+        height: 90%;
         display: flex;
         flex-direction: column;
         align-items: center; /* Center the chart horizontally within the container */
