@@ -3,7 +3,8 @@
     let group = "group08"
     import TestComponent from '$lib/test_component.svelte';
     import BarChart from '$lib/components/bar_chart.svelte';
-    import Data from '$lib/data/final_genesis_traffic.json';	
+    import _data from '$lib/data/final_genesis_traffic.json';
+    let data = {..._data, data: _data.data.filter(v=>v.Bundesland==='Deutschland')}	
 </script>
 
 
@@ -22,7 +23,7 @@
     
         <div class="right-viz viz-border"> 
             <div class="bar-chart-container"  id="barchart-parent">
-                <BarChart data={Data}/>
+                <BarChart data={data}/>
             </div>
         </div>
     </div>
