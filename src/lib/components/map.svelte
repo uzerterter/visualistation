@@ -2,26 +2,31 @@
 <script>
   import { onMount } from 'svelte';
   import * as d3 from 'd3'; 
+  
 
   let width, height, geoPath, focused = null;
   let g; 
 
+  
+
   // onMount is used to ensure the DOM is ready before trying to select and manipulate elements
   onMount(() => {
-    width = window.innerWidth;
-    height = window.innerHeight;
+
+    
   
+  var parentDiv = document.getElementById("map-parent");
+      width = parentDiv.clientWidth;
+      height = parentDiv.clientHeight;
       
   const svg = d3.select("#map")
     .append("svg")
-    // .attr("width", "100vw")
-    // .attr("height", "100vh")
-    .style("background", "#EAE2B7");
+    .attr("width", width)
+    .attr("height", height);
 
   g = svg.append("g").attr("id", "states");
 
   // draws the outlines of the federal states from coordinates
-  d3.json("data/dataBundesLander.json").then((collection) => {
+  d3.json("/src/lib/data/dataBundesLander.json").then((collection) => {
     const projection = getProjection(collection);
     geoPath = d3.geoPath().projection(projection);
 
@@ -31,7 +36,8 @@
       .append("path")
       .attr("class", "state")
       .attr("d", geoPath)
-      .on("click", clickState);
+      .on("click", clickState)
+      .attr("style", "fill: #FCBF49; stroke: #fff; stroke-width: 1.25px; opacity: 0.85;");
     });
   });
 
@@ -58,6 +64,7 @@
   
   // zooms in when a federal state is clicked
   function clickState(d) {
+    console.log(d);
     const stateId = d.properties.ID_1;
 
     if (focused === d) {
