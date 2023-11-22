@@ -1,34 +1,41 @@
-<!-- DROPDOWN -->
-<select bind:value={selected}>
-    {#each dd as d}
-        <option value={d}>
-            {d.label}
-        </option>
-    {/each}
-</select>
-<p/>
-<!-- BAR CHART -->
-<svg bind:this={svgLocal} class="bar-chart"/>
-<p/>
-<!-- CHECKBOXES-->
-{#each cc as c, i (c.id)}
-	<label style="color:{colors[c.color]}">
-		<input
-			type="checkbox"
-			value={c}            
+<div class="barchart-dropdown">
+    <!-- DROPDOWN -->
+    <select bind:value={selected}>
+        {#each dd as d}
+            <option value={d}>
+                {d.label}
+            </option>
+        {/each}
+    </select>
+    <p/>
+</div>
+<div class="barchart-diagram">
+    <!-- BAR CHART -->
+    <svg bind:this={svgLocal} class="bar-chart"/>
+    <p/>
+</div>
+<div class="barchart-checkboxes">
+    <!-- CHECKBOXES-->
+    {#each cc as c, i (c.id)}
+    <label style="color:{colors[c.color]}">
+        <input
+            type="checkbox"
+            value={c}            
             disabled={ccr.length===1 && ccr[0]===c}
-			bind:group={ccr}
-		/>
-		{c.label}
-	</label>
+            bind:group={ccr}
+        />
+        {c.label}
+    </label>
 {/each}
-
 <!--
 <p>{selected.id + ": " + selected.label}</p>
 <p>Checkbox selected: {ccr.map(x=>x.id + ": " + x.label).join(", ")}</p>
 <p>a: {a}</p>
 <p><b>stats:</b> {stats}</p>
 -->
+</div>
+
+
 
 <script>    
 let a = 0
@@ -44,12 +51,12 @@ let a = 0
     // Liniennahverkehr mit Eisenbahnen
     // Liniennahverkehr mit Omnibussen
     // Liniennahverkehr mit Straßenbahnen
-    const colors = { 1:'red', 2:'green', 3: 'blue', 4:'orange' }
+    const colors = { 1:'#d62828', 2:'#f77f00', 3: '#003049', 4:'#fcbf49' }
     let cc = [
-        {id: 6, label: "Nahverkehr Tram", orig: "Liniennahverkehr mit Straßenbahnen", color: 1},
-        {id: 7, label: "Nahverkehr Bus", orig: "Liniennahverkehr mit Omnibussen", color: 2},
-        {id: 8, label: "Nahverkehr Bahn", orig: "Liniennahverkehr mit Eisenbahnen", color: 3},
-        {id: 9, label: "gesamt", orig: "Liniennahverkehr insgesamt", color: 4},
+        {id: 6, label: "Tram", orig: "Liniennahverkehr mit Straßenbahnen", color: 1},
+        {id: 7, label: "Bus", orig: "Liniennahverkehr mit Omnibussen", color: 2},
+        {id: 8, label: "Train", orig: "Liniennahverkehr mit Eisenbahnen", color: 3},
+        {id: 9, label: "Total", orig: "Liniennahverkehr insgesamt", color: 4},
     ]
     let ccr = [cc[0]];
 
@@ -58,8 +65,8 @@ let a = 0
     // Personenkilometer_in_1000
     let dd = [
         {id: 3, label: "Anzahl Unternehmen", orig: "Anzahl_Unternehmen"}, 
-        {id: 4, label: "Beförderte Personen", orig: "Befoerderte_Personen_in_1000"}, 
-        {id: 5, label: "Personenkilometer", orig: "Personenkilometer_in_1000"}
+        {id: 4, label: "Beförderte Personen in 1000", orig: "Befoerderte_Personen_in_1000"}, 
+        {id: 5, label: "Personenkilometer in 1000", orig: "Personenkilometer_in_1000"}
     ]
     let selected = dd[0]
 
@@ -78,6 +85,10 @@ let a = 0
 
         let d = data.data
 
+
+        // Filter data for years starting from 2016
+        d = d.filter((entry) => entry.Jahr >= 2016);
+
         //  "Befoerderte_Personen_in_1000"}, Liniennahverkehr mit Straßenbahnen
         //let xxx = d.filter(d=>d.Art === "Liniennahverkehr mit Straßenbahnen")
         //xxx = xxx.filter(d=>d.Jahr === 2004)
@@ -95,8 +106,8 @@ let a = 0
         }
         //stats = maxVal
 
-        const width = 800
-        const height = 300
+        const width = 410
+        const height = 280
 
         d3.select(svgLocal).selectAll("*").remove();
         
@@ -179,3 +190,20 @@ let a = 0
         updateGraph();
     })
 </script>
+
+<style>
+    .bar-chart {
+        width: 100%;
+        height: 100%;
+    }
+
+  /* Style for checkboxes */
+  .barchart-checkboxes label {
+    display: inline-block;
+    margin-right: 15px; /* Adjust as needed for spacing between checkboxes */
+  }
+
+  input {
+    margin-right: 5px; /* Adjust as needed for spacing between checkbox and label text */
+  }
+</style>
