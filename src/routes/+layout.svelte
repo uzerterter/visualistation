@@ -42,10 +42,11 @@
     }
 
     .navbar {
-        background-color: var(--colorscheme-blue);
+        background-color: var(--colorscheme-grey);
         width: 100%;
-        height: 8vh;
-        color: white;
+        height: 7vh;
+        color: var(--colorscheme-blue);
+        border-bottom: 3px solid var(--colorscheme-blue);
     }
 
     .navbar-content {
@@ -72,6 +73,7 @@
         height: 60px;
         align-self: center;
         padding: auto;
+        background-color: var(--colorscheme-blue);
     }
 
     .logo {
@@ -85,7 +87,7 @@
     }
 
     .navbar-links a {
-        color: white;
+        color: var(--colorscheme-blue);
         margin-left: 25px; /* Add spacing between links */
         text-decoration: none;
     }

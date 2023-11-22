@@ -12,22 +12,22 @@
 <div id="main">
     <!-- Three equally sized empty divs that take a third of the width of #main each -->
     <div class="visualizations">
-        <div class="left-viz"> 
+        <div class="left-viz viz-border"> 
         
         </div>
     
-        <div class="center-viz"> 
+        <div class="center-viz viz-border"> 
             
         </div>
     
-        <div class="right-viz"> 
+        <div class="right-viz viz-border"> 
             <div class="bar-chart-container">
                 <BarChart data={Data}/>
             </div>
         </div>
     </div>
     <div class="timeline">
-        <div class="timeline-viz"> 
+        <div class="timeline-viz viz-border"> 
 
         </div>
     </div>
@@ -54,11 +54,10 @@
         width: 33.33%; 
         height: 50vh;
         float: left;
-        background-color: var(--colorscheme-sand);
+        background-color: white;
         display: flex;
         flex-direction: column;
         margin-top: 15vh;
-        border-radius: 15px; /* Add rounded borders */
     }
 
     .left-viz {
@@ -84,9 +83,14 @@
     .timeline-viz {
         width: 50%;
         height: 50%;
-        background-color: var(--colorscheme-sand);
-        border-radius: 15px; /* Add rounded borders */
+        background-color: white;
         margin-top: 2vh;
+    }
+
+    .viz-border {
+        border: solid 3px;
+        border-radius: 15px; /* Add rounded borders */
+        border-color: var(--colorscheme-blue);
     }
 
     .bar-chart-container {
