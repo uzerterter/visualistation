@@ -2,6 +2,7 @@
     import '../styles/global.css';
     let group = "group08"
     import TestComponent from '$lib/test_component.svelte';
+    import Timeline from '../lib/components/timeline.svelte';
 </script>
 
 
@@ -24,7 +25,7 @@
     </div>
     <div class="timeline">
         <div class="timeline-viz"> 
-
+            <Timeline/>
         </div>
     </div>
 </div>
