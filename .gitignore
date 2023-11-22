@@ -71,11 +71,6 @@ venv/
 # JavaScript
 # *.js
 
-# MongoDB
-data/
-dump/
-log/
-
 # SQL
 *.sql
 *.sqlite
