@@ -5,8 +5,9 @@
     import BarChart from '$lib/components/bar_chart.svelte';
     import Data from '$lib/data/final_genesis_traffic.json';	
     import Timeline from '../lib/components/timeline.svelte';
+    import Map from '$lib/components/map.svelte';
+    let mapContainer;
 </script>
-
 
 
 
@@ -18,7 +19,9 @@
         </div>
     
         <div class="center-viz viz-border"> 
-            
+            <div class="map-container" bind:this={mapContainer} id="map-parent">
+                <Map bind:container={mapContainer}/>
+            </div>
         </div>
     
         <div class="right-viz viz-border"> 
@@ -105,5 +108,16 @@
         align-items: center; /* Center the chart horizontally within the container */
         justify-content: center; /* Center the chart vertically within the container */
     }
+
+    .map-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Center the chart horizontally within the container */
+        justify-content: center; /* Center the chart vertically within the container */
+    }
+
+    
 
 </style>
