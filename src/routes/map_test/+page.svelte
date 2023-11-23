@@ -1,10 +1,7 @@
 <script>
     import '../../styles/global.css';
-    let group = "group08"
-    import TestComponent from '$lib/test_component.svelte';
-    import BarChart from '$lib/components/bar_chart.svelte';
-    import Data from '$lib/data/final_genesis_traffic.json';	
-    import Map from '$lib/components/map.svelte';
+    let group = "group08"	
+    import Map from '$lib/components/map_test.svelte';
 </script>
 
 
