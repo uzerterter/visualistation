@@ -73,6 +73,31 @@
   }
 
   function clickState(d, i) {
+
+    // prepared functions for single states
+
+    const stateName = d.properties.NAME_1; // This should be the property that identifies the state
+    const stateID = d.properties.ID_1;
+
+    console.log("Bundesstaaten: ", stateID, stateName);
+
+    switch (stateName) {
+      case 'Baden-Württemberg':
+        handleState1Click(d);
+        break;
+      case 'Bayern':
+        handleState2Click(d);
+        break;
+      case 'Berlin':
+        handleState3Click(d);
+        break;
+      default:
+        // Optionally handle any other cases
+        break;
+    }
+
+    // zoom functionality
+
     const centroid = centroidMatrix[i];
     if (!centroid) {
       console.error('No centroid found for feature at index:', i);
