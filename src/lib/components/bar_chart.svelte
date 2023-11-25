@@ -87,8 +87,8 @@ let a = 0
         let d = data.data
 
 
-        // Filter data for years starting from 2016
-        d = d.filter((entry) => entry.Jahr >= 2016);
+        // Filter data for years starting from 2017
+        d = d.filter((entry) => entry.Jahr >= 2017);
 
         //  "Befoerderte_Personen_in_1000"}, Liniennahverkehr mit Straßenbahnen
         //let xxx = d.filter(d=>d.Art === "Liniennahverkehr mit Straßenbahnen")
