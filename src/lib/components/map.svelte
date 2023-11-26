@@ -4,7 +4,7 @@
 <script>
   import { onMount } from 'svelte';
   import * as d3 from 'd3'; 
-  import collection from '$lib/data/dataBundesLander_right_hand_rule.json'
+  import collection from '$lib/data/dataBundesLander_right_hand_rule.json';
 
   let width, height, geoPath, projection;
   let svg, g, zoom; // Define zoom and SVG selections
