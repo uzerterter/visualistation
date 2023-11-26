@@ -5,41 +5,53 @@
   import { onMount } from 'svelte';
   import * as d3 from 'd3'; 
 
-  export let data = []
-  
-  let width, height, geoPath, focused = null;
-  let g; 
+  let width, height, geoPath, projection;
+  let svg, g, zoom; // Define zoom and SVG selections
+  let centroidMatrix = [];
+  let focused = null; // Store the currently focused element
 
-  // onMount is used to ensure the DOM is ready before trying to select and manipulate elements
   onMount(() => {
-  
-  var parentDiv = document.getElementById("map-parent");
-      width = parentDiv.clientWidth;
-      height = parentDiv.clientHeight - 100;
-      
-  const svg = d3.select("#map")
-    .append("svg")
-    .attr("width", width)
-    .attr("height", height);
+    var parentDiv = document.getElementById('map-parent');
+    width = parentDiv.clientWidth;
+    height = parentDiv.clientHeight;
+    
+    svg = d3.select('#map').append('svg')
+      .attr('width', width)
+      .attr('height', height);
 
-  g = svg.append("g").attr("id", "states");
+    g = svg.append('g');
 
-  // draws the outlines of the federal states from coordinates
-  d3.json("src/lib/data/dataBundesLander_right_hand_rule.json").then((collection) => {
-    const projection = getProjection(collection);
-    geoPath = d3.geoPath().projection(projection);
+    // Define the zoom behavior
+    zoom = d3.zoom()
+      .scaleExtent([1, 8])
+      .on('zoom', (event) => {
+        g.attr('transform', event.transform);
+      });
 
-    g.selectAll("path")
-      .data(collection.features)
-      .enter()
-      .append("path")
-      .attr("class", "state")
-      .attr("d", geoPath)
-      .on("click", clickState);
+    // Apply the zoom behavior to the svg
+    svg.call(zoom);
+
+    d3.json('src/lib/data/dataBundesLander_right_hand_rule.json').then((collection) => {
+      projection = getProjection(collection);
+      geoPath = d3.geoPath().projection(projection);
+
+      collection.features.forEach((feature, index) => {
+        const centroid = geoPath.centroid(feature);
+        centroidMatrix[index] = centroid; // Store the centroid as [x, y]
+      });
+
+      g.selectAll('path')
+        .data(collection.features)
+        .join('path')
+        .attr('class', 'state')
+        .attr('d', geoPath)
+        .on('click', (event, d) => {
+          const i = collection.features.indexOf(d);
+          clickState(d, i);
+        });
     });
   });
 
-  // draws the map in Albers projection
   function getProjection(collection) {
     const bounds = d3.geoBounds(collection),
       bottomLeft = bounds[0],
@@ -60,39 +72,74 @@
     return projection.scale(scaleFactor * 1000);
   }
 
-  function clickState(d) {
-    console.log("Clicked feature:", d);
+  function clickState(d, i) {
+
+    // const stateName = d.properties.NAME_1; // This should be the property that identifies the state
+    // const stateID = d.properties.ID_1;
+
+    // console.log("Bundesstaaten: ", stateID, stateName);
+
+    // switch (stateName) {
+    //   case 'Baden-Württemberg':
+    //     handleState1Click(d);
+    //     break;
+    //   case 'Bayern':
+    //     handleState2Click(d);
+    //     break;
+    //   case 'Berlin':
+    //     handleState3Click(d);
+    //     break;
+    //   default:
+    //     // Optionally handle any other cases
+    //     break;
+    // }
+
+
+    // zoom in functionality
+
+    // // Remove active class from all states
+    // g.selectAll('.state').classed('active', false);
+
+    // // Add active class to the clicked state
+    // d3.select(d).classed('active', true);
+
+    const centroid = centroidMatrix[i];
+    if (!centroid) {
+      console.error('No centroid found for feature at index:', i);
+      return;
+    }
     
-      if (focused === d) {
-          // If the same state is clicked again, reset the zoom
-          // resetZoom();
-      } else {
-          // Calculate the new scale and translate values
-          var centroid = geoPath.centroid(d),
-              x = +centroid[0],
-              y = +centroid[1],
-              k = 1.4;   // scaling factor
-          focused = d;
-          console.log("Centroid:", centroid); 
-          console.log("Translate and scale values:", x, y, k); 
-
-          // Apply the zoom transform to the map
-          g.transition()
-              .duration(1000)
-              .attr("transform", "translate(" + (width / 2) + "," + (height / 2) + ")scale(" + k + ")translate(" + (-x) + "," + (-y) + ")")
-              .style("stroke-width", 1.75 / k + "px");
-      }
+    if (focused !== d) {
+      focused = d;
       
+      const [x, y] = centroid;
+      const k = 1.75; // Adjust the scaling factor as needed
+      
+      // Compute the translation and scale to center the centroid
+      const transform = d3.zoomIdentity
+        .translate(width / 2, height / 2)
+        .scale(k)
+        .translate(-x, -y);
 
-      // Handle other actions related to the state click here
-      g.selectAll("path")
-      .classed("active", focused && function (d) { return d === focused; });
+      svg.transition()
+        .duration(1000)
+        .call(zoom.transform, transform);
+    } else {
+      resetZoom();
+    }
   }
-  
+
+  function resetZoom() {
+    focused = null;
+    // g.selectAll('.state').classed('active', false);
+    svg.transition()
+      .duration(1000)
+      .call(zoom.transform, d3.zoomIdentity);
+  }
 </script>
-  
+
 <style>
-  :global(#states) {
+  :global(.state) {
     fill: #FCBF49;
     stroke: #fff;
     stroke-width: 1.25px;
@@ -101,11 +148,7 @@
   :global(.state:hover) {
     fill: #F77F00;
   }
-
   :global(.state.active) {
     fill: #F77F00;
   }
 </style>
-
-<div id="map"></div>
-  
