@@ -173,7 +173,7 @@ let a = 0
             const g = svg.append("g")
             //stats = scaleYears.bandwidth()
 
-            const ww = scaleYears.bandwidth()/4
+            const ww = scaleYears.bandwidth() / ccr.length
             g.selectAll(".bar")
                 .data(d)                
                 .enter()
