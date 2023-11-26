@@ -97,6 +97,12 @@
 
     // zoom in functionality
 
+    // // Remove active class from all states
+    // g.selectAll('.state').classed('active', false);
+
+    // // Add active class to the clicked state
+    // d3.select(d).classed('active', true);
+
     const centroid = centroidMatrix[i];
     if (!centroid) {
       console.error('No centroid found for feature at index:', i);
@@ -125,6 +131,7 @@
 
   function resetZoom() {
     focused = null;
+    // g.selectAll('.state').classed('active', false);
     svg.transition()
       .duration(1000)
       .call(zoom.transform, d3.zoomIdentity);
