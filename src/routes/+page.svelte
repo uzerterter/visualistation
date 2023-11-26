@@ -32,7 +32,7 @@
         </div>
     </div>
     <div class="timeline">
-        <div class="timeline-viz viz-border"> 
+        <div class="timeline-viz"> 
             <Timeline/>
         </div>
     </div>
@@ -91,7 +91,6 @@
     .timeline-viz {
         width: 50%;
         height: 50%;
-        background-color: white;
         margin-top: 2vh;
     }
 
