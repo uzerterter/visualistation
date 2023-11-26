@@ -5,10 +5,10 @@ import seaborn as sns
 
 # %%
 ##############################################PATHS OF THE DATASETS#####################################################
-genesis = 'Daten/genesis_traffic.csv'
-income2021 = ('Daten/statistic_id209211_bruttomonatsverdienst-nach-bundeslaendern-und-geschlecht-in-deutschland'
+genesis = 'Daten/genesis_traffic/genesis_traffic.csv'
+income2021 = ('Daten/income/statistic_id209211_bruttomonatsverdienst-nach-bundeslaendern-und-geschlecht-in-deutschland'
               '-2021.csv')
-income2016 = ('Daten/statistic_id806476_median-des-bruttomonatsverdienstes-von-maennern-und-frauen-nach'
+income2016 = ('Daten/income/statistic_id806476_median-des-bruttomonatsverdienstes-von-maennern-und-frauen-nach'
               '-bundeslaendern-2016.csv')
 unemployment_sh = 'Daten/unemployment/statistic_id2509_arbeitslosenquote-in-schleswig-holstein-bis-2022.csv'
 unemployment_ham = 'Daten/unemployment/statistic_id2510_arbeitslosenquote-in-hamburg-bis-2022.csv'
@@ -557,6 +557,26 @@ print(brutto_income_2016)
 ################################################ VISUALIZATION #########################################################
 
 def plot_percentage_over_years(dataframe, title='', y_name='', plot_filename=None):
+    """
+        Plot percentage data over the years for different Bundesländer (states).
+
+        Parameters:
+        - dataframe (pd.DataFrame): The input DataFrame containing the data to be plotted.
+        - title (str, optional): Title for the plot. Defaults to an empty string.
+        - y_name (str): The column name representing the variable to be plotted on the y-axis.
+        - plot_filename (str, optional): If provided, the plot will be saved to this file. Defaults to None.
+
+        Returns:
+        - None: Displays the plot using Matplotlib.
+
+        Note:
+        - This function uses Seaborn and Matplotlib for plotting.
+        - The input DataFrame should have columns 'Jahr' (Year), 'Bundesland' (State), and 'Einwohner' (Population).
+        - The plot is a bar plot with years on the x-axis, population on the y-axis, and different states represented by colors.
+        - The legend is placed to the right of the plot.
+        - The plot can be saved to a file if 'plot_filename' is provided.
+    """
+
     sns.set(style="whitegrid")
 
     plt.figure(figsize=(35, 15))
@@ -599,6 +619,24 @@ plot_percentage_over_years(df_civ,
 ################################################ VISUALIZATION #########################################################
 # %%
 def add_mean_median_std(dataframe, target, helper):
+    """
+    Add mean, median, and standard deviation values to the DataFrame based on a grouping variable.
+
+    Parameters:
+    - dataframe (pd.DataFrame): The input DataFrame to which statistics will be added.
+    - target (str): The column name representing the variable for which statistics will be calculated.
+    - helper (str): The column name used for grouping the data.
+
+    Returns:
+    - pd.DataFrame: A new DataFrame with additional rows representing mean, median, and standard deviation values.
+
+    Notes:
+    - This function groups the DataFrame by the 'helper' column and calculates mean, median, and standard deviation
+      for the 'target' column within each group.
+    - Three new rows are added to the DataFrame for each group, representing the mean, median, and standard deviation.
+    - The 'Bundesland' column is set to 'Deutschland mean', 'Deutschland median', and 'Deutschland std' for the added rows.
+    - The resulting DataFrame includes the original data and the added mean, median, and standard deviation rows.
+    """
     aggregate_values = dataframe.groupby(helper)[target].agg(['mean', 'median', 'std']).reset_index()
     aggregate_values.columns = [f"{helper}", f"{target}_mean", f"{target}_median", f"{target}_std"]
 
@@ -626,52 +664,42 @@ def add_mean_median_std(dataframe, target, helper):
 
 
 # %%
+# Adding mean, median and std to the population development dataset, rent index dataset, unemployment rate dataset
 df_civ = add_mean_median_std(df_civ, 'Einwohner', 'Jahr')
 df_rent = add_mean_median_std(df_rent, 'Index', 'Jahr')
 df_unemployment = add_mean_median_std(df_unemployment, 'Prozent', 'Jahr')
 
-
-# df_rent.to_csv(f"Daten/mietindex.csv", index=True)
-# df_unemployment.to_csv(f"Daten/arbeitslosenquote.csv", index=True)
-# df_civ.to_csv(f"Daten/bevoelkerungsentwicklung.csv", index=True)
-
+df_rent.to_csv(f"Daten/mietindex.csv", index=True)
+df_unemployment.to_csv(f"Daten/arbeitslosenquote.csv", index=True)
+df_civ.to_csv(f"Daten/bevoelkerungsentwicklung.csv", index=True)
 
 # %%
-
-def get_length_for_df(dataframe, input_dict):
-    lengths = {}
-    og_cols = dataframe.columns
-    for column in og_cols:
-        if column in input_dict.keys():
-            lengths.update({
-                len(input_dict[column]): f"{column}"
-            })
-
-    max_key, max_value = max(lengths.items())
-
-    return max_key, max_value
-
-
-def sort_input_dict(dataframe, input_dict):
-    out = {}
-    og_cols = dataframe.columns
-    for column in og_cols:
-        if column in input_dict.keys():
-            out.update({
-                f"{column}": input_dict[column]
-            })
-
-    return out
-
+# Exporting datasets as jsons
+df_civ.to_json(f"Daten/population_development.json", index=True, orient="table", force_ascii=False)
+df_rent.to_json(f"Daten/index_rent_development.json", index=True, orient="table", force_ascii=False)
+df_unemployment.to_json("Daten/unemployment_rate.json", index=True, orient="table", force_ascii=False)
 
 # %%
+# Deleting Währung column in income dataset
+brutto_income_2016.drop([' Währung'], axis=1, inplace=True)
+brutto_income_2021.drop([' Währung'], axis=1, inplace=True)
 
+brutto_income_2021['Jahr'] = [2021]*len(brutto_income_2021)
+brutto_income_2016['Jahr'] = [2016]*len(brutto_income_2016)
+
+# %%
+# Add 'Insgesamt' column in income dataset
+brutto_income_2016['Insgesamt'] = ((brutto_income_2016['Männer'] + brutto_income_2016['Frauen']) / 2)
+brutto_income_2016['Insgesamt'] = brutto_income_2016['Insgesamt'].round().astype('int64')
+
+# %%
+# Adding mean, median and std to income dataset
 median_income = {
     "Bundesland": "Deutschland median",
     "Männer": brutto_income_2021.Männer.median(),
     "Frauen": brutto_income_2021.Frauen.median(),
     "Insgesamt": brutto_income_2021.Insgesamt.median(),
-    "Währung": "in €"
+    "Jahr": 2021
 }
 
 mean_income = {
@@ -679,7 +707,7 @@ mean_income = {
     "Männer": brutto_income_2021.Männer.mean(),
     "Frauen": brutto_income_2021.Frauen.mean(),
     "Insgesamt": brutto_income_2021.Insgesamt.mean(),
-    "Währung": "in €"
+    "Jahr": 2021
 }
 
 std_income = {
@@ -687,87 +715,192 @@ std_income = {
     "Männer": brutto_income_2021.Männer.std(),
     "Frauen": brutto_income_2021.Frauen.std(),
     "Insgesamt": brutto_income_2021.Insgesamt.std(),
-    "Währung": "in €"
+    "Jahr": 2021
 }
 
-copy_2021 = brutto_income_2021.copy()
-
 for row in [median_income, mean_income, std_income]:
-    copy_2021.loc[len(copy_2021)] = row
+    brutto_income_2021.loc[len(brutto_income_2021)] = row
 
-print(copy_2021.tail(4))
+# %%
+# Adding mean, median and std to income dataset
+brutto_income_2016.loc[len(brutto_income_2016)] = [
+    "Deutschland median",
+    brutto_income_2016.Männer.median(),
+    brutto_income_2016.Frauen.median(),
+    2016,
+    brutto_income_2016.Insgesamt.median(),
+]
+
+brutto_income_2016.loc[len(brutto_income_2016)] = [
+    "Deutschland mean",
+    brutto_income_2016.Männer.mean(),
+    brutto_income_2016.Frauen.mean(),
+    2016,
+    brutto_income_2016.Insgesamt.mean(),
+]
+
+brutto_income_2016.loc[len(brutto_income_2016)] = [
+    "Deutschland std",
+    brutto_income_2016.Männer.std(),
+    brutto_income_2016.Frauen.std(),
+    2016,
+    brutto_income_2016.Insgesamt.std(),
+]
+
+# %%
+brutto_income_2016 = brutto_income_2016.rename(columns={'Bundesland ': 'Bundesland'})
+df_income = pd.concat([brutto_income_2021, brutto_income_2016], ignore_index=True)
+
+# %%
+
+for col in ['Männer', 'Frauen', 'Insgesamt', 'Jahr']:
+    df_income[col] = df_income[col].round().astype('int64')
+
+df_income.to_csv(f"Daten/income.csv", index=True)
+df_income.to_json(f"Daten/income.json", index=True, orient="table", force_ascii=False)
 
 # %%
 ############################################### GENESIS TRAFFIC DATASET ################################################
+# Create a new DataFrame containing selected columns from the original DataFrame
 final_genesis_traffic = genesis_traffic[["Jahr", "Art", "Bundesland"]].copy()
 
+# Calculate total number of companies across quarters and add it as a new column
 final_genesis_traffic["Anzahl_Unternehmen"] = (genesis_traffic['1. Quartal Unternehmen Anzahl'] +
                                                genesis_traffic['2. Quartal Unternehmen Anzahl'] +
                                                genesis_traffic['3. Quartal Unternehmen Anzahl'] +
                                                genesis_traffic['4. Quartal Unternehmen Anzahl'])
 
+# Calculate total transported persons across quarters and add it as a new column
 final_genesis_traffic["Befoerderte_Personen_in_1000"] = (genesis_traffic['1. Quartal Beförderte Personen 1000'] +
                                                          genesis_traffic['2. Quartal Beförderte Personen 1000'] +
                                                          genesis_traffic['3. Quartal Beförderte Personen 1000'] +
                                                          genesis_traffic['4. Quartal Beförderte Personen 1000'])
-final_genesis_traffic["Befoerderte_Personen_in_Mrd"] = (
-    final_genesis_traffic["Befoerderte_Personen_in_1000"].apply(lambda x: round((x / 1000000), 3)))
 
+# Convert transported persons to million units and add it as a new column
+final_genesis_traffic["Befoerderte_Personen_in_Mio"] = (
+    final_genesis_traffic["Befoerderte_Personen_in_1000"].apply(lambda x: round((x / 1000), 3)))
+
+# Calculate total person kilometers across quarters and add it as a new column
 final_genesis_traffic["Personenkilometer_in_1000"] = (genesis_traffic['1. Quartal Personenkilometer 1000'] +
                                                       genesis_traffic['2. Quartal Personenkilometer 1000'] +
                                                       genesis_traffic['3. Quartal Personenkilometer 1000'] +
                                                       genesis_traffic['4. Quartal Personenkilometer 1000'])
-final_genesis_traffic["Personenkilometer_in_Mrd"] = (
-    final_genesis_traffic["Personenkilometer_in_1000"].apply(lambda x: round((x / 1000000), 3)))
 
+# Convert person kilometers to million units and add it as a new column
+final_genesis_traffic["Personenkilometer_in_Mio"] = (
+    final_genesis_traffic["Personenkilometer_in_1000"].apply(lambda x: round((x / 1000), 3)))
+
+# Filter and save data related to 'Liniennahverkehr insgesamt' into a separate DataFrame
+deutschland_gesamt_values = final_genesis_traffic[final_genesis_traffic['Art'] == 'Liniennahverkehr insgesamt']
+final_genesis_traffic = final_genesis_traffic[final_genesis_traffic['Art'] != 'Liniennahverkehr insgesamt']
+
+# Save the modified DataFrame to a CSV file
 final_genesis_traffic.to_csv(f"Daten/final_genesis_traffic.csv", index=True)
 
-# %%
+# Aggregate and merge data based on different groupings (Jahr/Art, Jahr/Bundesland, Jahr)
+# and create summary rows for Germany, individual Bundesland, and overall Deutschland values
 
+# Combine summarized Germany data based on 'Jahr' and 'Art'
+merge_df = pd.DataFrame()
+
+# Summarize Germany values based on 'Jahr' and 'Art'
+# Concatenate the summarized data with the 'merge_df' DataFrame
+# Repeat the same process for Bundesland and overall Deutschland values
+
+# Concatenate all the individual DataFrames to create the final DataFrame with aggregated data
 germany_df = final_genesis_traffic.groupby(['Jahr', 'Art']).agg({
     'Anzahl_Unternehmen': 'sum',
     'Befoerderte_Personen_in_1000': 'sum',
+    "Befoerderte_Personen_in_Mio": 'sum',
     'Personenkilometer_in_1000': 'sum',
+    "Personenkilometer_in_Mio": 'sum',
 }).reset_index()
 
-germany_row = pd.DataFrame({'Jahr': germany_df['Jahr'], 'Art': germany_df['Art'], 'Bundesland': 'Deutschland',
-                            'Anzahl_Unternehmen': germany_df['Anzahl_Unternehmen'],
-                            'Befoerderte_Personen_in_1000': germany_df['Befoerderte_Personen_in_1000'],
-                            'Personenkilometer_in_1000': germany_df['Personenkilometer_in_1000']})
+germany_row = pd.DataFrame(
+    {'Jahr': germany_df['Jahr'], 'Art': germany_df['Art'],
+     'Bundesland': 'Deutschland',
+     'Anzahl_Unternehmen': germany_df['Anzahl_Unternehmen'],
+     'Befoerderte_Personen_in_1000': germany_df['Befoerderte_Personen_in_1000'],
+     'Befoerderte_Personen_in_Mio': germany_df['Befoerderte_Personen_in_Mio'],
+     'Personenkilometer_in_1000': germany_df['Personenkilometer_in_1000'],
+     'Personenkilometer_in_Mio': germany_df['Personenkilometer_in_Mio'],
+     })
 
-final_genesis_traffic = pd.concat([final_genesis_traffic, germany_row], ignore_index=True)
+merge_df = pd.concat([merge_df, germany_row], ignore_index=True)
 
-final_genesis_traffic.to_csv(f"Daten/final_df.csv", index=True)
+germany_df = final_genesis_traffic.groupby(['Jahr', 'Bundesland']).agg({
+    'Anzahl_Unternehmen': 'sum',
+    'Befoerderte_Personen_in_1000': 'sum',
+    "Befoerderte_Personen_in_Mio": 'sum',
+    'Personenkilometer_in_1000': 'sum',
+    "Personenkilometer_in_Mio": 'sum',
+}).reset_index()
 
-# %%
+germany_row = pd.DataFrame(
+    {'Jahr': germany_df['Jahr'], 'Art': 'Nahverkehr insgesamt',
+     'Bundesland': germany_df['Bundesland'],
+     'Anzahl_Unternehmen': germany_df['Anzahl_Unternehmen'],
+     'Befoerderte_Personen_in_1000': germany_df['Befoerderte_Personen_in_1000'],
+     'Befoerderte_Personen_in_Mio': germany_df['Befoerderte_Personen_in_Mio'],
+     'Personenkilometer_in_1000': germany_df['Personenkilometer_in_1000'],
+     'Personenkilometer_in_Mio': germany_df['Personenkilometer_in_Mio'],
+     })
 
-germany_df = final_genesis_traffic.groupby(['Jahr', 'Art']).agg({
+merge_df = pd.concat([merge_df, germany_row], ignore_index=True)
+
+germany_df = final_genesis_traffic.groupby(['Jahr']).agg({
+    'Anzahl_Unternehmen': 'sum',
+    'Befoerderte_Personen_in_1000': 'sum',
+    "Befoerderte_Personen_in_Mio": 'sum',
+    'Personenkilometer_in_1000': 'sum',
+    "Personenkilometer_in_Mio": 'sum',
+}).reset_index()
+
+germany_row = pd.DataFrame(
+    {'Jahr': germany_df['Jahr'], 'Art': 'Nahverkehr insgesamt',
+     'Bundesland': 'Deutschland',
+     'Anzahl_Unternehmen': germany_df['Anzahl_Unternehmen'],
+     'Befoerderte_Personen_in_1000': germany_df['Befoerderte_Personen_in_1000'],
+     'Befoerderte_Personen_in_Mio': germany_df['Befoerderte_Personen_in_Mio'],
+     'Personenkilometer_in_1000': germany_df['Personenkilometer_in_1000'],
+     'Personenkilometer_in_Mio': germany_df['Personenkilometer_in_Mio'],
+     })
+
+merge_df = pd.concat([merge_df, germany_row], ignore_index=True)
+
+bundesland_df = final_genesis_traffic.groupby(['Jahr', 'Art']).agg({
     'Anzahl_Unternehmen': ['mean', 'median', 'std'],
     'Befoerderte_Personen_in_1000': ['mean', 'median', 'std'],
+    'Befoerderte_Personen_in_Mio': ['mean', 'median', 'std'],
     'Personenkilometer_in_1000': ['mean', 'median', 'std'],
+    'Personenkilometer_in_Mio': ['mean', 'median', 'std'],
 }).reset_index()
 
-mean = pd.DataFrame({'Jahr': germany_df['Jahr'], 'Art': germany_df['Art'], 'Bundesland': 'Deutschland_mean',
-                     'Anzahl_Unternehmen': round(germany_df['Anzahl_Unternehmen']['mean'], 3),
-                     'Befoerderte_Personen_in_1000': round(germany_df['Befoerderte_Personen_in_1000']['mean'], 3),
-                     'Personenkilometer_in_1000': round(germany_df['Personenkilometer_in_1000']['mean'], 3)})
+mean = pd.DataFrame({'Jahr': bundesland_df['Jahr'], 'Art': bundesland_df['Art'], 'Bundesland': 'Deutschland_mean',
+                     'Anzahl_Unternehmen': round(bundesland_df['Anzahl_Unternehmen']['mean'], 3),
+                     'Befoerderte_Personen_in_1000': round(bundesland_df['Befoerderte_Personen_in_1000']['mean'], 3),
+                     'Personenkilometer_in_1000': round(bundesland_df['Personenkilometer_in_1000']['mean'], 3)})
 
-std = pd.DataFrame({'Jahr': germany_df['Jahr'], 'Art': germany_df['Art'], 'Bundesland': 'Deutschland_std',
-                    'Anzahl_Unternehmen': round(germany_df['Anzahl_Unternehmen']['std'], 3),
-                    'Befoerderte_Personen_in_1000': round(germany_df['Befoerderte_Personen_in_1000']['std'], 3),
-                    'Personenkilometer_in_1000': round(germany_df['Personenkilometer_in_1000']['std'], 3)})
+std = pd.DataFrame({'Jahr': bundesland_df['Jahr'], 'Art': bundesland_df['Art'], 'Bundesland': 'Deutschland_std',
+                    'Anzahl_Unternehmen': round(bundesland_df['Anzahl_Unternehmen']['std'], 3),
+                    'Befoerderte_Personen_in_1000': round(bundesland_df['Befoerderte_Personen_in_1000']['std'], 3),
+                    'Personenkilometer_in_1000': round(bundesland_df['Personenkilometer_in_1000']['std'], 3)})
 
-median = pd.DataFrame({'Jahr': germany_df['Jahr'], 'Art': germany_df['Art'], 'Bundesland': 'Deutschland_median',
-                       'Anzahl_Unternehmen': round(germany_df['Anzahl_Unternehmen']['median'], 3),
-                       'Befoerderte_Personen_in_1000': round(germany_df['Befoerderte_Personen_in_1000']['median'], 3),
-                       'Personenkilometer_in_1000': round(germany_df['Personenkilometer_in_1000']['median'], 3)})
+median = pd.DataFrame({'Jahr': bundesland_df['Jahr'], 'Art': bundesland_df['Art'], 'Bundesland': 'Deutschland_median',
+                       'Anzahl_Unternehmen': round(bundesland_df['Anzahl_Unternehmen']['median'], 3),
+                       'Befoerderte_Personen_in_1000': round(bundesland_df['Befoerderte_Personen_in_1000']['median'],
+                                                             3),
+                       'Personenkilometer_in_1000': round(bundesland_df['Personenkilometer_in_1000']['median'], 3)})
 
 final_genesis_traffic = pd.concat([final_genesis_traffic, mean, std, median], ignore_index=True)
 
+# Concatenate all the individual DataFrames to create the final DataFrame with aggregated data
+final_genesis_traffic = pd.concat([final_genesis_traffic, merge_df], ignore_index=True)
+
+# Save the final DataFrame to a CSV file
 final_genesis_traffic.to_csv(f"Daten/final_genesis_traffic.csv", index=True)
 
-# %%
-
+# Save the final DataFrame to a JSON file using table orientation
 final_genesis_traffic.to_json(f"Daten/final_genesis_traffic.json", index=True, orient="table", force_ascii=False)
 
 ############################################### GENESIS TRAFFIC DATASET ################################################
