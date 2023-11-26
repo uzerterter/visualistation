@@ -1,16 +1,11 @@
 <script>
-    import '../styles/global.css';
-    let group = "group08"
-    import TestComponent from '$lib/test_component.svelte';
+    import '../../styles/global.css';
+    let group = "group08"	
+    import Map from '$lib/components/map_test.svelte';
     import BarChart from '$lib/components/bar_chart.svelte';
-    import _data from '$lib/data/final_genesis_traffic.json';
-    let data = {..._data, data: _data.data.filter(v=>v.Bundesland==='Deutschland')}	
-    import Timeline from '../lib/components/timeline.svelte';
-    import Map from '$lib/components/map.svelte';
+    import Data from '$lib/data/final_genesis_traffic.json';
     let mapContainer;
 </script>
-
-
 
 <div class="map-background" bind:this={mapContainer} id="map-parent">
     <Map bind:container={mapContainer}/>
@@ -30,13 +25,13 @@
 
         <div class="right-viz viz-border"> 
             <div class="bar-chart-container"  id="barchart-parent">
-                <BarChart data={data}/>
+                <BarChart data={Data}/>
             </div>
         </div>
     </div>
     <div class="timeline">
-        <div class="timeline-viz"> 
-            <Timeline/>
+        <div class="timeline-viz viz-border"> 
+
         </div>
     </div>
 </div>
@@ -106,6 +101,7 @@
     .timeline-viz {
         width: 50%;
         height: 50%;
+        background-color: white;
         margin-top: 2vh;
     }
 
