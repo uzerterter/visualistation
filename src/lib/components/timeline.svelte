@@ -8,8 +8,12 @@
 	const startYear = 2017;
 	const endYear = 2022;
 
-	//IsThumbPressed
+	// IsThumbPressed
 	const isThumbPressed = writable(false); // Track if thumb is being pressed
+
+	// Autoplay state
+	let autoplayInterval;
+	const isAutoplayActive = writable(false);
 
 	// Calculate the percentage of the slider to fill based on the selected year
 	const fillPercentage = derived(
@@ -30,9 +34,41 @@
 	function onThumbRelease() {
 		isThumbPressed.set(false);
 	}
+
+	// Toggle autoplay
+	function toggleAutoplay() {
+		const autoplayActive = $isAutoplayActive;
+
+		if (autoplayActive) {
+			clearInterval(autoplayInterval);
+		} else {
+			autoplayInterval = setInterval(() => {
+				// Increment the selected year by 1
+				const newYear = $selectedYear + 1;
+				// If the new year is within the allowed range, update the selected year
+				if (newYear <= endYear) {
+					selectedYear.set(newYear);
+				} else {
+					// Stop autoplay if the end of the range is reached
+					clearInterval(autoplayInterval);
+					isAutoplayActive.set(false);
+				}
+			}, 1000); // Adjust the interval as needed
+		}
+
+		isAutoplayActive.set(!autoplayActive);
+	}
 </script>
 
 <div class="timeline-container">
+	<button on:click={toggleAutoplay} id="autoplay-button">
+		{#if $isAutoplayActive}
+			Pause
+			<!-- Todo: Add Icons -->
+		{:else}
+			Play
+		{/if}
+	</button>
 	<input
 		type="range"
 		min={startYear}
@@ -137,6 +173,18 @@
 	input[type='range'].pressed::-ms-thumb {
 		/* Define your styles for the pressed thumb here */
 		box-shadow: rgba(247, 127, 0, 0.16) 0px 0px 0px 12px;
+	}
+
+	button {
+		transform: translateY(-50%);
+		background-color: var(--colorscheme-orange);
+		color: var(--colorscheme-blue);
+		padding: 8px 12px;
+		border: none;
+		border-radius: 20px;
+		cursor: pointer;
+		font-size: 14px;
+		margin-right: 10px; /* Adjust the margin as needed */
 	}
 
 </style>
