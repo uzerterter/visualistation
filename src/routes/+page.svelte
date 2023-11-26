@@ -4,6 +4,7 @@
     import TestComponent from '$lib/test_component.svelte';
     import BarChart from '$lib/components/bar_chart.svelte';
     import Data from '$lib/data/final_genesis_traffic.json';	
+    import Timeline from '../lib/components/timeline.svelte';
     import Map from '$lib/components/map.svelte';
     let mapContainer;
 </script>
@@ -33,8 +34,8 @@
         </div>
     </div>
     <div class="timeline">
-        <div class="timeline-viz viz-border"> 
-
+        <div class="timeline-viz"> 
+            <Timeline/>
         </div>
     </div>
 </div>
@@ -104,7 +105,6 @@
     .timeline-viz {
         width: 50%;
         height: 50%;
-        background-color: white;
         margin-top: 2vh;
     }
 
