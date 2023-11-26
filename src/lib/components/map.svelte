@@ -4,6 +4,7 @@
 <script>
   import { onMount } from 'svelte';
   import * as d3 from 'd3'; 
+  import collection from '$lib/data/dataBundesLander_right_hand_rule.json'
 
   let width, height, geoPath, projection;
   let svg, g, zoom; // Define zoom and SVG selections
@@ -31,25 +32,23 @@
     // Apply the zoom behavior to the svg
     svg.call(zoom);
 
-    d3.json('src/lib/data/dataBundesLander_right_hand_rule.json').then((collection) => {
-      projection = getProjection(collection);
-      geoPath = d3.geoPath().projection(projection);
+    projection = getProjection(collection);
+    geoPath = d3.geoPath().projection(projection);
 
-      collection.features.forEach((feature, index) => {
-        const centroid = geoPath.centroid(feature);
-        centroidMatrix[index] = centroid; // Store the centroid as [x, y]
-      });
-
-      g.selectAll('path')
-        .data(collection.features)
-        .join('path')
-        .attr('class', 'state')
-        .attr('d', geoPath)
-        .on('click', (event, d) => {
-          const i = collection.features.indexOf(d);
-          clickState(d, i);
-        });
+    collection.features.forEach((feature, index) => {
+      const centroid = geoPath.centroid(feature);
+      centroidMatrix[index] = centroid; // Store the centroid as [x, y]
     });
+
+    g.selectAll('path')
+      .data(collection.features)
+      .join('path')
+      .attr('class', 'state')
+      .attr('d', geoPath)
+      .on('click', (event, d) => {
+        const i = collection.features.indexOf(d);
+        clickState(d, i);
+      });
   });
 
   function getProjection(collection) {
