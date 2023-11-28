@@ -105,8 +105,12 @@
       svg.transition()
         .duration(1000)
         .call(zoom.transform, transform);
+
+      dispatch('stateClicked', { stateName: d.properties.NAME_1 }); // Dispatch the state name
     } else {
+      focused = null;
       resetZoom();
+      dispatch('stateClicked', { stateName: null }); // Dispatch null when no state is focused
     }
   }
 
@@ -116,6 +120,7 @@
     svg.transition()
       .duration(1000)
       .call(zoom.transform, d3.zoomIdentity);
+    dispatch('stateClicked', { stateName: null }); // Dispatch null when zoom is reset
   }
 </script>
 

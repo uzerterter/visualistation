@@ -10,12 +10,19 @@
     let filteredData = originalData; // Default to original data
 
     function handleStateClick(event) {
-        const stateName = event.detail.stateName;
+    const stateName = event.detail.stateName;
+    if (stateName) {
+        // Filter for a specific state's data
         filteredData = {
             ...originalData,
             data: originalData.data.filter(item => item.Bundesland === stateName)
         };
+    } else {
+        // Show data for all of Germany when no state is selected
+        filteredData = originalData;
     }
+}
+
 </script>
 
 
