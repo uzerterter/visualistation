@@ -4,7 +4,7 @@
 <script>
   import { onMount } from 'svelte';
   import * as d3 from 'd3'; 
-  import _data from '$lib/data/final_genesis_traffic.json';
+  import trafficData from '$lib/data/final_genesis_traffic.json';
   import { createEventDispatcher } from 'svelte';
 
   let width, height, geoPath, projection;
@@ -15,7 +15,7 @@
   const dispatch = createEventDispatcher();
 
   
-  export const stateData = {..._data, data: _data.data.filter(v=>v.Bundesland==='Bayern')}
+  export const stateData = {...trafficData, data: trafficData.data.filter(v=>v.Bundesland==='Bayern')}
 
   onMount(() => {
     var parentDiv = document.getElementById('map-parent');
