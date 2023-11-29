@@ -9,12 +9,12 @@
         <div class="navbar-content">
             <div class="logo">
                 <img src="Logo.png" alt="logo">
-                <p>VISUALIZE IT</p>
+                <p>visuali-station</p>
             </div>
             <ul class="navbar-links">
                 {#each [
-                    { href: '/', label: 'Home' },
-                    { href: '/team', label: 'Team' },
+                    { href: '/', label: 'home' },
+                    { href: '/team', label: 'team' },
                     // Add more links as needed
                   ] as { href, label }}
                     <a href={base}{href} class:active={$page.route.id === href}>{label}</a>
@@ -37,16 +37,16 @@
 
 
 <style>
-    header {
+    /* header {
         font-size: x-large;
-    }
+    } */
 
     .navbar {
         background-color: var(--colorscheme-grey);
         width: 100%;
         height: 7vh;
         color: var(--colorscheme-blue);
-        border-bottom: 3px solid var(--colorscheme-blue);
+        border-bottom: 1px solid var(--colorscheme-blue);
     }
 
     .navbar-content {
@@ -70,10 +70,9 @@
     }
 
     .navbar-content img {
-        height: 60px;
+        height: 50px;
         align-self: center;
         padding: auto;
-        background-color: var(--colorscheme-blue);
     }
 
     .logo {
@@ -84,6 +83,8 @@
         margin-left: auto; /* Push the links to the right */
         display: flex;
         align-items: center;
+        letter-spacing: 0.2rem;
+        font-weight: 600;
     }
 
     .navbar-links a {
@@ -95,6 +96,8 @@
     /* Style for links on hover */
     .navbar-links a:hover,
     .navbar-links a.active {
-        text-decoration: underline;
+        text-decoration-line: underline;
+        text-decoration-thickness: 3px; 
+        text-decoration-color: var(--colorscheme-orange);
     }
 </style>
