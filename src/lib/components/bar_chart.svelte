@@ -11,6 +11,7 @@
         <p/>
     </div>
     <div id="barchart-flag">
+        <img src="deutschland-flag.png" alt="flag of selected state">
     </div>
 </div>
 <div id="barchart-diagram">
@@ -214,7 +215,7 @@ let a = 0
 
     #barchart-diagram {
         width: 100%;
-        height: 80%;
+        height: 85%;
     }
 
     #barchart-checkboxes {
@@ -237,16 +238,22 @@ let a = 0
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        height: 15%;
+        height: 10%;
         width: 100%;
     }
     #barchart-flag {
         border: solid 3px;
         border-radius: 15px; /* Add rounded borders */
-        border-color: var(--colorscheme-blue);
-        width: 33%;
+        border-color: black;
+        width: 22%;
         height: 100%;
-        float: right
+        float: right;
+        overflow: hidden;
+    }
+
+    #barchart-flag img {
+        width: 110%;
+        height: 110%;
     }
 
     #barchart-dropdown {
