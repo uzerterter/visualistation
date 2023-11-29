@@ -8,7 +8,6 @@
                 </option>
             {/each}
         </select>
-        <p/>
     </div>
     <div id="barchart-flag">
         <img src="deutschland-flag.png" alt="flag of selected state">
@@ -17,7 +16,6 @@
 <div id="barchart-diagram">
     <!-- BAR CHART -->
     <svg bind:this={svgLocal} id="bar-chart"/>
-    <p/>
 </div>
 <div id="barchart-checkboxes">
     <!-- CHECKBOXES-->
