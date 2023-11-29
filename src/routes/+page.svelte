@@ -3,17 +3,31 @@
     let group = "group08"
     import TestComponent from '$lib/test_component.svelte';
     import BarChart from '$lib/components/bar_chart.svelte';
-    import _data from '$lib/data/final_genesis_traffic.json';
-    let data = {..._data, data: _data.data.filter(v=>v.Bundesland==='Deutschland')}	
+    import originalData from '$lib/data/final_genesis_traffic.json';	
     import Timeline from '../lib/components/timeline.svelte';
     import Map from '$lib/components/map.svelte';
     let mapContainer;
+    let filteredData = originalData; // Default to original data
+
+    function handleStateClick(event) {
+        const stateName = event.detail.stateName;
+        if (stateName) {
+            // Filter for a specific state's data
+            filteredData = {
+                ...originalData,
+                data: originalData.data.filter(item => item.Bundesland === stateName)
+            };
+        } else {
+            // Show data for all of Germany when no state is selected
+            filteredData = originalData;
+        }
+    }
 </script>
 
 
 
 <div class="map-background" bind:this={mapContainer} id="map-parent">
-    <Map bind:container={mapContainer}/>
+    <Map bind:container={mapContainer} on:stateClicked={handleStateClick}/>
 </div>
 
 <div id="main">
@@ -30,7 +44,7 @@
 
         <div class="right-viz viz-border"> 
             <div class="bar-chart-container"  id="barchart-parent">
-                <BarChart data={data}/>
+                <BarChart data={filteredData}/>
             </div>
         </div>
     </div>
