@@ -81,6 +81,7 @@
 
   function clickState(d, i) {
 
+    
     const stateName = d.properties.NAME_1; 
     dispatch('stateClicked', { stateName });
 
