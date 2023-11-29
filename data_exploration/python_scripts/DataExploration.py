@@ -5,61 +5,67 @@ import seaborn as sns
 
 # %%
 ##############################################PATHS OF THE DATASETS#####################################################
-genesis = 'Daten/genesis_traffic/genesis_traffic.csv'
-income2021 = ('Daten/income/statistic_id209211_bruttomonatsverdienst-nach-bundeslaendern-und-geschlecht-in-deutschland'
-              '-2021.csv')
-income2016 = ('Daten/income/statistic_id806476_median-des-bruttomonatsverdienstes-von-maennern-und-frauen-nach'
-              '-bundeslaendern-2016.csv')
-unemployment_sh = 'Daten/unemployment/statistic_id2509_arbeitslosenquote-in-schleswig-holstein-bis-2022.csv'
-unemployment_ham = 'Daten/unemployment/statistic_id2510_arbeitslosenquote-in-hamburg-bis-2022.csv'
-unemployment_ns = 'Daten/unemployment/statistic_id2511_arbeitslosenquote-in-niedersachsen-bis-2022.csv'
-unemployment_br = 'Daten/unemployment/statistic_id2512_arbeitslosenquote-in-bremen-bis-2022.csv'
-unemployment_nrw = 'Daten/unemployment/statistic_id2513_arbeitslosenquote-in-nordrhein-westfalen-bis-2022.csv'
-unemployment_hes = 'Daten/unemployment/statistic_id2514_arbeitslosenquote-in-hessen-bis-2022.csv'
-unemployment_rp = 'Daten/unemployment/statistic_id2515_arbeitslosenquote-in-rheinland-pfalz-bis-2022.csv'
-unemployment_bawu = 'Daten/unemployment/statistic_id2516_arbeitslosenquote-in-baden-wuerttemberg-bis-2022.csv'
-unemployment_ba = 'Daten/unemployment/statistic_id2517_arbeitslosenquote-in-bayern-bis-2022.csv'
-unemployment_saa = 'Daten/unemployment/statistic_id2518_arbeitslosenquote-im-saarland-bis-2022.csv'
-unemployment_ber = 'Daten/unemployment/statistic_id2519_arbeitslosenquote-in-berlin-bis-2022.csv'
-unemployment_bburg = 'Daten/unemployment/statistic_id2520_arbeitslosenquote-in-brandenburg-bis-2022.csv'
-unemployment_mp = 'Daten/unemployment/statistic_id2521_arbeitslosenquote-in-mecklenburg-vorpommern-bis-2022.csv'
-unemployment_s = 'Daten/unemployment/statistic_id2522_arbeitslosenquote-in-sachsen-bis-2022.csv'
-unemployment_sa = 'Daten/unemployment/statistic_id2523_arbeitslosenquote-in-sachsen-anhalt-bis-2022.csv'
-unemployment_t = 'Daten/unemployment/statistic_id2524_arbeitslosenquote-in-thueringen-bis-2022.csv'
+genesis = 'data_exploration/Daten/genesis_traffic/genesis_traffic.csv'
+income2021 = (
+    'data_exploration/Daten/income/statistic_id209211_bruttomonatsverdienst-nach-bundeslaendern-und-geschlecht-in'
+    '-deutschland-2021.csv')
+income2016 = (
+    'data_exploration/Daten/income/statistic_id806476_median-des-bruttomonatsverdienstes-von-maennern-und-frauen-nach'
+    '-bundeslaendern-2016.csv')
+unemployment_sh = ('data_exploration/Daten/unemployment/statistic_id2509_arbeitslosenquote-in-schleswig-holstein-bis'
+                   '-2022.csv')
+unemployment_ham = 'data_exploration/Daten/unemployment/statistic_id2510_arbeitslosenquote-in-hamburg-bis-2022.csv'
+unemployment_ns = 'data_exploration/Daten/unemployment/statistic_id2511_arbeitslosenquote-in-niedersachsen-bis-2022.csv'
+unemployment_br = 'data_exploration/Daten/unemployment/statistic_id2512_arbeitslosenquote-in-bremen-bis-2022.csv'
+unemployment_nrw = ('data_exploration/Daten/unemployment/statistic_id2513_arbeitslosenquote-in-nordrhein-westfalen-bis'
+                    '-2022.csv')
+unemployment_hes = 'data_exploration/Daten/unemployment/statistic_id2514_arbeitslosenquote-in-hessen-bis-2022.csv'
+unemployment_rp = ('data_exploration/Daten/unemployment/statistic_id2515_arbeitslosenquote-in-rheinland-pfalz-bis-2022'
+                   '.csv')
+unemployment_bawu = 'data_exploration/Daten/unemployment/statistic_id2516_arbeitslosenquote-in-baden-wuerttemberg-bis-2022.csv'
+unemployment_ba = 'data_exploration/Daten/unemployment/statistic_id2517_arbeitslosenquote-in-bayern-bis-2022.csv'
+unemployment_saa = 'data_exploration/Daten/unemployment/statistic_id2518_arbeitslosenquote-im-saarland-bis-2022.csv'
+unemployment_ber = 'data_exploration/Daten/unemployment/statistic_id2519_arbeitslosenquote-in-berlin-bis-2022.csv'
+unemployment_bburg = 'data_exploration/Daten/unemployment/statistic_id2520_arbeitslosenquote-in-brandenburg-bis-2022.csv'
+unemployment_mp = 'data_exploration/Daten/unemployment/statistic_id2521_arbeitslosenquote-in-mecklenburg-vorpommern-bis-2022.csv'
+unemployment_s = 'data_exploration/Daten/unemployment/statistic_id2522_arbeitslosenquote-in-sachsen-bis-2022.csv'
+unemployment_sa = 'data_exploration/Daten/unemployment/statistic_id2523_arbeitslosenquote-in-sachsen-anhalt-bis-2022.csv'
+unemployment_t = 'data_exploration/Daten/unemployment/statistic_id2524_arbeitslosenquote-in-thueringen-bis-2022.csv'
 
-rent_ba = 'Daten/rent_development/statistic_id975191_index-der-nettokaltmieten-fuer-bayern-bis-2022.csv'
-rent_bawu = 'Daten/rent_development/statistic_id975192_index-der-nettokaltmieten-fuer-baden-wuerttemberg-bis-2022.csv'
-rent_ber = 'Daten/rent_development/statistic_id975194_index-der-nettokaltmieten-fuer-berlin-bis-2022.csv'
-rent_br = 'Daten/rent_development/statistic_id975195_index-der-nettokaltmieten-fuer-bremen-bis-2022.csv'
-rent_bburg = 'Daten/rent_development/statistic_id975198_index-der-nettokaltmieten-fuer-brandenburg-bis-2022.csv'
-rent_hes = 'Daten/rent_development/statistic_id975199_index-der-nettokaltmieten-fuer-hessen-bis-2022.csv'
-rent_mp = 'Daten/rent_development/statistic_id975203_index-der-nettokaltmieten-fuer-mecklenburg-vorpommern-bis-2022.csv'
-rent_ns = 'Daten/rent_development/statistic_id975204_index-der-nettokaltmieten-fuer-niedersachsen-bis-2022.csv'
-rent_nrw = 'Daten/rent_development/statistic_id975205_index-der-nettokaltmieten-fuer-nordrhein-westfalen-bis-2022.csv'
-rent_rp = 'Daten/rent_development/statistic_id975207_index-der-nettokaltmieten-fuer-rheinland-pfalz-bis-2022.csv'
-rent_saa = 'Daten/rent_development/statistic_id975212_index-der-nettokaltmieten-fuer-das-saarland-bis-2022.csv'
-rent_s = 'Daten/rent_development/statistic_id975214_index-der-nettokaltmieten-fuer-sachsen-bis-2022.csv'
-rent_sa = 'Daten/rent_development/statistic_id975215_index-der-nettokaltmieten-fuer-sachsen-anhalt-bis-2022.csv'
-rent_t = 'Daten/rent_development/statistic_id975216_index-der-nettokaltmieten-fuer-thueringen-bis-2022.csv'
-rent_ham = 'Daten/rent_development/statistic_id975217_index-der-nettokaltmieten-fuer-hamburg-bis-2022.csv'
-rent_sw = 'Daten/rent_development/statistic_id1028723_index-der-nettokaltmieten-fuer-schleswig-holstein-bis-2022.csv'
+rent_ba = 'data_exploration/Daten/rent_development/statistic_id975191_index-der-nettokaltmieten-fuer-bayern-bis-2022.csv'
+rent_bawu = 'data_exploration/Daten/rent_development/statistic_id975192_index-der-nettokaltmieten-fuer-baden-wuerttemberg-bis-2022.csv'
+rent_ber = 'data_exploration/Daten/rent_development/statistic_id975194_index-der-nettokaltmieten-fuer-berlin-bis-2022.csv'
+rent_br = ('data_exploration/Daten/rent_development/statistic_id975195_index-der-nettokaltmieten-fuer-bremen-bis-2022'
+           '.csv')
+rent_bburg = 'data_exploration/Daten/rent_development/statistic_id975198_index-der-nettokaltmieten-fuer-brandenburg-bis-2022.csv'
+rent_hes = 'data_exploration/Daten/rent_development/statistic_id975199_index-der-nettokaltmieten-fuer-hessen-bis-2022.csv'
+rent_mp = 'data_exploration/Daten/rent_development/statistic_id975203_index-der-nettokaltmieten-fuer-mecklenburg-vorpommern-bis-2022.csv'
+rent_ns = 'data_exploration/Daten/rent_development/statistic_id975204_index-der-nettokaltmieten-fuer-niedersachsen-bis-2022.csv'
+rent_nrw = 'data_exploration/Daten/rent_development/statistic_id975205_index-der-nettokaltmieten-fuer-nordrhein-westfalen-bis-2022.csv'
+rent_rp = 'data_exploration/Daten/rent_development/statistic_id975207_index-der-nettokaltmieten-fuer-rheinland-pfalz-bis-2022.csv'
+rent_saa = 'data_exploration/Daten/rent_development/statistic_id975212_index-der-nettokaltmieten-fuer-das-saarland-bis-2022.csv'
+rent_s = 'data_exploration/Daten/rent_development/statistic_id975214_index-der-nettokaltmieten-fuer-sachsen-bis-2022.csv'
+rent_sa = 'data_exploration/Daten/rent_development/statistic_id975215_index-der-nettokaltmieten-fuer-sachsen-anhalt-bis-2022.csv'
+rent_t = 'data_exploration/Daten/rent_development/statistic_id975216_index-der-nettokaltmieten-fuer-thueringen-bis-2022.csv'
+rent_ham = 'data_exploration/Daten/rent_development/statistic_id975217_index-der-nettokaltmieten-fuer-hamburg-bis-2022.csv'
+rent_sw = 'data_exploration/Daten/rent_development/statistic_id1028723_index-der-nettokaltmieten-fuer-schleswig-holstein-bis-2022.csv'
 
-civ_bawu = 'Daten/inhabitants/statistic_id154878_einwohnerzahl-in-baden-wuerttemberg-bis-2022.csv'
-civ_ba = 'Daten/inhabitants/statistic_id154879_einwohnerzahl-in-bayern-bis-2022.csv'
-civ_ber = 'Daten/inhabitants/statistic_id154880_einwohnerzahl-in-berlin-bis-2022.csv'
-civ_bburg = 'Daten/inhabitants/statistic_id155142_einwohnerzahl-in-brandenburg-bis-2022.csv'
-civ_br = 'Daten/inhabitants/statistic_id155144_einwohnerzahl-in-bremen--bundesland--bis-2022.csv'
-civ_ham = 'Daten/inhabitants/statistic_id155147_einwohnerzahl-in-hamburg-bis-2022.csv'
-civ_hes = 'Daten/inhabitants/statistic_id155150_einwohnerzahl-in-hessen-bis-2022.csv'
-civ_mp = 'Daten/inhabitants/statistic_id155151_einwohnerzahl-in-mecklenburg-vorpommern-bis-2022.csv'
-civ_ns = 'Daten/inhabitants/statistic_id155154_einwohnerzahl-in-niedersachsen-bis-2022.csv'
-civ_nrw = 'Daten/inhabitants/statistic_id155156_einwohnerzahl-in-nordrhein-westfalen-bis-2022.csv'
-civ_rp = 'Daten/inhabitants/statistic_id155158_einwohnerzahl-in-rheinland-pfalz-bis-2022.csv'
-civ_saa = 'Daten/inhabitants/statistic_id155163_einwohnerzahl-im-saarland-bis-2022.csv'
-civ_s = 'Daten/inhabitants/statistic_id155167_einwohnerzahl-in-sachsen-bis-2022.csv'
-civ_sa = 'Daten/inhabitants/statistic_id155169_einwohnerzahl-in-sachsen-anhalt-bis-2022.csv'
-civ_sh = 'Daten/inhabitants/statistic_id155171_einwohnerzahl-in-schleswig-holstein-bis-2022.csv'
-civ_t = 'Daten/inhabitants/statistic_id155172_einwohnerzahl-in-thueringen-bis-2022.csv'
+civ_bawu = 'data_exploration/Daten/inhabitants/statistic_id154878_einwohnerzahl-in-baden-wuerttemberg-bis-2022.csv'
+civ_ba = 'data_exploration/Daten/inhabitants/statistic_id154879_einwohnerzahl-in-bayern-bis-2022.csv'
+civ_ber = 'data_exploration/Daten/inhabitants/statistic_id154880_einwohnerzahl-in-berlin-bis-2022.csv'
+civ_bburg = 'data_exploration/Daten/inhabitants/statistic_id155142_einwohnerzahl-in-brandenburg-bis-2022.csv'
+civ_br = 'data_exploration/Daten/inhabitants/statistic_id155144_einwohnerzahl-in-bremen--bundesland--bis-2022.csv'
+civ_ham = 'data_exploration/Daten/inhabitants/statistic_id155147_einwohnerzahl-in-hamburg-bis-2022.csv'
+civ_hes = 'data_exploration/Daten/inhabitants/statistic_id155150_einwohnerzahl-in-hessen-bis-2022.csv'
+civ_mp = 'data_exploration/Daten/inhabitants/statistic_id155151_einwohnerzahl-in-mecklenburg-vorpommern-bis-2022.csv'
+civ_ns = 'data_exploration/Daten/inhabitants/statistic_id155154_einwohnerzahl-in-niedersachsen-bis-2022.csv'
+civ_nrw = 'data_exploration/Daten/inhabitants/statistic_id155156_einwohnerzahl-in-nordrhein-westfalen-bis-2022.csv'
+civ_rp = 'data_exploration/Daten/inhabitants/statistic_id155158_einwohnerzahl-in-rheinland-pfalz-bis-2022.csv'
+civ_saa = 'data_exploration/Daten/inhabitants/statistic_id155163_einwohnerzahl-im-saarland-bis-2022.csv'
+civ_s = 'data_exploration/Daten/inhabitants/statistic_id155167_einwohnerzahl-in-sachsen-bis-2022.csv'
+civ_sa = 'data_exploration/Daten/inhabitants/statistic_id155169_einwohnerzahl-in-sachsen-anhalt-bis-2022.csv'
+civ_sh = 'data_exploration/Daten/inhabitants/statistic_id155171_einwohnerzahl-in-schleswig-holstein-bis-2022.csv'
+civ_t = 'data_exploration/Daten/inhabitants/statistic_id155172_einwohnerzahl-in-thueringen-bis-2022.csv'
 
 
 ##############################################PATHS OF THE DATASETS#####################################################
@@ -97,7 +103,7 @@ def count_NaNs_and_export(column_list, NaN_values_list, dataframe, name):
 
         percentage_occurrences_df = pd.concat([pd.DataFrame([row_data]) for row_data in data_to_concat],
                                               ignore_index=True)
-    percentage_occurrences_df.to_csv(f"Daten/{name}.csv", index=True)
+    percentage_occurrences_df.to_csv(f"data_exploration/Daten/genesis_traffic/{name}.csv", index=True)
 
     return percentage_occurrences_df
 
@@ -669,23 +675,23 @@ df_civ = add_mean_median_std(df_civ, 'Einwohner', 'Jahr')
 df_rent = add_mean_median_std(df_rent, 'Index', 'Jahr')
 df_unemployment = add_mean_median_std(df_unemployment, 'Prozent', 'Jahr')
 
-df_rent.to_csv(f"Daten/mietindex.csv", index=True)
-df_unemployment.to_csv(f"Daten/arbeitslosenquote.csv", index=True)
-df_civ.to_csv(f"Daten/bevoelkerungsentwicklung.csv", index=True)
+df_rent.to_csv(f"data_exploration/Daten/mietindex/mietindex.csv", index=True)
+df_unemployment.to_csv(f"data_exploration/Daten/unemployment/arbeitslosenquote.csv", index=True)
+df_civ.to_csv(f"data_exploration/Daten/inhabitants/bevoelkerungsentwicklung.csv", index=True)
 
 # %%
 # Exporting datasets as jsons
-df_civ.to_json(f"Daten/population_development.json", index=True, orient="table", force_ascii=False)
-df_rent.to_json(f"Daten/index_rent_development.json", index=True, orient="table", force_ascii=False)
-df_unemployment.to_json("Daten/unemployment_rate.json", index=True, orient="table", force_ascii=False)
+df_civ.to_json(f"data_exploration/Daten/jsons/population_development.json", index=True, orient="table", force_ascii=False)
+df_rent.to_json(f"data_exploration/Daten/jsons/index_rent_development.json", index=True, orient="table", force_ascii=False)
+df_unemployment.to_json("data_exploration/Daten/jsons/unemployment_rate.json", index=True, orient="table", force_ascii=False)
 
 # %%
 # Deleting Währung column in income dataset
 brutto_income_2016.drop([' Währung'], axis=1, inplace=True)
 brutto_income_2021.drop([' Währung'], axis=1, inplace=True)
 
-brutto_income_2021['Jahr'] = [2021]*len(brutto_income_2021)
-brutto_income_2016['Jahr'] = [2016]*len(brutto_income_2016)
+brutto_income_2021['Jahr'] = [2021] * len(brutto_income_2021)
+brutto_income_2016['Jahr'] = [2016] * len(brutto_income_2016)
 
 # %%
 # Add 'Insgesamt' column in income dataset
@@ -756,8 +762,8 @@ df_income = pd.concat([brutto_income_2021, brutto_income_2016], ignore_index=Tru
 for col in ['Männer', 'Frauen', 'Insgesamt', 'Jahr']:
     df_income[col] = df_income[col].round().astype('int64')
 
-df_income.to_csv(f"Daten/income.csv", index=True)
-df_income.to_json(f"Daten/income.json", index=True, orient="table", force_ascii=False)
+df_income.to_csv(f"data_exploration/Daten/income/income.csv", index=True)
+df_income.to_json(f"data_exploration/Daten/jsons/income.json", index=True, orient="table", force_ascii=False)
 
 # %%
 ############################################### GENESIS TRAFFIC DATASET ################################################
@@ -795,7 +801,7 @@ deutschland_gesamt_values = final_genesis_traffic[final_genesis_traffic['Art'] =
 final_genesis_traffic = final_genesis_traffic[final_genesis_traffic['Art'] != 'Liniennahverkehr insgesamt']
 
 # Save the modified DataFrame to a CSV file
-final_genesis_traffic.to_csv(f"Daten/final_genesis_traffic.csv", index=True)
+final_genesis_traffic.to_csv(f"data_exploration/Daten/genesis_traffic/final_genesis_traffic.csv", index=True)
 
 # Aggregate and merge data based on different groupings (Jahr/Art, Jahr/Bundesland, Jahr)
 # and create summary rows for Germany, individual Bundesland, and overall Deutschland values
@@ -898,9 +904,9 @@ final_genesis_traffic = pd.concat([final_genesis_traffic, mean, std, median], ig
 final_genesis_traffic = pd.concat([final_genesis_traffic, merge_df], ignore_index=True)
 
 # Save the final DataFrame to a CSV file
-final_genesis_traffic.to_csv(f"Daten/final_genesis_traffic.csv", index=True)
+final_genesis_traffic.to_csv(f"data_exploration/Daten/genesis_traffic/final_genesis_traffic.csv", index=True)
 
 # Save the final DataFrame to a JSON file using table orientation
-final_genesis_traffic.to_json(f"Daten/final_genesis_traffic.json", index=True, orient="table", force_ascii=False)
+final_genesis_traffic.to_json(f"data_exploration/Daten/jsons/final_genesis_traffic.json", index=True, orient="table", force_ascii=False)
 
 ############################################### GENESIS TRAFFIC DATASET ################################################
