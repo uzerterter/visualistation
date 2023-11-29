@@ -1,13 +1,17 @@
-<div id="barchart-dropdown">
-    <!-- DROPDOWN -->
-    <select bind:value={selected}>
-        {#each dd as d}
-            <option value={d}>
-                {d.label}
-            </option>
-        {/each}
-    </select>
-    <p/>
+<div id="barchart-toprow">
+    <div id="barchart-dropdown">
+        <!-- DROPDOWN -->
+        <select bind:value={selected}>
+            {#each dd as d}
+                <option value={d}>
+                    {d.label}
+                </option>
+            {/each}
+        </select>
+        <p/>
+    </div>
+    <div id="barchart-flag">
+    </div>
 </div>
 <div id="barchart-diagram">
     <!-- BAR CHART -->
@@ -17,12 +21,13 @@
 <div id="barchart-checkboxes">
     <!-- CHECKBOXES-->
     {#each cc as c, i (c.id)}
-    <label style="color:{colors[c.color]}">
+    <label >
         <input
             type="checkbox"
             value={c}            
             disabled={ccr.length===1 && ccr[0]===c}
             bind:group={ccr}
+            style="accent-color:{colors[c.color]};"
         />
         {c.label}
     </label>
@@ -110,7 +115,7 @@ let a = 0
         var checkboxHeight = document.getElementById("barchart-checkboxes").clientHeight;
         var dropdownHeight = document.getElementById("barchart-dropdown").clientHeight;
         var width = parentDiv.clientWidth;
-        var height = parentDiv.clientHeight - (checkboxHeight + dropdownHeight);
+        var height = 0.9 * parentDiv.clientHeight - (checkboxHeight + dropdownHeight);
 
         // var width = 410
         // var height = 280
@@ -207,13 +212,46 @@ let a = 0
         height: 100%;
     }
 
-  /* Style for checkboxes */
-  #barchart-checkboxes label {
-    display: inline-block;
-    margin-right: 15px; /* Adjust as needed for spacing between checkboxes */
-  }
+    #barchart-diagram {
+        width: 100%;
+        height: 80%;
+    }
 
-  input {
-    margin-right: 5px; /* Adjust as needed for spacing between checkbox and label text */
-  }
+    #barchart-checkboxes {
+        width: 100%;
+        height: 5%;
+    }
+
+  /* Style for checkboxes */
+    #barchart-checkboxes label {
+        display: inline-block;
+        margin-right: 15px; /* Adjust as needed for spacing between checkboxes */
+    }
+
+    input {
+        margin-right: 1px;
+    }
+
+    #barchart-toprow {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        height: 15%;
+        width: 100%;
+    }
+    #barchart-flag {
+        border: solid 3px;
+        border-radius: 15px; /* Add rounded borders */
+        border-color: var(--colorscheme-blue);
+        width: 33%;
+        height: 100%;
+        float: right
+    }
+
+    #barchart-dropdown {
+        width: 33%;
+        float: left;
+    }
+
 </style>
