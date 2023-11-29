@@ -61,13 +61,39 @@ We will be using the following technologies to build our website:
     git clone https://gitlab.lrz.de/iv2324-projects/team08.git
     ```
 
-2. Install necessary dependencies
+2. Create a Python virtual environment (optional but recommended)
+
+    ```bash
+    python -m venv venv
+    ```
+
+   Activate the virtual environment:
+
+    - On Windows:
+
+        ```bash
+        venv\Scripts\activate
+        ```
+
+    - On macOS and Linux:
+
+        ```bash
+        source venv/bin/activate
+        ```
+
+3. Install necessary Python dependencies
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4. Install necessary JavaScript dependencies
 
     ```bash
     npm install
     ```
 
-3. Start a development server
+5. Start a development server
 
     ```bash
     npm run dev
@@ -76,7 +102,7 @@ We will be using the following technologies to build our website:
     npm run dev -- --open
     ```
 
-4. Build the App
+6. Build the App
 
    To build your library:
 
