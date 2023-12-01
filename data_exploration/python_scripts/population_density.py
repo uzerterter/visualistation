@@ -111,4 +111,10 @@ df_population_density = df_population_density.iloc[:, 1:]
 # convert column 'Jahr' to int64
 df_population_density['Jahr'] = df_population_density['Jahr'].astype(int)
 
+# %%
+# exporting dataset as csv file
+df_population_density.to_csv(f"data_exploration/Daten/population_density/bevoelkerungsdichte.csv", index=True)
+
+# exporting dataset as json
+df_population_density.to_json("data_exploration/Daten/jsons/population_density.json", index=True, orient="table", force_ascii=False)
 
