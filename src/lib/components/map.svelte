@@ -30,13 +30,19 @@
 
     // Define the zoom behavior
     zoom = d3.zoom()
-      .scaleExtent([1, 8])
+      .scaleExtent([1, 1])
+      .translateExtent([[0, 0], [width, height]]) 
       .on('zoom', (event) => {
         g.attr('transform', event.transform);
+      })
+      .filter(event => {
+        // Only allow zoom interactions with mouse clicks (left/middle/right), not with scroll
+        return event.button === 0 || event.button === 1 || event.button === 2;
       });
 
     // Apply the zoom behavior to the svg
     svg.call(zoom);
+
 
     d3.json('src/lib/data/dataBundesLander_right_hand_rule.json').then((collection) => {
       projection = getProjection(collection);
