@@ -31,7 +31,7 @@
     // Define the zoom behavior
     zoom = d3.zoom()
       .scaleExtent([1, 1])
-      .translateExtent([[0, 0], [width, height]]) 
+      .translateExtent([[0, 0], [width, height]]) // disables dragging the map
       .on('zoom', (event) => {
         g.attr('transform', event.transform);
       })
@@ -58,6 +58,7 @@
         .join('path')
         .attr('class', 'state')
         .attr('d', geoPath)
+        .style('opacity', d => stateOpacities[d.properties.ID_1])
         .on('click', (event, d) => {
           const i = collection.features.indexOf(d);
           clickState(d, i);
@@ -128,6 +129,30 @@
       .call(zoom.transform, d3.zoomIdentity);
     dispatch('stateClicked', { stateName: null }); // Dispatch null when zoom is reset
   }
+
+  const stateOpacities = [
+    0.8, // Baden-Württemberg
+    0.7, // Bayern
+    0.9, // Berlin
+    0.6, // Brandenburg
+    0.9, // Bremen
+    0.8, // Hamburg
+    0.7, // Hessen
+    0.6, // Mecklenburg-Vorpommern
+    0.8, // Niedersachsen
+    0.7, // Nordrhein-Westfalen
+    0.6, // Rheinland-Pfalz
+    0.9, // Saarland
+    0.8, // Sachsen
+    0.7, // Sachsen-Anhalt
+    0.6, // Schleswig-Holstein
+    0.7  // Thüringen
+  ];
+
+
+  function getStateOpacity(stateName) {
+    return stateOpacities[stateName] || 1; // Default opacity if state not in list
+  }
 </script>
 
 <style>
@@ -139,8 +164,10 @@
   }
   :global(.state:hover) {
     fill: #F77F00;
+    opacity: 1;
   }
   :global(.state.active) {
     fill: #F77F00;
+    opacity: 1;
   }
 </style>
