@@ -4,11 +4,18 @@
 <script>
   import { onMount } from 'svelte';
   import * as d3 from 'd3'; 
+  import trafficData from '$lib/data/final_genesis_traffic.json';
+  import { createEventDispatcher } from 'svelte';
 
   let width, height, geoPath, projection;
   let svg, g, zoom; // Define zoom and SVG selections
   let centroidMatrix = [];
   let focused = null; // Store the currently focused element
+
+  const dispatch = createEventDispatcher();
+
+  
+  export const stateData = {...trafficData, data: trafficData.data.filter(v=>v.Bundesland==='Bayern')}
 
   onMount(() => {
     var parentDiv = document.getElementById('map-parent');
@@ -74,34 +81,8 @@
 
   function clickState(d, i) {
 
-    // const stateName = d.properties.NAME_1; // This should be the property that identifies the state
-    // const stateID = d.properties.ID_1;
-
-    // console.log("Bundesstaaten: ", stateID, stateName);
-
-    // switch (stateName) {
-    //   case 'Baden-Württemberg':
-    //     handleState1Click(d);
-    //     break;
-    //   case 'Bayern':
-    //     handleState2Click(d);
-    //     break;
-    //   case 'Berlin':
-    //     handleState3Click(d);
-    //     break;
-    //   default:
-    //     // Optionally handle any other cases
-    //     break;
-    // }
-
-
-    // zoom in functionality
-
-    // // Remove active class from all states
-    // g.selectAll('.state').classed('active', false);
-
-    // // Add active class to the clicked state
-    // d3.select(d).classed('active', true);
+    const stateName = d.properties.NAME_1; 
+    dispatch('stateClicked', { stateName });
 
     const centroid = centroidMatrix[i];
     if (!centroid) {
@@ -124,8 +105,12 @@
       svg.transition()
         .duration(1000)
         .call(zoom.transform, transform);
+
+      dispatch('stateClicked', { stateName: d.properties.NAME_1 }); // Dispatch the state name
     } else {
+      focused = null;
       resetZoom();
+      dispatch('stateClicked', { stateName: null }); // Dispatch null when no state is focused
     }
   }
 
@@ -135,6 +120,7 @@
     svg.transition()
       .duration(1000)
       .call(zoom.transform, d3.zoomIdentity);
+    dispatch('stateClicked', { stateName: null }); // Dispatch null when zoom is reset
   }
 </script>
 

@@ -60,7 +60,7 @@ let a = 0
         {id: 6, label: "Tram", orig: "Liniennahverkehr mit Straßenbahnen", color: 1},
         {id: 7, label: "Bus", orig: "Liniennahverkehr mit Omnibussen", color: 2},
         {id: 8, label: "Train", orig: "Liniennahverkehr mit Eisenbahnen", color: 3},
-        {id: 9, label: "Total", orig: "Liniennahverkehr insgesamt", color: 4},
+        {id: 9, label: "Total", orig: "Nahverkehr insgesamt", color: 4},
     ]
     let ccr = [cc[0]];
 
@@ -177,7 +177,7 @@ let a = 0
             const g = svg.append("g")
             //stats = scaleYears.bandwidth()
 
-            const ww = scaleYears.bandwidth()/4
+            const ww = scaleYears.bandwidth() / ccr.length
             g.selectAll(".bar")
                 .data(d)                
                 .enter()
