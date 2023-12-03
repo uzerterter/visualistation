@@ -164,10 +164,10 @@
   }
   :global(.state:hover) {
     fill: #F77F00;
-    opacity: 1;
+    opacity: 100 !important;
   }
   :global(.state.active) {
     fill: #F77F00;
-    opacity: 1;
+    opacity: 100 !important;
   }
 </style>
