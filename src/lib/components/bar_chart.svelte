@@ -70,8 +70,8 @@ let ccr = [cc[0]];
 // Personenkilometer_in_1000
 let dd = [
     {id: 3, label: "Anzahl Unternehmen", orig: "Anzahl_Unternehmen"}, 
-    {id: 4, label: "Beförderte Personen in 1000", orig: "Befoerderte_Personen_in_1000"}, 
-    {id: 5, label: "Personenkilometer in 1000", orig: "Personenkilometer_in_1000"}
+    {id: 4, label: "Beförderte Personen in Mio", orig: "Befoerderte_Personen_in_Mio"}, 
+    {id: 5, label: "Personenkilometer in Mio", orig: "Personenkilometer_in_Mio"}
 ]
 let selected = dd[0]
 
@@ -115,7 +115,7 @@ function updateGraph() {
     var checkboxHeight = document.getElementById("barchart-checkboxes").clientHeight;
     var dropdownHeight = document.getElementById("barchart-dropdown").clientHeight;
     var width = parentDiv.clientWidth;
-    var height = 0.9 * parentDiv.clientHeight - (checkboxHeight + dropdownHeight);
+    var height = 0.95 * parentDiv.clientHeight - (checkboxHeight + dropdownHeight);
 
     // var width = 410
     // var height = 280
@@ -147,10 +147,10 @@ function updateGraph() {
     const axisValues = d3.axisLeft(scaleValues);             
 
     svg.append("g")            
-        .attr("transform", `translate(70, ${height-30})`)
+        .attr("transform", `translate(50, ${height-30})`)
         .call(axisYears)
     svg.append("g")
-        .attr("transform", "translate(70,10)")
+        .attr("transform", "translate(50,10)")
         .call(axisValues)
 
     //alert(ccr.map(c=>c.label).join("+"))
@@ -186,7 +186,7 @@ function updateGraph() {
             .append("rect")                
             .attr("class", "bar")
             .attr("fill", colors[c.color])
-            .attr("transform", `translate(70, 0)`)
+            .attr("transform", `translate(50, 0)`)
             .attr("x", function(d) {
                 const x = scaleYears(d.Jahr)
                 const w = scaleYears.bandwidth()
@@ -242,22 +242,37 @@ onMount(() => {
     }
     #barchart-flag {
         border: solid 3px;
-        border-radius: 15px; /* Add rounded borders */
+        border-radius: 15px;
         border-color: black;
         width: 22%;
         height: 100%;
         float: right;
+        display: flex;
         overflow: hidden;
+        align-items: center;
+        justify-content: center;
     }
 
     #barchart-flag img {
-        width: 110%;
-        height: 110%;
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
     }
 
     #barchart-dropdown {
-        width: 33%;
+        width: 45%;
         float: left;
+    }
+
+    #barchart-dropdown select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 14px;
+        background-color: white;
     }
 
 </style>
