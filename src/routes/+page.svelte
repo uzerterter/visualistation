@@ -3,9 +3,10 @@
     let group = "group08"
     import TestComponent from '$lib/test_component.svelte';
     import BarChart from '$lib/components/bar_chart.svelte';
-    import originalData from '$lib/data/final_genesis_traffic.json';	
+    import originalData from '$lib/data/final_genesis_traffic.json';
     import Timeline from '../lib/components/timeline.svelte';
     import Map from '$lib/components/map.svelte';
+	import LineChart from '../lib/components/linechart.svelte';
     let mapContainer;
     let filteredData = originalData; // Default to original data
 
@@ -35,7 +36,9 @@
 
     <div class="visualizations">
         <div class="left-viz viz-border"> 
-        
+            <div class="line-chart-container" id="linechart-parent">
+                <LineChart/>
+            </div>
         </div>
 
         <div class="center-viz"> 
@@ -129,7 +132,7 @@
         border-color: var(--colorscheme-blue);
     }
 
-    .bar-chart-container {
+    .bar-chart-container, .line-chart-container {
         width: 100%;
         height: 90%;
         display: flex;
