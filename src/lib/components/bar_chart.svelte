@@ -138,20 +138,39 @@ function updateGraph() {
     //const values = [1,2,3,4,5,6,7]
     const scaleYears = d3.scaleBand()
                 .domain(years)
-                .range([0, width-80]).padding(0.1)
+                .range([0, width-60]).padding(0.1)
     const scaleValues = d3.scaleLinear()
                 .domain([maxVal/*d3.max(values)*/, 0])
                 .range([0, height-40])
                 
-    const axisYears = d3.axisBottom(scaleYears);   
-    const axisValues = d3.axisLeft(scaleValues);             
+    const axisYears = d3.axisBottom(scaleYears) 
+        .tickSizeOuter(0);  // Remove outer ticks
+    const axisValues = d3.axisLeft(scaleValues)
+        .tickSizeOuter(0);  // Remove outer ticks             
 
     svg.append("g")            
         .attr("transform", `translate(50, ${height-30})`)
-        .call(axisYears)
+        .call(axisYears);
+
     svg.append("g")
         .attr("transform", "translate(50,10)")
         .call(axisValues)
+        .call(g => g.selectAll(".tick line").attr("x2", width - 60));  // Extend tick lines to the right edge
+    
+    // Set opacity for the axis line
+    svg.selectAll(".domain")
+        .style("opacity", 0.5)  // Set opacity for the axis line
+        .style("stroke", "rgb(114, 119, 123)");  // Set color for the axis line
+    
+    // Set opacity for the tick lines
+    svg.selectAll(".tick line")
+        .style("opacity", 0.5)  // Set opacity for the tick lines
+        .style("stroke", "rgb(114, 119, 123)"); // Set color for the tick lines
+
+    // Set opacity for the tick text
+    svg.selectAll(".tick text")
+        .style("opacity", 0.75);  // Set higher opacity for text
+
 
     //alert(ccr.map(c=>c.label).join("+"))
     /*
