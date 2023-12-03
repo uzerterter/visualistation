@@ -8,9 +8,11 @@
     import Map from '$lib/components/map.svelte';
     let mapContainer;
     let filteredData = originalData; // Default to original data
+    let stateName = "Deutschland"; // Default to Germany
 
     function handleStateClick(event) {
-        const stateName = event.detail.stateName;
+        stateName = event.detail.stateName;
+        console.log(stateName);
         if (stateName) {
             // Filter for a specific state's data
             filteredData = {
@@ -20,8 +22,13 @@
         } else {
             // Show data for all of Germany when no state is selected
             filteredData = originalData;
+            if (stateName == null) {
+                stateName = "Deutschland";
+            }
         }
     }
+
+
 </script>
 
 
@@ -44,7 +51,7 @@
 
         <div class="right-viz viz-border"> 
             <div class="bar-chart-container"  id="barchart-parent">
-                <BarChart data={filteredData}/>
+                <BarChart data={filteredData} stateName={stateName} />
             </div>
         </div>
     </div>
