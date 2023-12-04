@@ -20,7 +20,7 @@
     <label style="color:{colors[c.color]}">
         <input
             type="checkbox"
-            value={c}            
+            value={c}
             disabled={ccr.length===1 && ccr[0]===c}
             bind:group={ccr}
         />
@@ -37,14 +37,14 @@
 
 
 
-<script>    
+<script>
 let a = 0
     export let data = []
     //let d = data.data
     let stats = null
 
     let svgLocal
-    
+
     // Linienfernverkehr mit Eisenbahnen
     // Linienfernverkehr mit Omnibussen
     // Liniennahverkehr insgesamt
@@ -56,7 +56,7 @@ let a = 0
         {id: 6, label: "Tram", orig: "Liniennahverkehr mit Straßenbahnen", color: 1},
         {id: 7, label: "Bus", orig: "Liniennahverkehr mit Omnibussen", color: 2},
         {id: 8, label: "Train", orig: "Liniennahverkehr mit Eisenbahnen", color: 3},
-        {id: 9, label: "Total", orig: "Nahverkehr insgesamt", color: 4},
+        {id: 9, label: "Total", orig: "Liniennahverkehr insgesamt", color: 4},
     ]
     let ccr = [cc[0]];
 
@@ -64,20 +64,20 @@ let a = 0
     // Befoerderte_Personen_in_1000
     // Personenkilometer_in_1000
     let dd = [
-        {id: 3, label: "Anzahl Unternehmen", orig: "Anzahl_Unternehmen"}, 
-        {id: 4, label: "Beförderte Personen in 1000", orig: "Befoerderte_Personen_in_1000"}, 
+        {id: 3, label: "Anzahl Unternehmen", orig: "Anzahl_Unternehmen"},
+        {id: 4, label: "Beförderte Personen in 1000", orig: "Befoerderte_Personen_in_1000"},
         {id: 5, label: "Personenkilometer in 1000", orig: "Personenkilometer_in_1000"}
     ]
     let selected = dd[0]
 
     //const sel = cc.map(c=>c.orig)
-    //const maxVal = d.reduce((agg, v) => Math.max(agg, v["Liniennahverkehr insgesamt"] ?? 0), 0)    
+    //const maxVal = d.reduce((agg, v) => Math.max(agg, v["Liniennahverkehr insgesamt"] ?? 0), 0)
     //alert(maxVal)
 
     import * as d3 from 'd3'
 	import { onMount } from 'svelte';
     import {afterUpdate } from 'svelte';
-    
+
     $: data, selected, ccr, updateGraph();
 
     let ready = false
@@ -99,7 +99,7 @@ let a = 0
         a++
         //stats = selected.orig
         //const sel = cc.map(c=>c.orig)
-        //const maxVal = d.reduce((agg, v) => Math.max(agg, v["Liniennahverkehr insgesamt"] ?? 0), 0)    
+        //const maxVal = d.reduce((agg, v) => Math.max(agg, v["Liniennahverkehr insgesamt"] ?? 0), 0)
         let maxVal = 0;
         for(const x of d) {
             //if (x.Art !== "Liniennahverkehr insgesamt") continue
@@ -120,8 +120,8 @@ let a = 0
         // const height = $("svg").parent().height();
 
         d3.select(svgLocal).selectAll("*").remove();
-        
-        const svg = d3.select(svgLocal) //const svg = d3.select("svg.bar-chart")        
+
+        const svg = d3.select(svgLocal) //const svg = d3.select("svg.bar-chart")
             .attr("width", width)
             .attr("height", height);
 
@@ -137,11 +137,11 @@ let a = 0
         const scaleValues = d3.scaleLinear()
                     .domain([maxVal/*d3.max(values)*/, 0])
                     .range([0, height-40])
-                    
-        const axisYears = d3.axisBottom(scaleYears);   
-        const axisValues = d3.axisLeft(scaleValues);             
 
-        svg.append("g")            
+        const axisYears = d3.axisBottom(scaleYears);
+        const axisValues = d3.axisLeft(scaleValues);
+
+        svg.append("g")
             .attr("transform", `translate(70, ${height-30})`)
             .call(axisYears)
         svg.append("g")
@@ -167,25 +167,25 @@ let a = 0
             //maxxx = Math.max(0, d[selected.orig])
             //stats = maxxx
             return d[selected.orig]
-        }        
-        
+        }
+
         for(const [i, c] of ccr.entries()) {
             const g = svg.append("g")
             //stats = scaleYears.bandwidth()
 
             const ww = scaleYears.bandwidth() / ccr.length
             g.selectAll(".bar")
-                .data(d)                
+                .data(d)
                 .enter()
                 .filter(d=>d.Art===c.orig)
-                .append("rect")                
+                .append("rect")
                 .attr("class", "bar")
                 .attr("fill", colors[c.color])
                 .attr("transform", `translate(70, 0)`)
                 .attr("x", function(d) {
                     const x = scaleYears(d.Jahr)
                     const w = scaleYears.bandwidth()
-                    //return x+w/2 - ww/2                    
+                    //return x+w/2 - ww/2
                     //return x + w/2 * (i+1)
                     return x + w/2 + (i*ww) - ccr.length*ww/2
                 })
