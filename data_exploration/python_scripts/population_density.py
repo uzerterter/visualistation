@@ -3,7 +3,6 @@ from data_exploration.python_scripts.functions import *
 
 # %%
 # Data Paths
-# Niedersachsen is missing!!!
 pd_ham = 'data_exploration/Daten/population_density/statistic_id254514_bevoelkerungsdichte-in-hamburg-bis-2022.csv'
 pd_bawu = 'data_exploration/Daten/population_density/statistic_id254840_bevoelkerungsdichte-in-baden-wuerttemberg-bis-2022.csv'
 pd_ba = 'data_exploration/Daten/population_density/statistic_id254957_bevoelkerungsdichte-in-bayern-bis-2022.csv'
@@ -20,6 +19,7 @@ pd_sh = 'data_exploration/Daten/population_density/statistic_id274545_bevoelkeru
 pd_t = 'data_exploration/Daten/population_density/statistic_id274546_bevoelkerungsdichte-in-thueringen-bis-2022.csv'
 pd_saa = 'data_exploration/Daten/population_density/statistic_id274547_bevoelkerungsdichte-im-saarland-bis-2022.csv'
 pd_de = 'data_exploration/Daten/population_density/statistic_id440766_bevoelkerungsdichte-in-deutschland-bis-2022.csv'
+pd_ns = 'data_exploration/Daten/population_density/statistic_id258893_bevoelkerungsdichte-in-niedersachsen-bis-2022.csv'
 
 # %%
 df_ham = pd.read_csv(pd_ham, delimiter=',')
@@ -54,6 +54,8 @@ df_saa = pd.read_csv(pd_saa, delimiter=',')
 set_name(df_saa, 'df_saa')
 df_de = pd.read_csv(pd_de, delimiter=',')
 set_name(df_de, 'df_de')
+df_ns = pd.read_csv(pd_ns, delimiter=',')
+set_name(df_ns, 'df_ns')
 
 # %%
 
@@ -94,7 +96,8 @@ population_density_list = [
     df_mp,
     df_nrw,
     df_rp,
-    df_sh
+    df_sh,
+    df_ns
 ]
 
 # add Federal State to dataset
@@ -110,6 +113,15 @@ df_population_density = df_population_density.iloc[:, 1:]
 # %%
 # convert column 'Jahr' to int64
 df_population_density['Jahr'] = df_population_density['Jahr'].astype(int)
+
+# %%
+# Adding mean, median and std to the population development dataset, rent index dataset, unemployment rate dataset
+df_germany = df_population_density[df_population_density['Bundesland'] == 'Deutschland']
+df_rest = df_population_density[df_population_density['Bundesland'] != 'Deutschland']
+
+# %%
+# Adding mean, median and std to the population development dataset, rent index dataset, unemployment rate dataset
+df_rest = add_mean_median_std(df_rest, 'EW_per_sqkm', 'Jahr')
 
 # %%
 # exporting dataset as csv file

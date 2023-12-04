@@ -109,7 +109,7 @@ germany_df = final_genesis_traffic.groupby(['Jahr', 'Bundesland']).agg({
 }).reset_index()
 
 germany_row = pd.DataFrame(
-    {'Jahr': germany_df['Jahr'], 'Art': 'Nahverkehr insgesamt',
+    {'Jahr': germany_df['Jahr'], 'Art': 'Liniennahverkehr insgesamt',
      'Bundesland': germany_df['Bundesland'],
      'Anzahl_Unternehmen': germany_df['Anzahl_Unternehmen'],
      'Befoerderte_Personen_in_1000': germany_df['Befoerderte_Personen_in_1000'],
@@ -129,7 +129,7 @@ germany_df = final_genesis_traffic.groupby(['Jahr']).agg({
 }).reset_index()
 
 germany_row = pd.DataFrame(
-    {'Jahr': germany_df['Jahr'], 'Art': 'Nahverkehr insgesamt',
+    {'Jahr': germany_df['Jahr'], 'Art': 'Liniennahverkehr insgesamt',
      'Bundesland': 'Deutschland',
      'Anzahl_Unternehmen': germany_df['Anzahl_Unternehmen'],
      'Befoerderte_Personen_in_1000': germany_df['Befoerderte_Personen_in_1000'],
