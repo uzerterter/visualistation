@@ -7,7 +7,11 @@
     import Timeline from '../lib/components/timeline.svelte';
     import Map from '$lib/components/map.svelte';
     let mapContainer;
-    let filteredData = originalData; // Default to original data
+    let germanyData = {
+        ...originalData,
+        data: originalData.data.filter(item => item.Bundesland === "Deutschland")
+    };
+    let filteredData = germanyData; // Default to Germany
     let stateName = "Deutschland"; // Default to Germany
 
     function handleStateClick(event) {
@@ -21,7 +25,7 @@
             };
         } else {
             // Show data for all of Germany when no state is selected
-            filteredData = originalData;
+            filteredData = germanyData
             if (stateName == null) {
                 stateName = "Deutschland";
             }
