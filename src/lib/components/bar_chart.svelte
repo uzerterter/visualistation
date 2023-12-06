@@ -5,25 +5,26 @@
 	let svgLocal;
 	let tooltip;
 
-	let cc = [
+	let checkboxes = [
 		{ id: 6, label: 'Tram', orig: 'Liniennahverkehr mit Straßenbahnen', color: 'var(--colorscheme-red)' },
 		{ id: 7, label: 'Bus', orig: 'Liniennahverkehr mit Omnibussen', color: 'var(--colorscheme-orange)' },
 		{ id: 8, label: 'Train', orig: 'Liniennahverkehr mit Eisenbahnen', color: 'var(--colorscheme-blue)' },
 		{ id: 9, label: 'Total', orig: 'Liniennahverkehr insgesamt', color: 'var(--colorscheme-yellow)' }
 	];
-	let ccr = [cc[0]];
+	let selectedCheckboxes = [checkboxes[0]];
 
-	let dd = [
+	let dropdownItems = [
 		{ id: 3, label: 'Anzahl Unternehmen', orig: 'Anzahl_Unternehmen' },
 		{ id: 4, label: 'Beförderte Personen in Mio', orig: 'Befoerderte_Personen_in_Mio' },
 		{ id: 5, label: 'Personenkilometer in Mio', orig: 'Personenkilometer_in_Mio' }
 	];
-	let selected = dd[0];
+	let selectedDropdownItem = dropdownItems[0];
 
 	import * as d3 from 'd3';
 	import { onMount } from 'svelte';
 
-	$: data, selected, ccr, updateGraph();
+    // update graph reactively
+	$: data, selectedDropdownItem, selectedCheckboxes, updateGraph();
 
 	let ready = false;
 	function updateGraph() {
@@ -36,8 +37,8 @@
 
 		let maxVal = 0;
 		for (const x of d) {
-			if (!ccr.map((c) => c.orig).includes(x.Art)) continue;
-			maxVal = Math.max(x[selected.orig], maxVal);
+			if (!selectedCheckboxes.map((c) => c.orig).includes(x.Art)) continue;
+			maxVal = Math.max(x[selectedDropdownItem.orig], maxVal);
 		}
 
 		var parentDiv = document.getElementById('barchart-parent');
@@ -106,16 +107,16 @@
 		svg.selectAll('.tick text').style('opacity', 0.75); // Set higher opacity for text
 
 		function getValue(d) {
-			return d[selected.orig];
+			return d[selectedDropdownItem.orig];
 		}
 
 		const tt = d3.select(tooltip);
 		let [ttw, tth] = [null, null];
 
-		for (const [i, c] of ccr.entries()) {
+		for (const [i, c] of selectedCheckboxes.entries()) {
 			const g = svg.append('g');
 
-			const ww = scaleYears.bandwidth() / ccr.length;
+			const ww = scaleYears.bandwidth() / selectedCheckboxes.length;
 			g.selectAll('.bar')
 				.data(d)
 				.enter()
@@ -125,9 +126,9 @@
 				.attr('fill', c.color)
 				.attr('transform', `translate(50, 0)`)
 				.on('mouseover', function (_, x) {
-					const color = ccr.filter((c) => c.orig === x.Art)[0].color;
+					const color = selectedCheckboxes.filter((c) => c.orig === x.Art)[0].color;
 					tt.transition().duration(0).style('opacity', 1).style('color', color);
-					tt.html(d3.format(',')(x[selected.orig]));
+					tt.html(d3.format(',')(x[selectedDropdownItem.orig]));
 					const rect = tt.node().getBoundingClientRect();
 					ttw = rect.width;
 					tth = rect.height;
@@ -144,7 +145,7 @@
 				.attr('x', function (d) {
 					const x = scaleYears(d.Jahr);
 					const w = scaleYears.bandwidth();
-					return x + w / 2 + i * ww - (ccr.length * ww) / 2;
+					return x + w / 2 + i * ww - (selectedCheckboxes.length * ww) / 2;
 				})
 				.attr('y', function (d) {
 					return scaleValues(getValue(d)) + 10;
@@ -167,8 +168,8 @@
 <div id="barchart-toprow">
 	<div id="barchart-dropdown">
 		<!-- DROPDOWN -->
-		<select bind:value={selected}>
-			{#each dd as d}
+		<select bind:value={selectedDropdownItem}>
+			{#each dropdownItems as d}
 				<option value={d}>
 					{d.label}
 				</option>
@@ -185,13 +186,13 @@
 </div>
 <div id="barchart-checkboxes">
 	<!-- CHECKBOXES-->
-	{#each cc as c, i (c.id)}
+	{#each checkboxes as c, i (c.id)}
 		<label>
 			<input
 				type="checkbox"
 				value={c}
-				disabled={ccr.length === 1 && ccr[0] === c}
-				bind:group={ccr}
+				disabled={selectedCheckboxes.length === 1 && selectedCheckboxes[0] === c}
+				bind:group={selectedCheckboxes}
 				style="accent-color:{c.color};"
 			/>
 			{c.label}
