@@ -18,7 +18,7 @@
 		{ id: 6, label: 'Tram', orig: 'Liniennahverkehr mit Straßenbahnen', color: 1 },
 		{ id: 7, label: 'Bus', orig: 'Liniennahverkehr mit Omnibussen', color: 2 },
 		{ id: 8, label: 'Train', orig: 'Liniennahverkehr mit Eisenbahnen', color: 3 },
-		{ id: 9, label: 'Total', orig: 'Nahverkehr insgesamt', color: 4 }
+		{ id: 9, label: 'Total', orig: 'Liniennahverkehr insgesamt', color: 4 }
 	];
 	let ccr = [cc[0]];
 
