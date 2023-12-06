@@ -5,6 +5,7 @@
   import { onMount } from 'svelte';
   import * as d3 from 'd3'; 
   import trafficData from '$lib/data/final_genesis_traffic.json';
+  import unemploymentData from '$lib/data/unemployment_rate.json';
   import { createEventDispatcher } from 'svelte';
 
   let width, height, geoPath, projection;
@@ -14,10 +15,14 @@
 
   const dispatch = createEventDispatcher();
 
-  
-  export const stateData = {...trafficData, data: trafficData.data.filter(v=>v.Bundesland==='Bayern')}
+  export const stateData = {...trafficData, data: trafficData.data.filter(v => v.Bundesland === 'Bayern')};
+
+  let unemploymentOpacityMap = {};
 
   onMount(() => {
+    // Load and process unemployment data for 2018
+    getUnemploymentPercentagesByYear(2019);
+
     var parentDiv = document.getElementById('map-parent');
     width = parentDiv.clientWidth;
     height = parentDiv.clientHeight;
@@ -43,7 +48,6 @@
     // Apply the zoom behavior to the svg
     svg.call(zoom);
 
-
     d3.json('src/lib/data/dataBundesLander_right_hand_rule.json').then((collection) => {
       projection = getProjection(collection);
       geoPath = d3.geoPath().projection(projection);
@@ -58,7 +62,7 @@
         .join('path')
         .attr('class', 'state')
         .attr('d', geoPath)
-        .style('opacity', d => stateOpacities[d.properties.ID_1])
+        .style('opacity', d => getStateOpacity(d.properties.NAME_1))
         .on('click', (event, d) => {
           const i = collection.features.indexOf(d);
           clickState(d, i);
@@ -68,10 +72,10 @@
 
   function getProjection(collection) {
     const bounds = d3.geoBounds(collection),
-      bottomLeft = bounds[0],
-      topRight = bounds[1],
-      rotLong = -(topRight[0] + bottomLeft[0]) / 2,
-      center = [(topRight[0] + bottomLeft[0]) / 2 + rotLong, (topRight[1] + bottomLeft[1]) / 2];
+          bottomLeft = bounds[0],
+          topRight = bounds[1],
+          rotLong = -(topRight[0] + bottomLeft[0]) / 2,
+          center = [(topRight[0] + bottomLeft[0]) / 2 + rotLong, (topRight[1] + bottomLeft[1]) / 2];
 
     const projection = d3.geoAlbers()
       .parallels([bottomLeft[1], topRight[1]])
@@ -80,14 +84,13 @@
       .center(center);
 
     const bottomLeftPx = projection(bottomLeft),
-      topRightPx = projection(topRight),
-      scaleFactor = 1.00 * Math.min(width / (topRightPx[0] - bottomLeftPx[0]), height / (-topRightPx[1] + bottomLeftPx[1]));
+          topRightPx = projection(topRight),
+          scaleFactor = 1.00 * Math.min(width / (topRightPx[0] - bottomLeftPx[0]), height / (-topRightPx[1] + bottomLeftPx[1]));
 
     return projection.scale(scaleFactor * 1000);
   }
 
   function clickState(d, i) {
-
     const stateName = d.properties.NAME_1; 
     dispatch('stateClicked', { stateName });
 
@@ -96,6 +99,9 @@
       console.error('No centroid found for feature at index:', i);
       return;
     }
+
+    g.selectAll('.state').classed('active', false);
+    d3.select(event.currentTarget).classed('active', true);
     
     if (focused !== d) {
       focused = d;
@@ -122,36 +128,38 @@
   }
 
   function resetZoom() {
+    g.selectAll('.state').classed('active', false);
     focused = null;
-    // g.selectAll('.state').classed('active', false);
     svg.transition()
       .duration(1000)
       .call(zoom.transform, d3.zoomIdentity);
     dispatch('stateClicked', { stateName: null }); // Dispatch null when zoom is reset
   }
 
-  const stateOpacities = [
-    0.8, // Baden-Württemberg
-    0.7, // Bayern
-    0.9, // Berlin
-    0.6, // Brandenburg
-    0.9, // Bremen
-    0.8, // Hamburg
-    0.7, // Hessen
-    0.6, // Mecklenburg-Vorpommern
-    0.8, // Niedersachsen
-    0.7, // Nordrhein-Westfalen
-    0.6, // Rheinland-Pfalz
-    0.9, // Saarland
-    0.8, // Sachsen
-    0.7, // Sachsen-Anhalt
-    0.6, // Schleswig-Holstein
-    0.7  // Thüringen
-  ];
+  function getUnemploymentPercentagesByYear(year) {
+    const filteredData = unemploymentData.data.filter(entry => entry.Jahr === year);
+    
+    // Sort the filtered data alphabetically by Bundesland
+    const sortedData = filteredData.sort((a, b) => a.Bundesland.localeCompare(b.Bundesland));
 
+    const unemploymentPercentages = sortedData.map(entry => ({
+        Bundesland: entry.Bundesland,
+        Prozent: entry.Prozent
+    }));
+
+    // Normalize and map percentages to opacity
+    const maxPercentage = Math.max(...unemploymentPercentages.map(entry => entry.Prozent));
+    unemploymentPercentages.forEach(entry => {
+      // Normalize the percentage to a value between 0.3 and 1 for better visibility
+      unemploymentOpacityMap[entry.Bundesland] = 0.3 + (entry.Prozent / maxPercentage) * 0.7;
+    });
+
+    // console.log('Sorted Unemployment Percentages:', unemploymentPercentages);
+    return unemploymentPercentages;
+  }
 
   function getStateOpacity(stateName) {
-    return stateOpacities[stateName] || 1; // Default opacity if state not in list
+    return unemploymentOpacityMap[stateName] || 1; // Default opacity if state not in list or data not loaded yet
   }
 </script>
 
@@ -167,7 +175,7 @@
     opacity: 100 !important;
   }
   :global(.state.active) {
-    fill: #F77F00;
+    fill: #F77F00 !important;
     opacity: 100 !important;
   }
 </style>
