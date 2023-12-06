@@ -14,12 +14,11 @@
 	// Liniennahverkehr mit Eisenbahnen
 	// Liniennahverkehr mit Omnibussen
 	// Liniennahverkehr mit Straßenbahnen
-	const colors = { 1: '#d62828', 2: '#f77f00', 3: '#003049', 4: '#fcbf49' };
 	let cc = [
-		{ id: 6, label: 'Tram', orig: 'Liniennahverkehr mit Straßenbahnen', color: 1 },
-		{ id: 7, label: 'Bus', orig: 'Liniennahverkehr mit Omnibussen', color: 2 },
-		{ id: 8, label: 'Train', orig: 'Liniennahverkehr mit Eisenbahnen', color: 3 },
-		{ id: 9, label: 'Total', orig: 'Liniennahverkehr insgesamt', color: 4 }
+		{ id: 6, label: 'Tram', orig: 'Liniennahverkehr mit Straßenbahnen', color: 'var(--colorscheme-red)' },
+		{ id: 7, label: 'Bus', orig: 'Liniennahverkehr mit Omnibussen', color: 'var(--colorscheme-orange)' },
+		{ id: 8, label: 'Train', orig: 'Liniennahverkehr mit Eisenbahnen', color: 'var(--colorscheme-blue)' },
+		{ id: 9, label: 'Total', orig: 'Liniennahverkehr insgesamt', color: 'var(--colorscheme-yellow)' }
 	];
 	let ccr = [cc[0]];
 
@@ -179,10 +178,10 @@
 				.filter((d) => d.Art === c.orig)
 				.append('rect')
 				.attr('class', 'bar')
-				.attr('fill', colors[c.color])
+				.attr('fill', c.color)
 				.attr('transform', `translate(50, 0)`)
 				.on('mouseover', function (_, x) {
-					const color = colors[ccr.filter((c) => c.orig === x.Art)[0].color];
+					const color = ccr.filter((c) => c.orig === x.Art)[0].color;
 					tt.transition().duration(0).style('opacity', 1).style('color', color);
 					tt.html(d3.format(',')(x[selected.orig]));
 					const rect = tt.node().getBoundingClientRect();
@@ -251,7 +250,7 @@
 				value={c}
 				disabled={ccr.length === 1 && ccr[0] === c}
 				bind:group={ccr}
-				style="accent-color:{colors[c.color]};"
+				style="accent-color:{c.color};"
 			/>
 			{c.label}
 		</label>
