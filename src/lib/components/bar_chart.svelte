@@ -1,5 +1,5 @@
 <script>
-	export let stateName;
+	export let stateName = 'Deutschland';
 	let a = 0;
 	export let data = [];
 	//let d = data.data
