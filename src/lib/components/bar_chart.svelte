@@ -63,6 +63,7 @@
 		//const maxVal = d.reduce((agg, v) => Math.max(agg, v["Liniennahverkehr insgesamt"] ?? 0), 0)
 		let maxVal = 0;
 		for (const x of d) {
+            if(!ccr.map(c=>c.orig).includes(x.Art)) continue
 			//if (x.Art !== "Liniennahverkehr insgesamt") continue
 			maxVal = Math.max(x[selected.orig], maxVal);
 		}
