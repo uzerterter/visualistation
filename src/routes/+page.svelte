@@ -8,9 +8,11 @@
     import Map from '$lib/components/map.svelte';
     let mapContainer;
     let filteredData = originalData; // Default to original data
+    let stateName = "Deutschland"; // Default to Germany
 
     function handleStateClick(event) {
-        const stateName = event.detail.stateName;
+        stateName = event.detail.stateName;
+        console.log(stateName);
         if (stateName) {
             // Filter for a specific state's data
             filteredData = {
@@ -20,8 +22,13 @@
         } else {
             // Show data for all of Germany when no state is selected
             filteredData = originalData;
+            if (stateName == null) {
+                stateName = "Deutschland";
+            }
         }
     }
+
+
 </script>
 
 
@@ -44,7 +51,7 @@
 
         <div class="right-viz viz-border"> 
             <div class="bar-chart-container"  id="barchart-parent">
-                <BarChart data={filteredData}/>
+                <BarChart data={filteredData} stateName={stateName} />
             </div>
         </div>
     </div>
@@ -76,7 +83,7 @@
 
     .left-viz, .center-viz, .right-viz {
         width: 33.33%; 
-        height: 50vh;
+        height: 60vh;
         z-index: 2;
         
     }
@@ -87,7 +94,7 @@
         background-color: white;
         display: flex;
         flex-direction: column;
-        margin-top: 15vh;
+        margin-top: 10vh;
         flex-direction: column;
         align-items: center;
         justify-content: center;  
@@ -100,7 +107,6 @@
 
     .right-viz {
         margin-left: 4%;
-        
     }
 
     .center-viz {
@@ -130,8 +136,8 @@
     }
 
     .bar-chart-container {
-        width: 100%;
-        height: 90%;
+        width: 95%;
+        height: 95%;
         display: flex;
         flex-direction: column;
         align-items: center; /* Center the chart horizontally within the container */
