@@ -227,3 +227,9 @@ def set_first_row_as_header(dataframe):
     dataframe = dataframe[1:]
 
     return dataframe
+
+
+# %%
+def get_EW(year, bundesland, pandas_df, target):
+    val = pandas_df.loc[(pandas_df["Jahr"] == year) & (pandas_df["Bundesland"] == bundesland), target].iloc[0]
+    return val

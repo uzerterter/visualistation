@@ -18,6 +18,7 @@ civ_s = 'data_exploration/Daten/inhabitants/statistic_id155167_einwohnerzahl-in-
 civ_sa = 'data_exploration/Daten/inhabitants/statistic_id155169_einwohnerzahl-in-sachsen-anhalt-bis-2022.csv'
 civ_sh = 'data_exploration/Daten/inhabitants/statistic_id155171_einwohnerzahl-in-schleswig-holstein-bis-2022.csv'
 civ_t = 'data_exploration/Daten/inhabitants/statistic_id155172_einwohnerzahl-in-thueringen-bis-2022.csv'
+civ_de = 'data_exploration/Daten/inhabitants/statistic_id1358_entwicklung-der-gesamtbevoelkerung-deutschlands-bis-2022.csv'
 
 # %%
 
@@ -88,11 +89,15 @@ set_name(df_civ_ham, "df_civ_ham")
 df_civ_sh = process_csv_data(civ_sh, skip_rows=4, skip_first_columns=1, skip_last_rows=2,
                              column_names=["Jahr", "Einwohner"])
 set_name(df_civ_sh, "df_civ_sh")
-
+# %%
+df_civ_de = pd.read_csv(civ_de, delimiter=',')
+set_name(df_civ_de, "df_civ_de")
+df_civ_de = df_civ_de.iloc[:, 1:]
+# %%
 # Dictionary with Federal States Abbrevations and Federal State Names
 bundeslaender = {
     "ba": "Bayern",
-    "bawu": "Baden-Wuerttemberg",
+    "bawu": "Baden-Württemberg",
     "ber": "Berlin",
     "br": "Bremen",
     "bburg": "Brandenburg",
@@ -104,9 +109,10 @@ bundeslaender = {
     "saa": "Saarland",
     "s": "Sachsen",
     "sa": "Sachsen-Anhalt",
-    "t": "Thueringen",
+    "t": "Thüringen",
     "ham": "Hamburg",
     "sh": "Schleswig-Holstein",
+    "de": "Deutschland"
 }
 
 # list of all datasets with population development data
@@ -127,6 +133,7 @@ datasets_civ = [
     df_civ_t,
     df_civ_ham,
     df_civ_sh,
+    df_civ_de
 ]
 
 # %%
@@ -156,4 +163,5 @@ df_civ.to_csv(f"data_exploration/Daten/inhabitants/bevoelkerungsentwicklung.csv"
 
 # %%
 # Exporting datasets as jsons
-df_civ.to_json(f"data_exploration/Daten/jsons/population_development.json", index=True, orient="table", force_ascii=False)
+df_civ.to_json(f"data_exploration/Daten/jsons/population_development.json", index=True, orient="table",
+               force_ascii=False)

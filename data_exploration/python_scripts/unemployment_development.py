@@ -87,7 +87,7 @@ set_name(df_unemployment_t, "df_unemployment_t")
 # Dictionary with Federal States Abbrevations and Federal State Names
 bundeslaender = {
     "ba": "Bayern",
-    "bawu": "Baden-Wuerttemberg",
+    "bawu": "Baden-Württemberg",
     "ber": "Berlin",
     "br": "Bremen",
     "bburg": "Brandenburg",
@@ -99,7 +99,7 @@ bundeslaender = {
     "saa": "Saarland",
     "s": "Sachsen",
     "sa": "Sachsen-Anhalt",
-    "t": "Thueringen",
+    "t": "Thüringen",
     "ham": "Hamburg",
     "sh": "Schleswig-Holstein",
 }

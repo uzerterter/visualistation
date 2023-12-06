@@ -169,6 +169,17 @@ final_genesis_traffic = pd.concat([final_genesis_traffic, mean, std, median], ig
 # Concatenate all the individual DataFrames to create the final DataFrame with aggregated data
 final_genesis_traffic = pd.concat([final_genesis_traffic, merge_df], ignore_index=True)
 
+# %%
+# importing population development dataset for calculating relative numbers
+population = 'data_exploration/Daten/inhabitants/bevoelkerungsentwicklung.csv'
+population_df = pd.read_csv(population)
+
+gen_df = final_genesis_traffic.copy()
+gen_df["Relative_Befoerderte_Personen_in_1000"] = gen_df.apply(
+    lambda x: x["Befoerderte_Personen_in_1000"] / get_EW(x["Jahr"], x["Bundesland"], population_df, "Einwohner"),
+    axis=1)
+
+# %%
 # Save the final DataFrame to a CSV file
 final_genesis_traffic.to_csv(f"data_exploration/Daten/genesis_traffic/final_genesis_traffic.csv", index=True)
 
