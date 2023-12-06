@@ -23,7 +23,7 @@
 	import * as d3 from 'd3';
 	import { onMount } from 'svelte';
 
-    // update graph reactively
+	// update graph reactively
 	$: data, selectedDropdownItem, selectedCheckboxes, updateGraph();
 
 	let ready = false;
