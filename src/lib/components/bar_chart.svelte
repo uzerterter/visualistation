@@ -6,6 +6,7 @@
 	let stats = null;
 
 	let svgLocal;
+    let tooltip;
 
 	// Linienfernverkehr mit Eisenbahnen
 	// Linienfernverkehr mit Omnibussen
@@ -106,6 +107,17 @@
 		const axisYears = d3.axisBottom(scaleYears).tickSizeOuter(0); // Remove outer ticks
 		const axisValues = d3.axisLeft(scaleValues).tickSizeOuter(0); // Remove outer ticks
 
+        // mouse move in between bars to avoid jumpy behavior (optional)
+        svg.append("g")
+            .append("rect")
+            .attr("width", width)
+            .attr("height", height)
+            .style("opacity", 0)
+            .on('mousemove', function(event) {
+                    tt.style("left", `${event.pageX-ttw/2}px`)
+                      .style("top", `${event.pageY-tth-10}px`)
+            })
+
 		svg
 			.append('g')
 			.attr('transform', `translate(50, ${height - 30})`)
@@ -153,6 +165,9 @@
 			return d[selected.orig];
 		}
 
+        const tt = d3.select(tooltip)
+        let [ttw, tth] = [null, null]
+
 		for (const [i, c] of ccr.entries()) {
 			const g = svg.append('g');
 			//stats = scaleYears.bandwidth()
@@ -166,6 +181,21 @@
 				.attr('class', 'bar')
 				.attr('fill', colors[c.color])
 				.attr('transform', `translate(50, 0)`)
+                .on('mouseover', function(_, x) {
+                    const color = colors[ccr.filter(c=>c.orig===x.Art)[0].color]
+                    tt.transition().duration(0).style("opacity", 1).style("color", color)                    
+                    tt.html(d3.format(",")(x[selected.orig]))
+                    const rect = tt.node().getBoundingClientRect()
+                    ttw = rect.width
+                    tth = rect.height
+                })
+                .on('mousemove', function(event) {
+                    tt.style("left", `${event.pageX-ttw/2}px`)
+                      .style("top", `${event.pageY-tth-10}px`)
+                })
+                .on('mouseout', function() {
+                    tt.transition().duration(100).style("opacity", 0)
+                })
 				.attr('x', function (d) {
 					const x = scaleYears(d.Jahr);
 					const w = scaleYears.bandwidth();
@@ -188,6 +218,8 @@
 		updateGraph();
 	});
 </script>
+
+<div bind:this={tooltip} class="tooltip"></div>
 
 <div id="barchart-toprow">
 	<div id="barchart-dropdown">
@@ -231,6 +263,15 @@
 </div>
 
 <style>
+    .tooltip {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+        background-color: #fff;
+        border: 1px solid #000;
+        padding: 10px;
+    }
+    
 	#bar-chart {
 		width: 100%;
 		height: 100%;
