@@ -6,6 +6,7 @@
     import originalData from '$lib/data/final_genesis_traffic.json';	
     import Timeline from '../lib/components/timeline.svelte';
     import Map from '$lib/components/map.svelte';
+	import Piechart from '../lib/components/piechart.svelte';
     let mapContainer;
     let filteredData = originalData; // Default to original data
 
@@ -35,7 +36,7 @@
 
     <div class="visualizations">
         <div class="left-viz viz-border"> 
-        
+            <Piechart/>
         </div>
 
         <div class="center-viz"> 
