@@ -6,6 +6,14 @@
     import originalData from '$lib/data/final_genesis_traffic.json';	
     import Timeline from '../lib/components/timeline.svelte';
     import Map from '$lib/components/map.svelte';
+
+    import { selectedYear } from '../lib/components/timeline.svelte';
+    let selectedYearValue;
+    
+    selectedYear.subscribe(value => {
+        selectedYearValue = value;
+    });
+
     let mapContainer;
     let germanyData = {
         ...originalData,
@@ -15,6 +23,7 @@
     let stateName = "Deutschland"; // Default to Germany
 
     function handleStateClick(event) {
+        console.log(selectedYearValue);
         stateName = event.detail.stateName;
         console.log(stateName);
         if (stateName) {
