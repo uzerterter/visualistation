@@ -1,6 +1,7 @@
 <script>
 	export let stateName = 'Deutschland';
 	export let data = [];
+	export let selectedYearValue = 2017;
 
 	let svgLocal;
 	let tooltip;

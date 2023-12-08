@@ -64,7 +64,7 @@
 
         <div class="right-viz viz-border"> 
             <div class="bar-chart-container"  id="barchart-parent">
-                <BarChart data={filteredData} stateName={stateName} />
+                <BarChart data={filteredData} stateName={stateName} selectedYearValue={selectedYearValue}/>
             </div>
         </div>
     </div>
