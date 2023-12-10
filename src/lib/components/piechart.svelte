@@ -1,9 +1,15 @@
 <script>
     import { onMount } from 'svelte';
     import * as d3 from 'd3';
-    import { selectedYear } from '$lib/data/stores.js';
 
-    console.log($selectedYear);
+    import { selectedYear } from '$lib/components/timeline.svelte';
+    let selectedYearValue;
+    
+    selectedYear.subscribe(value => {
+        selectedYearValue = value;
+    });
+
+    console.log($selectedYearValue);
   
     // Dummy data for each year
     let yearlyData = {
@@ -116,14 +122,15 @@
       'Thuringia': { male: 3000, female: 2500, both: 2750 }
     }
     };
+    
     let currentView = 'both'; // Default view set to 'both'
   
     onMount(() => {
-    drawDoughnutChart(yearlyData[$selectedYear][currentView]);
+    drawDoughnutChart(yearlyData[selectedYearValue][currentView]);
     });
 
     // Reactive statement to update the chart when selectedYear changes
-    $: drawDoughnutChart(yearlyData[$selectedYear][currentView]);
+    $: drawDoughnutChart(yearlyData[selectedYearValue][currentView]);
   
     // Function to draw the doughnut chart
     function drawDoughnutChart(dataForYear) {
