@@ -38,7 +38,7 @@
     // Apply the zoom behavior to the svg
     svg.call(zoom);
 
-    d3.json('src/lib/data/dataBundesLander_right_hand_rule.json').then((collection) => {
+    import('$lib/data/dataBundesLander_right_hand_rule.json').then((collection) => {
       projection = getProjection(collection);
       geoPath = d3.geoPath().projection(projection);
 
