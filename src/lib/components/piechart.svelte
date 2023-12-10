@@ -1,9 +1,67 @@
 <script>
     import { onMount } from 'svelte';
     import * as d3 from 'd3';
+    import { selectedYear } from '$lib/data/stores.js';
+
+    console.log($selectedYear);
   
-    // Dummy data
-    let data = {
+    // Dummy data for each year
+    let yearlyData = {
+    "2017": {
+      'Baden-Württemberg': { male: 1000, female: 3000, both: 3250 },
+      'Bavaria': { male: 3400, female: 2900, both: 3150 },
+      'Berlin': { male: 3300, female: 2800, both: 3050 },
+      'Brandenburg': { male: 3200, female: 2700, both: 2950 },
+      'Bremen': { male: 3100, female: 2600, both: 2850 },
+      'Hamburg': { male: 10000, female: 3000, both: 9000 },
+      'Hesse': { male: 2900, female: 8000, both: 2650 },
+      'Lower Saxony': { male: 2800, female: 2300, both: 2550 },
+      'Mecklenburg-Vorpommern': { male: 4000, female: 2200, both: 2450 },
+      'North Rhine-Westphalia': { male: 3600, female: 3100, both: 500 },
+      'Rhineland-Palatinate': { male: 3500, female: 3000, both: 3250 },
+      'Saarland': { male: 3400, female: 2900, both: 9000 },
+      'Saxony': { male: 3300, female: 2800, both: 3050 },
+      'Saxony-Anhalt': { male: 3200, female: 2700, both: 2950 },
+      'Schleswig-Holstein': { male: 3100, female: 2600, both: 2850 },
+      'Thuringia': { male: 3000, female: 2500, both: 2750 }
+    },
+    "2018": {
+      'Baden-Württemberg': { male: 1000, female: 3000, both: 3250 },
+      'Bavaria': { male: 3400, female: 2900, both: 3150 },
+      'Berlin': { male: 3300, female: 2800, both: 3050 },
+      'Brandenburg': { male: 3200, female: 2700, both: 2950 },
+      'Bremen': { male: 3100, female: 2600, both: 2850 },
+      'Hamburg': { male: 3000, female: 2500, both: 2750 },
+      'Hesse': { male: 2900, female: 8000, both: 2650 },
+      'Lower Saxony': { male: 2800, female: 2300, both: 10000 },
+      'Mecklenburg-Vorpommern': { male: 10000, female: 2200, both: 2450 },
+      'North Rhine-Westphalia': { male: 3600, female: 3100, both: 3350 },
+      'Rhineland-Palatinate': { male: 3500, female: 3000, both: 3250 },
+      'Saarland': { male: 3400, female: 2900, both: 9000 },
+      'Saxony': { male: 3300, female: 10000, both: 3050 },
+      'Saxony-Anhalt': { male: 3200, female: 2700, both: 2950 },
+      'Schleswig-Holstein': { male: 3100, female: 2600, both: 2850 },
+      'Thuringia': { male: 3000, female: 2500, both: 2750 }
+    },
+    "2019": {
+      'Baden-Württemberg': { male: 1000, female: 3000, both: 3250 },
+      'Bavaria': { male: 3400, female: 2900, both: 3150 },
+      'Berlin': { male: 3300, female: 2800, both: 3050 },
+      'Brandenburg': { male: 3200, female: 2700, both: 10000 },
+      'Bremen': { male: 3100, female: 10000, both: 2850 },
+      'Hamburg': { male: 3000, female: 2500, both: 2750 },
+      'Hesse': { male: 2900, female: 8000, both: 2650 },
+      'Lower Saxony': { male: 2800, female: 2300, both: 2550 },
+      'Mecklenburg-Vorpommern': { male: 2700, female: 2200, both: 2450 },
+      'North Rhine-Westphalia': { male: 3600, female: 3100, both: 3350 },
+      'Rhineland-Palatinate': { male: 3500, female: 3000, both: 3250 },
+      'Saarland': { male: 10000, female: 2900, both: 9000 },
+      'Saxony': { male: 3300, female: 2800, both: 3050 },
+      'Saxony-Anhalt': { male: 3200, female: 2700, both: 2950 },
+      'Schleswig-Holstein': { male: 3100, female: 2600, both: 2850 },
+      'Thuringia': { male: 3000, female: 2500, both: 2750 }
+    },
+    "2020": {
       'Baden-Württemberg': { male: 1000, female: 3000, both: 3250 },
       'Bavaria': { male: 3400, female: 2900, both: 3150 },
       'Berlin': { male: 3300, female: 2800, both: 3050 },
@@ -14,26 +72,66 @@
       'Lower Saxony': { male: 2800, female: 2300, both: 2550 },
       'Mecklenburg-Vorpommern': { male: 2700, female: 2200, both: 2450 },
       'North Rhine-Westphalia': { male: 3600, female: 3100, both: 3350 },
+      'Rhineland-Palatinate': { male: 10000, female: 3000, both: 10000 },
+      'Saarland': { male: 3400, female: 2900, both: 9000 },
+      'Saxony': { male: 3300, female: 10000, both: 3050 },
+      'Saxony-Anhalt': { male: 3200, female: 2700, both: 2950 },
+      'Schleswig-Holstein': { male: 3100, female: 2600, both: 2850 },
+      'Thuringia': { male: 3000, female: 2500, both: 2750 }
+    },
+    "2021": {
+      'Baden-Württemberg': { male: 1000, female: 3000, both: 3250 },
+      'Bavaria': { male: 3400, female: 2900, both: 3150 },
+      'Berlin': { male: 3300, female: 2800, both: 3050 },
+      'Brandenburg': { male: 3200, female: 2700, both: 2950 },
+      'Bremen': { male: 3100, female: 2600, both: 2850 },
+      'Hamburg': { male: 3000, female: 2500, both: 2750 },
+      'Hesse': { male: 2900, female: 8000, both: 2650 },
+      'Lower Saxony': { male: 2800, female: 2300, both: 10000 },
+      'Mecklenburg-Vorpommern': { male: 2700, female: 2200, both: 2450 },
+      'North Rhine-Westphalia': { male: 3600, female: 3100, both: 3350 },
+      'Rhineland-Palatinate': { male: 3500, female: 3000, both: 3250 },
+      'Saarland': { male: 10000, female: 2900, both: 9000 },
+      'Saxony': { male: 3300, female: 10000, both: 3050 },
+      'Saxony-Anhalt': { male: 3200, female: 2700, both: 2950 },
+      'Schleswig-Holstein': { male: 3100, female: 2600, both: 2850 },
+      'Thuringia': { male: 3000, female: 2500, both: 2750 }
+    },
+    "2022": {
+      'Baden-Württemberg': { male: 1000, female: 3000, both: 3250 },
+      'Bavaria': { male: 3400, female: 2900, both: 3150 },
+      'Berlin': { male: 3300, female: 2800, both: 3050 },
+      'Brandenburg': { male: 3200, female: 2700, both: 10000 },
+      'Bremen': { male: 3100, female: 10000, both: 2850 },
+      'Hamburg': { male: 3000, female: 2500, both: 2750 },
+      'Hesse': { male: 10000, female: 8000, both: 2650 },
+      'Lower Saxony': { male: 2800, female: 2300, both: 2550 },
+      'Mecklenburg-Vorpommern': { male: 2700, female: 2200, both: 2450 },
+      'North Rhine-Westphalia': { male: 3600, female: 3100, both: 3350 },
       'Rhineland-Palatinate': { male: 3500, female: 3000, both: 3250 },
       'Saarland': { male: 3400, female: 2900, both: 9000 },
       'Saxony': { male: 3300, female: 2800, both: 3050 },
       'Saxony-Anhalt': { male: 3200, female: 2700, both: 2950 },
       'Schleswig-Holstein': { male: 3100, female: 2600, both: 2850 },
       'Thuringia': { male: 3000, female: 2500, both: 2750 }
+    }
     };
     let currentView = 'both'; // Default view set to 'both'
   
     onMount(() => {
-      drawDoughnutChart(currentView);
+    drawDoughnutChart(yearlyData[$selectedYear][currentView]);
     });
+
+    // Reactive statement to update the chart when selectedYear changes
+    $: drawDoughnutChart(yearlyData[$selectedYear][currentView]);
   
     // Function to draw the doughnut chart
-    function drawDoughnutChart(view) {
+    function drawDoughnutChart(dataForYear) {
       // Clear previous chart
       d3.select("#doughnut-chart").selectAll("*").remove();
   
       // Prepare data for D3
-      const pieData = d3.pie().value(d => d[1][view])(Object.entries(data));
+      const pieData = d3.pie().value(d => d[1][view])(Object.entries(dataForYear));
   
       // Define dimensions and radii
       const width = 250;  // Increased width for better label space
@@ -78,7 +176,7 @@
          })
          .attr("dy", ".35em")
          .style("text-anchor", d => midAngle(d) < Math.PI ? "start" : "end")
-         .text(d => d.data[0]) // Using state names as labels
+         .text(d => d.dataForYear[0]) // Using state names as labels
          .style("font-size", "10px");
   
       // Add lines
