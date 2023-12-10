@@ -152,31 +152,51 @@
 
 	let currentYear = '2017';
 
-  let selectedYearValue = currentYear;
+	let selectedYearValue = currentYear;
 
-  selectedYear.subscribe(value => {
-    selectedYearValue = value.toString();
-    if (typeof window !== 'undefined') {
-      updateChart(selectedYearValue);
-    }
-  });
+	selectedYear.subscribe((value) => {
+		selectedYearValue = value.toString();
+		if (typeof window !== 'undefined') {
+			updateChart(selectedYearValue);
+		}
+	});
 
 	onMount(() => {
-    if (typeof window !== 'undefined') {
-      createDoughnutChart(data, currentYear);
-    }
-  });
+		if (typeof window !== 'undefined') {
+			createDoughnutChart(data, currentYear);
+		}
+	});
 
 	function updateChart(year) {
-    currentYear = year;
-    if (typeof window !== 'undefined') {
-      createDoughnutChart(data, currentYear);
-    }
-  }
+		currentYear = year;
+		if (typeof window !== 'undefined') {
+			createDoughnutChart(data, currentYear);
+		}
+	}
 
 	function createDoughnutChart(data, year) {
 		// Clear existing SVG if any
 		d3.select('#chart').selectAll('*').remove();
+
+		// Mapping states to their abbreviations
+		const abbreviations = {
+			'Baden-Württemberg': 'BW',
+			'Bavaria': 'BY',
+			'Berlin': 'BE',
+			'Brandenburg': 'BB',
+			'Bremen': 'HB',
+			'Hamburg': 'HH',
+			'Hesse': 'HE',
+			'Lower Saxony': 'NI',
+			'Mecklenburg-Vorpommern': 'MV',
+			'North Rhine-Westphalia': 'NW',
+			'Rhineland-Palatinate': 'RP',
+			'Saarland': 'SL',
+			'Saxony': 'SN',
+			'Saxony-Anhalt': 'ST',
+			'Schleswig-Holstein': 'SH',
+			'Thuringia': 'TH'
+		};
 
 		const width = 360,
 			height = 360,
@@ -203,24 +223,106 @@
 
 		const g = svg.selectAll('.arc').data(pie(data)).enter().append('g').attr('class', 'arc');
 
+		// Append paths for the pie pieces
 		g.append('path')
 			.attr('d', arc)
 			.style('fill', (d) => color(d.data.state));
+
+		// Label positioning
+		const label = d3
+			.arc()
+			.outerRadius(radius - 40)
+			.innerRadius(radius - 40);
+
+		// Append text labels
+		g.append('text')
+			.attr('transform', (d) => 'translate(' + label.centroid(d) + ')')
+			.attr('dy', '0.35em')
+			.text((d) => abbreviations[d.data.state])
+			.style('text-anchor', 'middle')
+			.style('fill', '#fff');
+
+		// Tooltip setup
+		const tooltip = d3.select('#chart').append('div').attr('class', 'tooltip').style('opacity', 0);
+
+		// Tooltip mouseover event
+		g.on('mouseover', (event, d) => {
+			tooltip.transition().duration(200).style('opacity', 0.9);
+			tooltip
+				.html(d.data.state + ': ' + d.data[year])
+				.style('left', event.pageX + 'px')
+				.style('top', event.pageY - 28 + 'px');
+		}).on('mouseout', () => {
+			tooltip.transition().duration(500).style('opacity', 0);
+		});
 	}
 </script>
 
 <div>
 	<div id="chart" />
-	<div>
-		<button on:click={() => updateChart('2017')}>2017</button>
-		<button on:click={() => updateChart('2018')}>2018</button>
-		<button on:click={() => updateChart('2019')}>2019</button>
-		<button on:click={() => updateChart('2020')}>2020</button>
-		<button on:click={() => updateChart('2021')}>2021</button>
-		<button on:click={() => updateChart('2022')}>2022</button>
+	<div class="button-container">
+		{#each ['2017', '2018', '2019', '2020', '2021', '2022'] as year}
+			<button
+				on:click={() => updateChart(year)}
+				class:current={year === currentYear}
+				disabled={year === currentYear}
+			>
+				{year}
+			</button>
+		{/each}
 	</div>
 </div>
 
 <style>
-	/* Add your styles here */
+	.button-container {
+		margin-top: 10px;
+		text-align: center;
+	}
+	button {
+		background-color: var(--colorscheme-blue); /* Green */
+		border: 2px solid var(--colorscheme-blue);
+		color: white;
+		padding: 10px 10px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 12px;
+		margin: 4px 2px;
+		transition-duration: 0.4s;
+		cursor: pointer;
+		border-radius: 15px;
+	}
+
+	button:hover {
+		background-color: var(--colorscheme-orange);
+		opacity: 0.6;
+		color: white;
+		border: 2px solid var(--colorscheme-orange);
+	}
+
+	.current {
+		background-color: var(--colorscheme-orange); /* Darker grey */
+		color: white;
+		border: 2px solid var(--colorscheme-orange);
+		cursor: default;
+		pointer-events: none; /* Prevents click events on the current button */
+	}
+
+	button:disabled {
+		/* opacity: 0.6; */
+		cursor: not-allowed;
+	}
+
+	.tooltip {
+		position: absolute;
+		text-align: center;
+		width: 60px;
+		height: 28px;
+		padding: 2px;
+		font: 12px sans-serif;
+		background: lightsteelblue;
+		border: 0px;
+		border-radius: 8px;
+		pointer-events: none;
+	}
 </style>
