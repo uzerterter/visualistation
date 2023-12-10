@@ -7,21 +7,30 @@
   import trafficData from '$lib/data/final_genesis_traffic.json';
   import unemploymentData from '$lib/data/unemployment_rate.json';
   import { createEventDispatcher } from 'svelte';
+  import { selectedYear } from '$lib/data/stores.js'; // Import the selectedYear store
 
   let width, height, geoPath, projection;
   let svg, g, zoom; // Define zoom and SVG selections
   let centroidMatrix = [];
   let focused = null; // Store the currently focused element
+  let isMapInitialized = false; // Flag to track if the map is initialized
+
 
   const dispatch = createEventDispatcher();
 
   export const stateData = {...trafficData, data: trafficData.data.filter(v => v.Bundesland === 'Bayern')};
+  
 
   let unemploymentOpacityMap = {};
+  let year = 2017; // initial year for the map color coding
+
+  $: if ($selectedYear && isMapInitialized) {
+    year = $selectedYear;
+    getUnemploymentPercentagesByYear(year);
+    updateMapOpacities();
+  }
 
   onMount(() => {
-    // Load and process unemployment data for 2018
-    getUnemploymentPercentagesByYear(2019);
 
     var parentDiv = document.getElementById('map-parent');
     width = parentDiv.clientWidth;
@@ -48,7 +57,7 @@
     // Apply the zoom behavior to the svg
     svg.call(zoom);
 
-    d3.json('src/lib/data/dataBundesLander_right_hand_rule.json').then((collection) => {
+    import('$lib/data/dataBundesLander_right_hand_rule.json').then((collection) => {
       projection = getProjection(collection);
       geoPath = d3.geoPath().projection(projection);
 
@@ -68,6 +77,12 @@
           clickState(d, i);
         });
     });
+    // After setting up the map, set the flag to true
+    isMapInitialized = true;
+
+    // Initial call to set opacities based on the default year
+    getUnemploymentPercentagesByYear(year);
+    updateMapOpacities();
   });
 
   function getProjection(collection) {
@@ -147,35 +162,49 @@
         Prozent: entry.Prozent
     }));
 
-    // Normalize and map percentages to opacity
-    const maxPercentage = Math.max(...unemploymentPercentages.map(entry => entry.Prozent));
-    unemploymentPercentages.forEach(entry => {
-      // Normalize the percentage to a value between 0.3 and 1 for better visibility
-      unemploymentOpacityMap[entry.Bundesland] = 0.3 + (entry.Prozent / maxPercentage) * 0.7;
-    });
+    function mapPercentageToOpacity(percentage) {
+      const minPercentage = 2.8;
+      const maxPercentage = 11.2;
+      const minOpacity = 0.1;
+      const maxOpacity = 1;
+      const opacity = minOpacity + ((percentage - minPercentage) * (maxOpacity - minOpacity)) / (maxPercentage - minPercentage);
+      return opacity;
+    }
 
-    // console.log('Sorted Unemployment Percentages:', unemploymentPercentages);
+    unemploymentPercentages.forEach(entry => {
+        const normalizedOpacity = mapPercentageToOpacity(entry.Prozent);
+        unemploymentOpacityMap[entry.Bundesland] = normalizedOpacity;
+    });
     return unemploymentPercentages;
+    
   }
 
   function getStateOpacity(stateName) {
     return unemploymentOpacityMap[stateName] || 1; // Default opacity if state not in list or data not loaded yet
   }
+
+  function updateMapOpacities() {
+    if (g) {
+      g.selectAll('.state')
+        .style('opacity', d => getStateOpacity(d.properties.NAME_1));
+    }
+  }
+
 </script>
 
 <style>
   :global(.state) {
-    fill: #FCBF49;
+    fill: #003049;
     stroke: #fff;
     stroke-width: 1.25px;
     transition: 0.5s;
   }
   :global(.state:hover) {
-    fill: #F77F00;
+    fill: #EAE2B7;
     opacity: 100 !important;
   }
   :global(.state.active) {
-    fill: #F77F00 !important;
+    fill: #EAE2B7 !important;
     opacity: 100 !important;
   }
 </style>

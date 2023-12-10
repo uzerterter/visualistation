@@ -1,8 +1,12 @@
 <script>
 	import { writable, derived } from 'svelte/store';
+	import { createEventDispatcher } from 'svelte';
+	import { selectedYear } from '$lib/data/stores.js';
+
+	const dispatch = createEventDispatcher();
 
 	// Initialize the selected year
-	const selectedYear = writable(2017);
+	// const selectedYear = writable(2017);
 
 	// Define the start and end years for the timeline
 	const startYear = 2017;
@@ -12,7 +16,7 @@
 	const isThumbPressed = writable(false); // Track if thumb is being pressed
 
 	// Autoplay state
-	let autoplayInterval;
+	let autoplayInterval; 
 	const isAutoplayActive = writable(false);
 
 	// Calculate the percentage of the slider to fill based on the selected year
@@ -22,8 +26,8 @@
 	);
 
 	// Function to update the selected year
-	function updateYear(event) {
-		selectedYear.set(+event.target.value);
+	function updateYear(newYear) {
+		selectedYear.set(newYear); // Update the store with the new year
 	}
 
 	// Functions to update thumb press state
@@ -35,24 +39,39 @@
 		isThumbPressed.set(false);
 	}
 
+	// Functions to be able to dispatch the currentYear
+	let autoplayActive, currentYear;
+
+	selectedYear.subscribe(value => {
+		currentYear = value;
+	});
+
+	isAutoplayActive.subscribe(value => {
+		autoplayActive = value;
+	});
+
 	// Toggle autoplay
 	function toggleAutoplay() {
 		const autoplayActive = $isAutoplayActive;
+		isAutoplayActive.update(n => !n); // Toggle the autoplay state
 
-		if (autoplayActive) {
+		if (!$isAutoplayActive) {
 			clearInterval(autoplayInterval);
 		} else {
 			autoplayInterval = setInterval(() => {
+				selectedYear.update(year => {
 				// Increment the selected year by 1
-				const newYear = $selectedYear + 1;
+				const newYear = year + 1;
 				// If the new year is within the allowed range, update the selected year
-				if (newYear <= endYear) {
-					selectedYear.set(newYear);
-				} else {
-					// Stop autoplay if the end of the range is reached
-					clearInterval(autoplayInterval);
-					isAutoplayActive.set(false);
-				}
+                if (year < endYear) {
+                    dispatch('selectedYear', { selectedYear: newYear });
+                    return newYear;
+                } else {
+                    clearInterval(autoplayInterval);
+                    isAutoplayActive.set(false);
+                    return year;
+                }
+            });
 			}, 1000); // Adjust the interval as needed
 		}
 

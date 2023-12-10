@@ -6,6 +6,7 @@
     import originalData from '$lib/data/final_genesis_traffic.json';	
     import Timeline from '../lib/components/timeline.svelte';
     import Map from '$lib/components/map.svelte';
+    import { selectedYear } from '$lib/data/stores.js';
     let mapContainer;
     let filteredData = originalData; // Default to original data
 
@@ -27,7 +28,8 @@
 
 
 <div class="map-background" bind:this={mapContainer} id="map-parent">
-    <Map bind:container={mapContainer} on:stateClicked={handleStateClick}/>
+    <Map bind:container={mapContainer} on:stateClicked={handleStateClick} />
+
 </div>
 
 <div id="main">
