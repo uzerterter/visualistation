@@ -199,19 +199,19 @@ def add_mean_median_std(dataframe, target, helper):
 
     germany_mean_rows = pd.DataFrame({
         helper: aggregate_values[helper],
-        'Bundesland': ['Deutschland mean'] * len(aggregate_values),
+        'Bundesland': ['Deutschland_mean'] * len(aggregate_values),
         target: aggregate_values[f"{target}_mean"].astype(int)
     })
 
     germany_median_rows = pd.DataFrame({
         helper: aggregate_values[helper],
-        'Bundesland': ['Deutschland median'] * len(aggregate_values),
+        'Bundesland': ['Deutschland_median'] * len(aggregate_values),
         target: aggregate_values[f"{target}_median"].astype(int)
     })
 
     germany_std_rows = pd.DataFrame({
         helper: aggregate_values[helper],
-        'Bundesland': ['Deutschland std'] * len(aggregate_values),
+        'Bundesland': ['Deutschland_std'] * len(aggregate_values),
         target: aggregate_values[f"{target}_std"].astype(int)
     })
 

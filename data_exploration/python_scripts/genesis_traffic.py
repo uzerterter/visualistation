@@ -140,7 +140,9 @@ germany_row = pd.DataFrame(
 
 merge_df = pd.concat([merge_df, germany_row], ignore_index=True)
 
-bundesland_df = final_genesis_traffic.groupby(['Jahr', 'Art']).agg({
+# %%
+# Adding mean, median, std to numbers
+"""bundesland_df = final_genesis_traffic.groupby(['Jahr', 'Art']).agg({
     'Anzahl_Unternehmen': ['mean', 'median', 'std'],
     'Befoerderte_Personen_in_1000': ['mean', 'median', 'std'],
     'Befoerderte_Personen_in_Mio': ['mean', 'median', 'std'],
@@ -168,20 +170,27 @@ final_genesis_traffic = pd.concat([final_genesis_traffic, mean, std, median], ig
 
 # Concatenate all the individual DataFrames to create the final DataFrame with aggregated data
 final_genesis_traffic = pd.concat([final_genesis_traffic, merge_df], ignore_index=True)
+"""
+
+# %%
+final_genesis_traffic = pd.concat([final_genesis_traffic, merge_df], ignore_index=True)
 
 # %%
 # importing population development dataset for calculating relative numbers
 population = 'data_exploration/Daten/inhabitants/bevoelkerungsentwicklung.csv'
 population_df = pd.read_csv(population)
 
-gen_df = final_genesis_traffic.copy()
-gen_df["Relative_Befoerderte_Personen_in_1000"] = gen_df.apply(
-    lambda x: x["Befoerderte_Personen_in_1000"] / get_EW(x["Jahr"], x["Bundesland"], population_df, "Einwohner"),
-    axis=1)
+final_genesis_traffic["Relative_Befoerderte_Personen"] = final_genesis_traffic.apply(
+    lambda x: round((x["Befoerderte_Personen_in_1000"] / get_EW(x["Jahr"], x["Bundesland"], population_df,
+                                                                "Einwohner"))*1000, 3), axis=1)
+final_genesis_traffic["Relative_Personenkilometer"] = final_genesis_traffic.apply(
+    lambda x: round((x["Personenkilometer_in_1000"] / get_EW(x["Jahr"], x["Bundesland"], population_df,
+                                                             "Einwohner"))*1000, 3), axis=1)
 
 # %%
 # Save the final DataFrame to a CSV file
-final_genesis_traffic.to_csv(f"data_exploration/Daten/genesis_traffic/final_genesis_traffic.csv", index=True)
+final_genesis_traffic.to_csv(f"data_exploration/Daten/genesis_traffic/final_genesis_traffic.csv", index=True,
+                             float_format='%.3f')
 
 # Save the final DataFrame to a JSON file using table orientation
 final_genesis_traffic.to_json(f"data_exploration/Daten/jsons/final_genesis_traffic.json", index=True, orient="table",

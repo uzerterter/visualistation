@@ -21,6 +21,7 @@ unemployment_mp = 'data_exploration/Daten/unemployment/statistic_id2521_arbeitsl
 unemployment_s = 'data_exploration/Daten/unemployment/statistic_id2522_arbeitslosenquote-in-sachsen-bis-2022.csv'
 unemployment_sa = 'data_exploration/Daten/unemployment/statistic_id2523_arbeitslosenquote-in-sachsen-anhalt-bis-2022.csv'
 unemployment_t = 'data_exploration/Daten/unemployment/statistic_id2524_arbeitslosenquote-in-thueringen-bis-2022.csv'
+unemployment_de = 'data_exploration/Daten/unemployment/statistic_id1224_arbeitslosenquote-in-deutschland-bis-2023.csv'
 
 # %%
 df_unemployment_sh = process_csv_data(unemployment_sh, skip_rows=4, skip_last_rows=2, skip_first_columns=1,
@@ -30,7 +31,9 @@ set_name(df_unemployment_sh, "df_unemployment_sh")
 df_unemployment_ham = process_csv_data(unemployment_ham, skip_rows=4, skip_last_rows=2, skip_first_columns=1,
                                        column_names=["Jahr", "Prozent"], skip_last_columns=1)
 set_name(df_unemployment_ham, "df_unemployment_ham")
-
+df_unemployment_ns = process_csv_data(unemployment_ns, skip_rows=4, skip_last_rows=2, skip_first_columns=1,
+                                       column_names=["Jahr", "Prozent"], skip_last_columns=1)
+set_name(df_unemployment_ns, "df_unemployment_ns")
 df_unemployment_br = process_csv_data(unemployment_br, skip_rows=4, skip_last_rows=2, skip_first_columns=1,
                                       column_names=["Jahr", "Prozent"], skip_last_columns=1)
 set_name(df_unemployment_br, "df_unemployment_br")
@@ -82,6 +85,9 @@ set_name(df_unemployment_sa, "df_unemployment_sa")
 df_unemployment_t = process_csv_data(unemployment_t, skip_rows=4, skip_last_rows=2, skip_first_columns=1,
                                      column_names=["Jahr", "Prozent"], skip_last_columns=1)
 set_name(df_unemployment_t, "df_unemployment_t")
+df_unemployment_de = process_csv_data(unemployment_de, skip_rows=4, skip_last_rows=2, skip_first_columns=1,
+                                     column_names=["Jahr", "Prozent"], skip_last_columns=1)
+set_name(df_unemployment_de, "df_unemployment_de")
 
 # %%
 # Dictionary with Federal States Abbrevations and Federal State Names
@@ -102,12 +108,14 @@ bundeslaender = {
     "t": "Thüringen",
     "ham": "Hamburg",
     "sh": "Schleswig-Holstein",
+    "de": "Deutschland"
 }
 
 # list of all datasets with unemployment data
 datasets_unemployment = [
     df_unemployment_sh,
     df_unemployment_ham,
+    df_unemployment_ns,
     df_unemployment_br,
     df_unemployment_nrw,
     df_unemployment_hes,
@@ -121,6 +129,7 @@ datasets_unemployment = [
     df_unemployment_s,
     df_unemployment_sa,
     df_unemployment_t,
+    df_unemployment_de
 ]
 
 # Add Federal State in own column to datasets in lists of datasets
@@ -143,7 +152,7 @@ plot_percentage_over_years(df_unemployment,
 
 # %%
 # Adding mean, median and std to the population development dataset, rent index dataset, unemployment rate dataset
-df_unemployment = add_mean_median_std(df_unemployment, 'Prozent', 'Jahr')
+# df_unemployment = add_mean_median_std(df_unemployment, 'Prozent', 'Jahr')
 
 # %%
 # exporting dataset as csv file
