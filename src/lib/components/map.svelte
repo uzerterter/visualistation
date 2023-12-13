@@ -139,6 +139,7 @@
     if (isZoomedIn) {
       // If already zoomed in, reset the zoom
       resetZoom();
+      dispatch('stateClicked', { stateName: null });
     } else {
       // Logic for zooming in
       focused = d;
@@ -167,8 +168,9 @@
       svg.transition()
         .duration(1000)
         .call(zoom.transform, transform);
-    }
-    dispatch('stateClicked', { stateName: d.properties.NAME_1 });
+
+      dispatch('stateClicked', { stateName: d.properties.NAME_1 });
+    }    
   }
 
   function resetZoom() {
@@ -183,9 +185,7 @@
     // Reset the zoom transform
     svg.transition()
       .duration(1000)
-      .call(zoom.transform, d3.zoomIdentity);
-
-    dispatch('stateClicked', { stateName: null });
+      .call(zoom.transform, d3.zoomIdentity);    
   }
 
 
