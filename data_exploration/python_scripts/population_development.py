@@ -143,6 +143,9 @@ plot_percentage_over_years(df_civ,
 # %%
 # Exporting dataset as csv
 df_civ.to_csv(f"data_exploration/Daten/inhabitants/bevoelkerungsentwicklung.csv", index=True)
+
+# %%
 # Exporting datasets as jsons
+df_civ = pd.read_csv('data_exploration/Daten/inhabitants/bevoelkerungsentwicklung.csv', delimiter=',')
 df_civ.to_json(f"data_exploration/Daten/jsons/population_development.json", index=True, orient="table",
                force_ascii=False)
