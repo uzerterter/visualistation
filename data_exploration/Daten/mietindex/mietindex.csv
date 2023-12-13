@@ -253,54 +253,31 @@
 251,2020,106.0,Schleswig-Holstein
 252,2021,107.7,Schleswig-Holstein
 253,2022,109.6,Schleswig-Holstein
-254,2006,90.0,Deutschland median
-255,2007,91.0,Deutschland median
-256,2008,92.0,Deutschland median
-257,2009,93.0,Deutschland median
-258,2010,94.0,Deutschland median
-259,2011,95.0,Deutschland median
-260,2012,96.0,Deutschland median
-261,2013,97.0,Deutschland median
-262,2014,98.0,Deutschland median
-263,2015,100.0,Deutschland median
-264,2016,101.0,Deutschland median
-265,2017,102.0,Deutschland median
-266,2018,103.0,Deutschland median
-267,2019,104.0,Deutschland median
-268,2020,106.0,Deutschland median
-269,2021,107.0,Deutschland median
-270,2022,109.0,Deutschland median
-271,2006,90.0,Deutschland mean
-272,2007,91.0,Deutschland mean
-273,2008,92.0,Deutschland mean
-274,2009,93.0,Deutschland mean
-275,2010,94.0,Deutschland mean
-276,2011,95.0,Deutschland mean
-277,2012,96.0,Deutschland mean
-278,2013,97.0,Deutschland mean
-279,2014,98.0,Deutschland mean
-280,2015,100.0,Deutschland mean
-281,2016,101.0,Deutschland mean
-282,2017,102.0,Deutschland mean
-283,2018,103.0,Deutschland mean
-284,2019,105.0,Deutschland mean
-285,2020,106.0,Deutschland mean
-286,2021,107.0,Deutschland mean
-287,2022,109.0,Deutschland mean
-288,2006,3.0,Deutschland std
-289,2007,3.0,Deutschland std
-290,2008,3.0,Deutschland std
-291,2009,2.0,Deutschland std
-292,2010,2.0,Deutschland std
-293,2011,1.0,Deutschland std
-294,2012,1.0,Deutschland std
-295,2013,1.0,Deutschland std
-296,2014,0.0,Deutschland std
-297,2015,0.0,Deutschland std
-298,2016,0.0,Deutschland std
-299,2017,0.0,Deutschland std
-300,2018,1.0,Deutschland std
-301,2019,1.0,Deutschland std
-302,2020,1.0,Deutschland std
-303,2021,1.0,Deutschland std
-304,2022,2.0,Deutschland std
+254,1995,76.7,Deutschland
+255,1996,79.2,Deutschland
+256,1997,81.2,Deutschland
+257,1998,82.2,Deutschland
+258,1999,82.9,Deutschland
+259,2000,83.9,Deutschland
+260,2001,84.9,Deutschland
+261,2002,86,Deutschland
+262,2003,86.9,Deutschland
+263,2004,87.7,Deutschland
+264,2005,88.5,Deutschland
+265,2006,89.5,Deutschland
+266,2007,90.5,Deutschland
+267,2008,91.6,Deutschland
+268,2009,92.6,Deutschland
+269,2010,93.7,Deutschland
+270,2011,94.9,Deutschland
+271,2012,96,Deutschland
+272,2013,97.2,Deutschland
+273,2014,98.7,Deutschland
+274,2015,100,Deutschland
+275,2016,101.1,Deutschland
+276,2017,102.5,Deutschland
+277,2018,104,Deutschland
+278,2019,105.5,Deutschland
+279,2020,106.9,Deutschland
+280,2021,108.4,Deutschland
+281,2022,110.2,Deutschland
