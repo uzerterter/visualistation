@@ -161,6 +161,7 @@
     if (focused !== d) {
       focused = d;
 
+      // Apply 'active' class to the clicked state
       d3.select(event.currentTarget).classed('active', true);
       
       const [x, y] = centroid;
@@ -182,15 +183,16 @@
   }
 
   function resetZoom() {
-    // Reset opacity of all states to full
-    g.selectAll('.state').style('opacity', d => getStateOpacity(d.properties.NAME_1));
+    // Reset opacity and remove 'active' class from all states
+    g.selectAll('.state')
+      .style('opacity', d => getStateOpacity(d.properties.NAME_1))
+      .classed('active', false);
+
     focused = null;
     svg.transition()
       .duration(1000)
       .call(zoom.transform, d3.zoomIdentity);
-    dispatch('stateClicked', { stateName: null }); // Dispatch null when no state is focused
-
-    
+    dispatch('stateClicked', { stateName: null });
   }
 
   function getZoomFactor(stateName) {
@@ -204,14 +206,15 @@
       'Hessen': 2.7,
       'Mecklenburg-Vorpommern': 2.8,
       'Niedersachsen': 2,
-      'Nordrhein-Westfahlen': 1,
+      'Nordrhein-Westfalen': 2.5,
       'Rheinland-Pfalz': 3,
       'Saarland': 7,
-      'Sachsen': 1,
-      'Sachsen-Anhalt': 1,
-      'Schlewsig-Holstein': 1,
+      'Sachsen': 2.7,
+      'Sachsen-Anhalt': 3,
+      'Schleswig-Holstein': 3,
       'Thüringen': 3.1
     };
+
     return zoomFactors[stateName] || 1; // Default zoom factor if state not listed
   }
 
@@ -264,14 +267,10 @@
   stroke-width: 1.25px;
   transition: 0.5s;
 }
-:global(.state.active) {
+/* :global(.state.active) {
   fill: #003049 !important;
   opacity: 100 !important;
-}
-:global(.state:hover) {
-  fill: #FCBF49; /* Color on hover */
-  transition: 0.5s;
-}
+} */
 
 
 </style>
