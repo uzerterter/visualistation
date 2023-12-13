@@ -1,14 +1,16 @@
-<script>
+<script context="module">
 	import { writable, derived } from 'svelte/store';
 
 	// Initialize the selected year
+	export const selectedYear = writable(2017);
+
 	export const initialYear = 2017;
-	const selectedYear = writable(initialYear);
+	// const selectedYear = writable(initialYear);
 
 	// Call selectedYearUpdated if needed
 	import { onDestroy } from 'svelte'
 	export let selectedYearUpdated;
-	onDestroy(selectedYear.subscribe(v => selectedYearUpdated && selectedYearUpdated(v)));
+	selectedYear.subscribe(v => selectedYearUpdated && selectedYearUpdated(v));
 
 	// Define the start and end years for the timeline
 	const startYear = 2017;
@@ -40,6 +42,9 @@
 	function onThumbRelease() {
 		isThumbPressed.set(false);
 	}
+</script>
+<script>
+
 
 	// Toggle autoplay
 	function toggleAutoplay() {

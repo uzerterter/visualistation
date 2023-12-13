@@ -6,6 +6,14 @@
     import originalData from '$lib/data/final_genesis_traffic.json';	
     import Timeline from '../lib/components/timeline.svelte';
     import Map from '$lib/components/map.svelte';
+
+    import { selectedYear } from '../lib/components/timeline.svelte';
+    let selectedYearValue;
+    
+    selectedYear.subscribe(value => {
+        selectedYearValue = value;
+    });
+
     let mapContainer;    
     let stateName = "Deutschland"; // Default to Germany
     function handleStateClick(event) {
@@ -38,7 +46,7 @@
 
         <div class="right-viz viz-border"> 
             <div class="bar-chart-container"  id="barchart-parent">
-                <BarChart data={originalData} stateName={stateName} year={year}/>
+                <BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue}/>
             </div>
         </div>
     </div>
