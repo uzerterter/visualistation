@@ -6,6 +6,7 @@
     import originalData from '$lib/data/final_genesis_traffic.json';	
     import Timeline from '../lib/components/timeline.svelte';
     import Map from '$lib/components/map.svelte';
+    import DoughnutChart from '$lib/components/doughnut_chart.svelte';
 
     import { selectedYear } from '../lib/components/timeline.svelte';
     let selectedYearValue;
@@ -37,7 +38,7 @@
 
     <div class="visualizations">
         <div class="left-viz viz-border"> 
-        
+            <DoughnutChart/>
         </div>
 
         <div class="center-viz"> 
