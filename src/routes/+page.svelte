@@ -1,3 +1,4 @@
+
 <script>
     import '../styles/global.css';
     let group = "group08"
@@ -7,31 +8,29 @@
     import Timeline from '../lib/components/timeline.svelte';
     import Map from '$lib/components/map.svelte';
     import DoughnutChart from '$lib/components/doughnut_chart.svelte';
+    import ColorLegend from '$lib/components/color_legend.svelte'; // Import the ColorLegend component
+    let mapContainer;
 
-    import { selectedYear } from '../lib/components/timeline.svelte';
+    import { selectedYear } from '$lib/components/timeline.svelte';
     let selectedYearValue;
     
     selectedYear.subscribe(value => {
         selectedYearValue = value;
     });
 
-    let mapContainer;    
     let stateName = "Deutschland"; // Default to Germany
     function handleStateClick(event) {
         stateName = event.detail.stateName ||  "Deutschland";
-    }
-
-    let year = Timeline.initialYear;
-    function selectedYearUpdated(newValue) {
-        year = newValue;
     }
 </script>
 
 
 
 <div class="map-background" bind:this={mapContainer} id="map-parent">
-    <Map bind:container={mapContainer} on:stateClicked={handleStateClick}/>
+    <Map bind:container={mapContainer} on:stateClicked={handleStateClick} />
+    <ColorLegend />
 </div>
+
 
 <div id="main">
     <!-- Three equally sized empty divs that take a third of the width of #main each -->
@@ -53,7 +52,7 @@
     </div>
     <div class="timeline">
         <div class="timeline-viz"> 
-            <Timeline selectedYearUpdated={selectedYearUpdated}/>
+            <Timeline/>
         </div>
     </div>
 </div>
@@ -148,7 +147,7 @@
         left: 0;
         width: 100%;
         margin-top: 8vh;
-        height: 70vh; /* Match the height of the visualizations */
+        height: 65vh; /* Match the height of the visualizations */
         z-index: 0; /* Layered behind the side containers */
     }
 
