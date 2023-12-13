@@ -1,3 +1,4 @@
+
 <script>
     import '../styles/global.css';
     let group = "group08"
@@ -6,6 +7,7 @@
     import originalData from '$lib/data/final_genesis_traffic.json';	
     import Timeline from '../lib/components/timeline.svelte';
     import Map from '$lib/components/map.svelte';
+    import ColorLegend from '$lib/components/color_legend.svelte'; // Import the ColorLegend component
     import { selectedYear } from '$lib/data/stores.js';
     let mapContainer;
     let filteredData = originalData; // Default to original data
@@ -29,8 +31,9 @@
 
 <div class="map-background" bind:this={mapContainer} id="map-parent">
     <Map bind:container={mapContainer} on:stateClicked={handleStateClick} />
-
+    <ColorLegend />
 </div>
+
 
 <div id="main">
     <!-- Three equally sized empty divs that take a third of the width of #main each -->
@@ -147,7 +150,7 @@
         left: 0;
         width: 100%;
         margin-top: 8vh;
-        height: 70vh; /* Match the height of the visualizations */
+        height: 65vh; /* Match the height of the visualizations */
         z-index: 0; /* Layered behind the side containers */
     }
 

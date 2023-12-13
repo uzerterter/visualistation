@@ -28,13 +28,20 @@
     year = $selectedYear;
     getUnemploymentPercentagesByYear(year);
     updateMapOpacities();
+    console.log(unemploymentOpacityMap);
   }
+
+  // Define a color scale for the legend
+  const colorScale = d3.scaleLinear()
+    .domain([2.8, 11.2]) // Min and max values of unemployment percentages
+    .range(["#eeeff0", "#003049"]); // Change these colors as needed
 
   onMount(() => {
 
     var parentDiv = document.getElementById('map-parent');
     width = parentDiv.clientWidth;
     height = parentDiv.clientHeight;
+
     
     svg = d3.select('#map').append('svg')
       .attr('width', width)
@@ -190,6 +197,12 @@
     }
   }
 
+  
+
+
+
+  
+
 </script>
 
 <style>
@@ -200,11 +213,11 @@
     transition: 0.5s;
   }
   :global(.state:hover) {
-    fill: #EAE2B7;
+    fill: #FCBF49;
     opacity: 100 !important;
   }
   :global(.state.active) {
-    fill: #EAE2B7 !important;
+    fill: #FCBF49 !important;
     opacity: 100 !important;
   }
 </style>
