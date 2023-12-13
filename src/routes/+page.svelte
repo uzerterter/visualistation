@@ -6,33 +6,16 @@
     import originalData from '$lib/data/final_genesis_traffic.json';	
     import Timeline from '../lib/components/timeline.svelte';
     import Map from '$lib/components/map.svelte';
-    let mapContainer;
-    let germanyData = {
-        ...originalData,
-        data: originalData.data.filter(item => item.Bundesland === "Deutschland")
-    };
-    let filteredData = germanyData; // Default to Germany
+    let mapContainer;    
     let stateName = "Deutschland"; // Default to Germany
-
     function handleStateClick(event) {
-        stateName = event.detail.stateName;
-        console.log(stateName);
-        if (stateName) {
-            // Filter for a specific state's data
-            filteredData = {
-                ...originalData,
-                data: originalData.data.filter(item => item.Bundesland === stateName)
-            };
-        } else {
-            // Show data for all of Germany when no state is selected
-            filteredData = germanyData
-            if (stateName == null) {
-                stateName = "Deutschland";
-            }
-        }
+        stateName = event.detail.stateName ||  "Deutschland";
     }
 
-
+    let year = Timeline.initialYear;
+    function selectedYearUpdated(newValue) {
+        year = newValue;
+    }
 </script>
 
 
@@ -55,13 +38,13 @@
 
         <div class="right-viz viz-border"> 
             <div class="bar-chart-container"  id="barchart-parent">
-                <BarChart data={filteredData} stateName={stateName} />
+                <BarChart data={originalData} stateName={stateName} year={year}/>
             </div>
         </div>
     </div>
     <div class="timeline">
         <div class="timeline-viz"> 
-            <Timeline/>
+            <Timeline selectedYearUpdated={selectedYearUpdated}/>
         </div>
     </div>
 </div>
@@ -140,6 +123,7 @@
     }
 
     .bar-chart-container {
+        background-color:transparent;
         width: 95%;
         height: 95%;
         display: flex;
