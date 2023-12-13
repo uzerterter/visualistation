@@ -136,37 +136,28 @@
 
 
   function clickState(d, i) {
-    const stateName = d.properties.NAME_1; 
-    dispatch('stateClicked', { stateName });
-
-    const centroid = centroidMatrix[i];
-    if (!centroid) {
-      console.error('No centroid found for feature at index:', i);
-      return;
-    }
-
-    isZoomedIn = !isZoomedIn;
-
-    // Reset any previously active state
-    g.selectAll('.state').classed('active', false);
-
-    console.log(stateName);
-    console.log(getZoomFactor(stateName));
-
-    // Set opacity of all states to a lower value
-    g.selectAll('.state').style('opacity', 0);
-    // Set opacity of clicked state to full
-    d3.select(event.currentTarget).style('opacity', 1);
-
-    if (focused !== d) {
+    if (isZoomedIn) {
+      // If already zoomed in, reset the zoom
+      resetZoom();
+    } else {
+      // Logic for zooming in
       focused = d;
+      isZoomedIn = true;
 
-      // Apply 'active' class to the clicked state
-      d3.select(event.currentTarget).classed('active', true);
-      
+      // Set opacity of all states to transparent, except the clicked one
+      g.selectAll('.state')
+        .transition().duration(500)
+        .style('opacity', (_, j) => i === j ? 1 : 0);
+
+      const centroid = centroidMatrix[i];
+      if (!centroid) {
+        console.error('No centroid found for feature at index:', i);
+        return;
+      }
+
       const [x, y] = centroid;
-      const k = getZoomFactor(stateName); // Adjust the scaling factor as needed
-      
+      const k = getZoomFactor(d.properties.NAME_1);
+
       // Compute the translation and scale to center the centroid
       const transform = d3.zoomIdentity
         .translate(width / 2, height / 2)
@@ -176,24 +167,26 @@
       svg.transition()
         .duration(1000)
         .call(zoom.transform, transform);
-    } else {
-      focused = null;
-      resetZoom();
     }
   }
 
   function resetZoom() {
-    // Reset opacity and remove 'active' class from all states
+    // Reset opacity of all states
     g.selectAll('.state')
-      .style('opacity', d => getStateOpacity(d.properties.NAME_1))
-      .classed('active', false);
+      .transition().duration(500)
+      .style('opacity', d => getStateOpacity(d.properties.NAME_1));
 
     focused = null;
+    isZoomedIn = false;
+
+    // Reset the zoom transform
     svg.transition()
       .duration(1000)
       .call(zoom.transform, d3.zoomIdentity);
+
     dispatch('stateClicked', { stateName: null });
   }
+
 
   function getZoomFactor(stateName) {
     const zoomFactors = {
@@ -217,7 +210,6 @@
 
     return zoomFactors[stateName] || 1; // Default zoom factor if state not listed
   }
-
 
   function getUnemploymentPercentagesByYear(year) {
     const filteredData = unemploymentData.data.filter(entry => entry.Jahr === year);
@@ -262,15 +254,14 @@
 
 <style>
   :global(.state) {
-  fill: #003049;
-  stroke: #fff;
-  stroke-width: 1.25px;
-  transition: 0.5s;
-}
-/* :global(.state.active) {
-  fill: #003049 !important;
-  opacity: 100 !important;
-} */
+    fill: #003049;
+    stroke: #fff;
+    stroke-width: 1.25px;
+    transition: 0.5s;
+  }
+  :global(.state.active) {
+    fill: #003049 !important;
+  }
 
 
 </style>
