@@ -233,3 +233,25 @@ def set_first_row_as_header(dataframe):
 def get_EW(year, bundesland, pandas_df, target):
     val = pandas_df.loc[(pandas_df["Jahr"] == year) & (pandas_df["Bundesland"] == bundesland), target].iloc[0]
     return val
+
+
+# %%
+bundeslaender = {
+    "ba": "Bayern",
+    "bawu": "Baden-Württemberg",
+    "ber": "Berlin",
+    "br": "Bremen",
+    "bburg": "Brandenburg",
+    "hes": "Hessen",
+    "mp": "Mecklenburg-Vorpommern",
+    "ns": "Niedersachsen",
+    "nrw": "Nordrhein-Westfalen",
+    "rp": "Rheinland-Pfalz",
+    "saa": "Saarland",
+    "s": "Sachsen",
+    "sa": "Sachsen-Anhalt",
+    "t": "Thüringen",
+    "ham": "Hamburg",
+    "sh": "Schleswig-Holstein",
+    "de": "Deutschland",
+}
