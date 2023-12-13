@@ -114,6 +114,13 @@
 		const tt = d3.select(tooltip);
 		let [ttw, tth] = [null, null];
 
+		// Create a class string for bars of the selected year
+		function getClassForYear(year) {
+			const className = `year-${year}`;
+			console.log(className);
+			return className;
+		}
+
 		for (const [i, c] of selectedCheckboxes.entries()) {
 			const g = svg.append('g');
 
@@ -123,7 +130,7 @@
 				.enter()
 				.filter((d) => d.Art === c.orig)
 				.append('rect')
-				.attr('class', 'bar')
+				.attr('class', (d) => `bar ${getClassForYear(d.Jahr)}`)
 				.attr('fill', c.color)
 				.attr('transform', `translate(50, 0)`)
 				.on('mouseover', function (_, x) {
@@ -156,12 +163,72 @@
 					return height - scaleValues(getValue(d)) - 40;
 				});
 		}
+		// Apply styling to the current year when updating graph
+		applyStylingToCurrentYear(selectedYearValue);
+	}
+
+	function toggleHighlighting() {
+		console.log(selectedYearValue);
+		highlightingActive = !highlightingActive;
+		console.log(highlightingActive);
+		applyStylingToCurrentYear(selectedYearValue);
 	}
 
 	onMount(() => {
 		ready = true;
 		updateGraph();
+		applyStylingToCurrentYear(2017);
 	});
+
+	// Use a reactive statement to apply styling when selectedYearValue changes
+	$: {
+		applyStylingToCurrentYear(selectedYearValue);
+	}
+
+	let selectedYearClass = "";
+	let highlightingActive = false;
+
+	function applyStylingToCurrentYear(selectedYearValue) {
+		if (!ready) return;
+
+		if (selectedYearValue === undefined) return;
+
+		if (!highlightingActive){
+			const allYearClasses = [2017, 2018, 2019, 2020, 2021, 2022];
+			allYearClasses.forEach(year => {
+				const yearElements = document.querySelectorAll(`.year-${year}`);
+				yearElements.forEach(element => {
+					// Remove the styling or update it as needed
+					element.style.cssText = "";
+			});
+			});
+			return;
+		} 
+
+		// Remove styling from all years except the current one
+		const allYearClasses = [2017, 2018, 2019, 2020, 2021, 2022];
+			allYearClasses.forEach(year => {
+				if (year !== selectedYearValue) {
+				const yearElements = document.querySelectorAll(`.year-${year}`);
+				yearElements.forEach(element => {
+					// Remove the styling or update it as needed
+					element.style.cssText = "";
+			});
+			}
+		});
+
+		// Update the selectedYearClass when selectedYearValue changes
+		selectedYearClass = selectedYearValue ? `year-${selectedYearValue}` : "";
+
+		// Apply styling to the current selected year class
+		const currentYearElements = document.querySelectorAll(`.${selectedYearClass}`);
+		currentYearElements.forEach(element => {
+			// Apply the styling as needed
+			element.style.cssText += "filter:brightness(150%)";
+			// opacity??
+			// jahr: font-weight, größer? farblich?
+		});
+	}
 </script>
 
 <div bind:this={tooltip} class="tooltip" />
@@ -176,6 +243,12 @@
 				</option>
 			{/each}
 		</select>
+	</div>
+	<!--  button for toggling highlighting -->
+	<div id="print-current-year">
+		<button on:click={toggleHighlighting}>
+			{highlightingActive ? "Disable Highlighting" : "Enable Highlighting"}
+		</button>
 	</div>
 	<div id="barchart-flag">
 		<img src={`${stateName}-flag.png`} alt={`flag of ${stateName}`} id="flag" />
