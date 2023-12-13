@@ -14,34 +14,16 @@
         selectedYearValue = value;
     });
 
-    let mapContainer;
-    let germanyData = {
-        ...originalData,
-        data: originalData.data.filter(item => item.Bundesland === "Deutschland")
-    };
-    let filteredData = germanyData; // Default to Germany
+    let mapContainer;    
     let stateName = "Deutschland"; // Default to Germany
-
     function handleStateClick(event) {
-        console.log(selectedYearValue);
-        stateName = event.detail.stateName;
-        console.log(stateName);
-        if (stateName) {
-            // Filter for a specific state's data
-            filteredData = {
-                ...originalData,
-                data: originalData.data.filter(item => item.Bundesland === stateName)
-            };
-        } else {
-            // Show data for all of Germany when no state is selected
-            filteredData = germanyData
-            if (stateName == null) {
-                stateName = "Deutschland";
-            }
-        }
+        stateName = event.detail.stateName ||  "Deutschland";
     }
 
-
+    let year = Timeline.initialYear;
+    function selectedYearUpdated(newValue) {
+        year = newValue;
+    }
 </script>
 
 
@@ -64,13 +46,13 @@
 
         <div class="right-viz viz-border"> 
             <div class="bar-chart-container"  id="barchart-parent">
-                <BarChart data={filteredData} stateName={stateName} selectedYearValue={selectedYearValue}/>
+                <BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue}/>
             </div>
         </div>
     </div>
     <div class="timeline">
         <div class="timeline-viz"> 
-            <Timeline/>
+            <Timeline selectedYearUpdated={selectedYearUpdated}/>
         </div>
     </div>
 </div>
@@ -149,6 +131,7 @@
     }
 
     .bar-chart-container {
+        background-color:transparent;
         width: 95%;
         height: 95%;
         display: flex;

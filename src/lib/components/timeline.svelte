@@ -4,6 +4,14 @@
 	// Initialize the selected year
 	export const selectedYear = writable(2017);
 
+	export const initialYear = 2017;
+	// const selectedYear = writable(initialYear);
+
+	// Call selectedYearUpdated if needed
+	import { onDestroy } from 'svelte'
+	export let selectedYearUpdated;
+	selectedYear.subscribe(v => selectedYearUpdated && selectedYearUpdated(v));
+
 	// Define the start and end years for the timeline
 	const startYear = 2017;
 	const endYear = 2022;

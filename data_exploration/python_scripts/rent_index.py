@@ -19,7 +19,7 @@ rent_sa = 'data_exploration/Daten/rent_development/statistic_id975215_index-der-
 rent_t = 'data_exploration/Daten/rent_development/statistic_id975216_index-der-nettokaltmieten-fuer-thueringen-bis-2022.csv'
 rent_ham = 'data_exploration/Daten/rent_development/statistic_id975217_index-der-nettokaltmieten-fuer-hamburg-bis-2022.csv'
 rent_sw = 'data_exploration/Daten/rent_development/statistic_id1028723_index-der-nettokaltmieten-fuer-schleswig-holstein-bis-2022.csv'
-
+rent_de = 'data_exploration/Daten/rent_development/statistic_id70132_wohnungsmietindex-fuer-deutschland-bis-2022.csv'
 # %%
 df_rent_ba = process_csv_data(rent_ba, skip_rows=4, skip_first_columns=1, column_names=["Jahr", "Index"])
 set_name(df_rent_ba, "df_rent_ba")
@@ -68,27 +68,10 @@ set_name(df_rent_ham, "df_rent_ham")
 
 df_rent_sh = process_csv_data(rent_sw, skip_rows=4, skip_first_columns=1, column_names=["Jahr", "Index"])
 set_name(df_rent_sh, "df_rent_sh")
+df_rent_de = process_csv_data(rent_de, skip_rows=4, skip_first_columns=1, column_names=["Jahr", "Index"])
+set_name(df_rent_de, "df_rent_de")
 
 # %%
-# Dictionary with Federal States Abbrevations and Federal State Names
-bundeslaender = {
-    "ba": "Bayern",
-    "bawu": "Baden-Wuerttemberg",
-    "ber": "Berlin",
-    "br": "Bremen",
-    "bburg": "Brandenburg",
-    "hes": "Hessen",
-    "mp": "Mecklenburg-Vorpommern",
-    "ns": "Niedersachsen",
-    "nrw": "Nordrhein-Westfalen",
-    "rp": "Rheinland-Pfalz",
-    "saa": "Saarland",
-    "s": "Sachsen",
-    "sa": "Sachsen-Anhalt",
-    "t": "Thueringen",
-    "ham": "Hamburg",
-    "sh": "Schleswig-Holstein",
-}
 
 # list of all datasets with rent-index data
 datasets_rent = [
@@ -108,6 +91,7 @@ datasets_rent = [
     df_rent_t,
     df_rent_ham,
     df_rent_sh,
+    df_rent_de
 ]
 
 # %%
@@ -126,7 +110,7 @@ plot_percentage_over_years(df_rent,
 
 # %%
 # Adding mean, median and std to the population development dataset, rent index dataset, unemployment rate dataset
-df_rent = add_mean_median_std(df_rent, 'Index', 'Jahr')
+#df_rent = add_mean_median_std(df_rent, 'Index', 'Jahr')
 
 # exporting dataset as csv file
 df_rent.to_csv(f"data_exploration/Daten/mietindex/mietindex.csv", index=True)
