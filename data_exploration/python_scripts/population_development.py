@@ -94,27 +94,6 @@ set_name(df_civ_sh, "df_civ_sh")
 df_civ_de = pd.read_csv(civ_de, delimiter=',')
 df_civ_de = df_civ_de.iloc[:, 1:]
 set_name(df_civ_de, 'df_civ_de')
-# %%
-# Dictionary with Federal States Abbrevations and Federal State Names
-bundeslaender = {
-    "ba": "Bayern",
-    "bawu": "Baden-Württemberg",
-    "ber": "Berlin",
-    "br": "Bremen",
-    "bburg": "Brandenburg",
-    "hes": "Hessen",
-    "mp": "Mecklenburg-Vorpommern",
-    "ns": "Niedersachsen",
-    "nrw": "Nordrhein-Westfalen",
-    "rp": "Rheinland-Pfalz",
-    "saa": "Saarland",
-    "s": "Sachsen",
-    "sa": "Sachsen-Anhalt",
-    "t": "Thüringen",
-    "ham": "Hamburg",
-    "sh": "Schleswig-Holstein",
-    "de": "Deutschland"
-}
 
 # %%
 # list of all datasets with population development data
@@ -162,13 +141,6 @@ plot_percentage_over_years(df_civ,
                            y_name='Einwohner', plot_filename="population")
 
 # %%
-# Adding mean, median and std to the population development dataset, rent index dataset, unemployment rate dataset
-#df_civ_de_mean_median_std = add_mean_median_std(df_civ_de, 'Einwohner', 'Jahr')
-#df_civ_de_mean_median_std = df_civ_de_mean_median_std[
-# df_civ_de_mean_median_std['Bundesland'] == 'Deutschland_mean' | df_civ_de_mean_median_std[
-#        'Bundesland'] == 'Deutschland_median']
-
- # %%
 # Exporting dataset as csv
 df_civ.to_csv(f"data_exploration/Daten/inhabitants/bevoelkerungsentwicklung.csv", index=True)
 # Exporting datasets as jsons
