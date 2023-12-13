@@ -199,19 +199,19 @@ def add_mean_median_std(dataframe, target, helper):
 
     germany_mean_rows = pd.DataFrame({
         helper: aggregate_values[helper],
-        'Bundesland': ['Deutschland mean'] * len(aggregate_values),
+        'Bundesland': ['Deutschland_mean'] * len(aggregate_values),
         target: aggregate_values[f"{target}_mean"].astype(int)
     })
 
     germany_median_rows = pd.DataFrame({
         helper: aggregate_values[helper],
-        'Bundesland': ['Deutschland median'] * len(aggregate_values),
+        'Bundesland': ['Deutschland_median'] * len(aggregate_values),
         target: aggregate_values[f"{target}_median"].astype(int)
     })
 
     germany_std_rows = pd.DataFrame({
         helper: aggregate_values[helper],
-        'Bundesland': ['Deutschland std'] * len(aggregate_values),
+        'Bundesland': ['Deutschland_std'] * len(aggregate_values),
         target: aggregate_values[f"{target}_std"].astype(int)
     })
 
@@ -227,3 +227,31 @@ def set_first_row_as_header(dataframe):
     dataframe = dataframe[1:]
 
     return dataframe
+
+
+# %%
+def get_EW(year, bundesland, pandas_df, target):
+    val = pandas_df.loc[(pandas_df["Jahr"] == year) & (pandas_df["Bundesland"] == bundesland), target].iloc[0]
+    return val
+
+
+# %%
+bundeslaender = {
+    "ba": "Bayern",
+    "bawu": "Baden-Württemberg",
+    "ber": "Berlin",
+    "br": "Bremen",
+    "bburg": "Brandenburg",
+    "hes": "Hessen",
+    "mp": "Mecklenburg-Vorpommern",
+    "ns": "Niedersachsen",
+    "nrw": "Nordrhein-Westfalen",
+    "rp": "Rheinland-Pfalz",
+    "saa": "Saarland",
+    "s": "Sachsen",
+    "sa": "Sachsen-Anhalt",
+    "t": "Thüringen",
+    "ham": "Hamburg",
+    "sh": "Schleswig-Holstein",
+    "de": "Deutschland",
+}

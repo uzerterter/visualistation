@@ -1,4 +1,6 @@
 # %%
+import pandas as pd
+
 from data_exploration.python_scripts.functions import *
 
 # %%
@@ -18,6 +20,7 @@ civ_s = 'data_exploration/Daten/inhabitants/statistic_id155167_einwohnerzahl-in-
 civ_sa = 'data_exploration/Daten/inhabitants/statistic_id155169_einwohnerzahl-in-sachsen-anhalt-bis-2022.csv'
 civ_sh = 'data_exploration/Daten/inhabitants/statistic_id155171_einwohnerzahl-in-schleswig-holstein-bis-2022.csv'
 civ_t = 'data_exploration/Daten/inhabitants/statistic_id155172_einwohnerzahl-in-thueringen-bis-2022.csv'
+civ_de = 'data_exploration/Daten/inhabitants/statistic_id1358_entwicklung-der-gesamtbevoelkerung-deutschlands-bis-2022.csv'
 
 # %%
 
@@ -88,27 +91,11 @@ set_name(df_civ_ham, "df_civ_ham")
 df_civ_sh = process_csv_data(civ_sh, skip_rows=4, skip_first_columns=1, skip_last_rows=2,
                              column_names=["Jahr", "Einwohner"])
 set_name(df_civ_sh, "df_civ_sh")
+df_civ_de = pd.read_csv(civ_de, delimiter=',')
+df_civ_de = df_civ_de.iloc[:, 1:]
+set_name(df_civ_de, 'df_civ_de')
 
-# Dictionary with Federal States Abbrevations and Federal State Names
-bundeslaender = {
-    "ba": "Bayern",
-    "bawu": "Baden-Wuerttemberg",
-    "ber": "Berlin",
-    "br": "Bremen",
-    "bburg": "Brandenburg",
-    "hes": "Hessen",
-    "mp": "Mecklenburg-Vorpommern",
-    "ns": "Niedersachsen",
-    "nrw": "Nordrhein-Westfalen",
-    "rp": "Rheinland-Pfalz",
-    "saa": "Saarland",
-    "s": "Sachsen",
-    "sa": "Sachsen-Anhalt",
-    "t": "Thueringen",
-    "ham": "Hamburg",
-    "sh": "Schleswig-Holstein",
-}
-
+# %%
 # list of all datasets with population development data
 datasets_civ = [
     df_civ_ba,
@@ -127,6 +114,7 @@ datasets_civ = [
     df_civ_t,
     df_civ_ham,
     df_civ_sh,
+    df_civ_de
 ]
 
 # %%
@@ -135,14 +123,17 @@ add_bundesland(datasets_civ, bundeslaender)
 
 # %%
 # Merge all the datasets in the lists from above into one dataset for each list
+datasets_civ.pop()
 df_civ = pd.concat(datasets_civ, ignore_index=True)
 
 # %%
 # Converting numeral-values in columns into int64 format in population development dataset
 df_civ['Einwohner'] = df_civ['Einwohner'].str.replace('.', '')
 df_civ_cols = {'Jahr', 'Einwohner'}
-conversion_dict = {col: 'int64' for col in df_civ_cols}
+conversion_dict = {col: 'int' for col in df_civ_cols}
 df_civ = df_civ.astype(conversion_dict)
+df_civ = pd.concat([df_civ, df_civ_de], ignore_index=True)
+df_civ.to_csv(f"data_exploration/Daten/inhabitants/bevoelkerungsentwicklung.csv", index=True)
 
 # %%
 plot_percentage_over_years(df_civ,
@@ -150,10 +141,11 @@ plot_percentage_over_years(df_civ,
                            y_name='Einwohner', plot_filename="population")
 
 # %%
-# Adding mean, median and std to the population development dataset, rent index dataset, unemployment rate dataset
-df_civ = add_mean_median_std(df_civ, 'Einwohner', 'Jahr')
+# Exporting dataset as csv
 df_civ.to_csv(f"data_exploration/Daten/inhabitants/bevoelkerungsentwicklung.csv", index=True)
 
 # %%
 # Exporting datasets as jsons
-df_civ.to_json(f"data_exploration/Daten/jsons/population_development.json", index=True, orient="table", force_ascii=False)
+df_civ = pd.read_csv('data_exploration/Daten/inhabitants/bevoelkerungsentwicklung.csv', delimiter=',')
+df_civ.to_json(f"data_exploration/Daten/jsons/population_development.json", index=True, orient="table",
+               force_ascii=False)
