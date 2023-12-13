@@ -28,7 +28,6 @@
     year = $selectedYear;
     getUnemploymentPercentagesByYear(year);
     updateMapOpacities();
-    console.log(unemploymentOpacityMap);
   }
 
   // Define a color scale for the legend
@@ -41,7 +40,6 @@
     var parentDiv = document.getElementById('map-parent');
     width = parentDiv.clientWidth;
     height = parentDiv.clientHeight;
-
     
     svg = d3.select('#map').append('svg')
       .attr('width', width)
@@ -82,7 +80,9 @@
         .on('click', (event, d) => {
           const i = collection.features.indexOf(d);
           clickState(d, i);
-        });
+        })
+        .on('mouseover', (event, d) => applyHoverStyle(event, d))
+        .on('mouseout', (event, d) => removeHoverStyle(event, d));;
     });
     // After setting up the map, set the flag to true
     isMapInitialized = true;
@@ -112,6 +112,29 @@
     return projection.scale(scaleFactor * 1000);
   }
 
+  let isZoomedIn = false; // Track zoom state
+
+  function applyHoverStyle(event, d) {
+    // Change the style only if the map is not zoomed in, or if it's the focused state
+    if (!isZoomedIn || (isZoomedIn && focused === d)) {
+      d3.select(event.currentTarget)
+        .style('fill', '#003049')
+        .style('opacity', '100');
+    }
+  }
+
+  function removeHoverStyle(event, d) {
+    // Reset the style only if the map is not zoomed in, or if it's the focused state
+    if (!isZoomedIn || (isZoomedIn && focused === d)) {
+      d3.select(event.currentTarget)
+        .style('fill', null)
+        .style('opacity', d => getStateOpacity(d.properties.NAME_1));
+    }
+  }
+
+
+
+
   function clickState(d, i) {
     const stateName = d.properties.NAME_1; 
     dispatch('stateClicked', { stateName });
@@ -122,14 +145,26 @@
       return;
     }
 
+    isZoomedIn = !isZoomedIn;
+
+    // Reset any previously active state
     g.selectAll('.state').classed('active', false);
-    d3.select(event.currentTarget).classed('active', true);
-    
+
+    console.log(stateName);
+    console.log(getZoomFactor(stateName));
+
+    // Set opacity of all states to a lower value
+    g.selectAll('.state').style('opacity', 0);
+    // Set opacity of clicked state to full
+    d3.select(event.currentTarget).style('opacity', 1);
+
     if (focused !== d) {
       focused = d;
+
+      d3.select(event.currentTarget).classed('active', true);
       
       const [x, y] = centroid;
-      const k = 1.75; // Adjust the scaling factor as needed
+      const k = getZoomFactor(stateName); // Adjust the scaling factor as needed
       
       // Compute the translation and scale to center the centroid
       const transform = d3.zoomIdentity
@@ -140,23 +175,46 @@
       svg.transition()
         .duration(1000)
         .call(zoom.transform, transform);
-
-      dispatch('stateClicked', { stateName: d.properties.NAME_1 }); // Dispatch the state name
     } else {
       focused = null;
       resetZoom();
-      dispatch('stateClicked', { stateName: null }); // Dispatch null when no state is focused
     }
   }
 
   function resetZoom() {
-    g.selectAll('.state').classed('active', false);
+    // Reset opacity of all states to full
+    g.selectAll('.state').style('opacity', d => getStateOpacity(d.properties.NAME_1));
     focused = null;
     svg.transition()
       .duration(1000)
       .call(zoom.transform, d3.zoomIdentity);
-    dispatch('stateClicked', { stateName: null }); // Dispatch null when zoom is reset
+    dispatch('stateClicked', { stateName: null }); // Dispatch null when no state is focused
+
+    
   }
+
+  function getZoomFactor(stateName) {
+    const zoomFactors = {
+      'Baden-Württemberg': 2.3,
+      'Bayern': 1.75,
+      'Berlin': 10,
+      'Brandenburg': 2.5,
+      'Bremen': 15,
+      'Hamburg': 10,
+      'Hessen': 2.7,
+      'Mecklenburg-Vorpommern': 2.8,
+      'Niedersachsen': 2,
+      'Nordrhein-Westfahlen': 1,
+      'Rheinland-Pfalz': 3,
+      'Saarland': 7,
+      'Sachsen': 1,
+      'Sachsen-Anhalt': 1,
+      'Schlewsig-Holstein': 1,
+      'Thüringen': 3.1
+    };
+    return zoomFactors[stateName] || 1; // Default zoom factor if state not listed
+  }
+
 
   function getUnemploymentPercentagesByYear(year) {
     const filteredData = unemploymentData.data.filter(entry => entry.Jahr === year);
@@ -197,27 +255,23 @@
     }
   }
 
-  
-
-
-
-  
-
 </script>
 
 <style>
   :global(.state) {
-    fill: #003049;
-    stroke: #fff;
-    stroke-width: 1.25px;
-    transition: 0.5s;
-  }
-  :global(.state:hover) {
-    fill: #FCBF49;
-    opacity: 100 !important;
-  }
-  :global(.state.active) {
-    fill: #FCBF49 !important;
-    opacity: 100 !important;
-  }
+  fill: #003049;
+  stroke: #fff;
+  stroke-width: 1.25px;
+  transition: 0.5s;
+}
+:global(.state.active) {
+  fill: #003049 !important;
+  opacity: 100 !important;
+}
+:global(.state:hover) {
+  fill: #FCBF49; /* Color on hover */
+  transition: 0.5s;
+}
+
+
 </style>
