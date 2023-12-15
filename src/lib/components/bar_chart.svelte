@@ -5,6 +5,8 @@
 	export let selectedYearValue = 2017;
 	export let year;
 
+	import { base } from '$app/paths';
+
 	let svgLocal;
 	let tooltip;
 
@@ -306,7 +308,7 @@
 		</button>
 	</div>
 	<div id="barchart-flag">
-		<img src={`${stateName}-flag.png`} alt={`flag of ${stateName}`} id="flag" />
+		<img src={base}{`${stateName}-flag.png`} alt={`flag of ${stateName}`} id="flag" />
 	</div>
 </div>
 
