@@ -308,7 +308,7 @@
 		</button>
 	</div>
 	<div id="barchart-flag">
-		<img src={base}{`${stateName}-flag.png`} alt={`flag of ${stateName}`} id="flag" />
+		<img src={base}/{`${stateName}-flag.png`} alt={`flag of ${stateName}`} id="flag" />
 	</div>
 </div>
 
