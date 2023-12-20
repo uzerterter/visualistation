@@ -4,7 +4,8 @@
     let group = "group08"
     import TestComponent from '$lib/test_component.svelte';
     import BarChart from '$lib/components/bar_chart.svelte';
-    import originalData from '$lib/data/final_genesis_traffic.json';	
+    import originalData from '$lib/data/final_genesis_traffic.json';
+    import incomeData from '$lib/data/income.json';	
     import Timeline from '../lib/components/timeline.svelte';
     import Map from '$lib/components/map.svelte';
     import DoughnutChart from '$lib/components/doughnut_chart.svelte';
@@ -37,7 +38,7 @@
 
     <div class="visualizations">
         <div class="left-viz viz-border" id="doughnutchart-parent"> 
-            <DoughnutChart stateName={stateName}/>
+            <DoughnutChart realData={incomeData} stateName={stateName}/>
         </div>
 
         <div class="center-viz"> 
