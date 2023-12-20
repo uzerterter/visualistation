@@ -36,7 +36,7 @@
     <!-- Three equally sized empty divs that take a third of the width of #main each -->
 
     <div class="visualizations">
-        <div class="left-viz viz-border"> 
+        <div class="left-viz viz-border" id="doughnutchart-parent"> 
             <DoughnutChart/>
         </div>
 

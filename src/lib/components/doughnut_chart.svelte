@@ -165,7 +165,19 @@
 		if (typeof window !== 'undefined') {
 			createDoughnutChart(data, currentYear);
 		}
+
+		window.addEventListener('resize', handleResize);
+		return () => {
+			window.removeEventListener('resize', handleResize);
+			//unsubscribe();
+		};
 	});
+
+	function handleResize() {
+		if (typeof window !== 'undefined') {
+			createDoughnutChart(data, currentYear);
+		}
+	}
 
 	function updateChart(year) {
 		currentYear = year;
@@ -198,9 +210,11 @@
 			'Thuringia': 'TH'
 		};
 
-		const width = 360,
-			height = 360,
-			radius = Math.min(width, height) / 2;
+		var parentDiv = document.getElementById('doughnutchart-parent');
+		var width = .8 * parentDiv.clientWidth;
+		var height = .8 * parentDiv.clientHeight;
+
+		var radius = Math.min(width, height) / 2;
 		const color = d3.scaleOrdinal(d3.schemeCategory10);
 
 		const svg = d3
