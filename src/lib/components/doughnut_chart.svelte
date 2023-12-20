@@ -150,6 +150,27 @@
 		}
 	];
 
+	const customColors = [
+		'#1f77b4',
+		'#ff7f0e',
+		'#2ca02c',
+		'#d62728',
+		'#9467bd',
+		'#8c564b',
+		'#e377c2',
+		'#7f7f7f',
+		'#bcbd22',
+		'#17becf',
+		'#393b79',
+		'#637939',
+		'#8c6d31',
+		'#843c39',
+		'#7b4173',
+		'#bd9e39',
+		'#ad494a',
+		'#d6616b'
+	];
+
 	let currentYear = '2017';
 
 	let selectedYearValue = currentYear;
@@ -193,29 +214,29 @@
 		// Mapping states to their abbreviations
 		const abbreviations = {
 			'Baden-Württemberg': 'BW',
-			'Bavaria': 'BY',
-			'Berlin': 'BE',
-			'Brandenburg': 'BB',
-			'Bremen': 'HB',
-			'Hamburg': 'HH',
-			'Hesse': 'HE',
+			Bavaria: 'BY',
+			Berlin: 'BE',
+			Brandenburg: 'BB',
+			Bremen: 'HB',
+			Hamburg: 'HH',
+			Hesse: 'HE',
 			'Lower Saxony': 'NI',
 			'Mecklenburg-Vorpommern': 'MV',
 			'North Rhine-Westphalia': 'NW',
 			'Rhineland-Palatinate': 'RP',
-			'Saarland': 'SL',
-			'Saxony': 'SN',
+			Saarland: 'SL',
+			Saxony: 'SN',
 			'Saxony-Anhalt': 'ST',
 			'Schleswig-Holstein': 'SH',
-			'Thuringia': 'TH'
+			Thuringia: 'TH'
 		};
 
 		var parentDiv = document.getElementById('doughnutchart-parent');
-		var width = .8 * parentDiv.clientWidth;
-		var height = .8 * parentDiv.clientHeight;
+		var width = 0.8 * parentDiv.clientWidth;
+		var height = 0.8 * parentDiv.clientHeight;
 
 		var radius = Math.min(width, height) / 2;
-		const color = d3.scaleOrdinal(d3.schemeCategory10);
+		const color = d3.scaleOrdinal(customColors);
 
 		const svg = d3
 			.select('#chart')
