@@ -3,6 +3,9 @@
 	import * as d3 from 'd3';
 	import { selectedYear } from '$lib/components/timeline.svelte';
 
+	export let stateName = 'Deutschland';
+	let highlightedState = '';
+
 	let data = [
 		{
 			state: 'Baden-Württemberg',
@@ -14,7 +17,7 @@
 			'2022': 61782
 		},
 		{
-			state: 'Bavaria',
+			state: 'Bayern',
 			'2017': 38836,
 			'2018': 58435,
 			'2019': 34230,
@@ -59,7 +62,7 @@
 			'2022': 57151
 		},
 		{
-			state: 'Hesse',
+			state: 'Hessen',
 			'2017': 54841,
 			'2018': 67881,
 			'2019': 30921,
@@ -68,7 +71,7 @@
 			'2022': 51697
 		},
 		{
-			state: 'Lower Saxony',
+			state: 'Niedersachsen',
 			'2017': 41299,
 			'2018': 56289,
 			'2019': 43474,
@@ -86,7 +89,7 @@
 			'2022': 42146
 		},
 		{
-			state: 'North Rhine-Westphalia',
+			state: 'Nordrhein-Westfalen',
 			'2017': 54481,
 			'2018': 41524,
 			'2019': 53080,
@@ -95,7 +98,7 @@
 			'2022': 62499
 		},
 		{
-			state: 'Rhineland-Palatinate',
+			state: 'Rheinland-Pfalz',
 			'2017': 32485,
 			'2018': 44456,
 			'2019': 56074,
@@ -113,7 +116,7 @@
 			'2022': 46104
 		},
 		{
-			state: 'Saxony',
+			state: 'Sachsen',
 			'2017': 63459,
 			'2018': 34279,
 			'2019': 56271,
@@ -122,7 +125,7 @@
 			'2022': 48941
 		},
 		{
-			state: 'Saxony-Anhalt',
+			state: 'Sachsen-Anhalt',
 			'2017': 31145,
 			'2018': 45053,
 			'2019': 58964,
@@ -140,7 +143,7 @@
 			'2022': 53371
 		},
 		{
-			state: 'Thuringia',
+			state: 'Thüringen',
 			'2017': 47311,
 			'2018': 57978,
 			'2019': 60698,
@@ -194,41 +197,53 @@
 		};
 	});
 
+	$: {
+		if (stateName !== 'Deutschland') {
+			highlightedState = stateName;
+		} else {
+			highlightedState = '';
+		}
+		if (typeof window !== 'undefined') {
+			createDoughnutChart(data, currentYear, highlightedState);
+		}
+	}
+
 	function handleResize() {
 		if (typeof window !== 'undefined') {
 			createDoughnutChart(data, currentYear);
 		}
 	}
 
+	// Update chart when year changes
 	function updateChart(year) {
 		currentYear = year;
 		if (typeof window !== 'undefined') {
-			createDoughnutChart(data, currentYear);
+			createDoughnutChart(data, currentYear, highlightedState);
 		}
 	}
 
-	function createDoughnutChart(data, year) {
+	function createDoughnutChart(data, year, highlightState) {
 		// Clear existing SVG if any
 		d3.select('#chart').selectAll('*').remove();
 
 		// Mapping states to their abbreviations
 		const abbreviations = {
 			'Baden-Württemberg': 'BW',
-			Bavaria: 'BY',
+			Bayern: 'BY',
 			Berlin: 'BE',
 			Brandenburg: 'BB',
 			Bremen: 'HB',
 			Hamburg: 'HH',
-			Hesse: 'HE',
-			'Lower Saxony': 'NI',
+			Hessen: 'HE',
+			Niedersachsen: 'NI',
 			'Mecklenburg-Vorpommern': 'MV',
-			'North Rhine-Westphalia': 'NW',
-			'Rhineland-Palatinate': 'RP',
+			'Nordrhein-Westfalen': 'NW',
+			'Rheinland-Pfalz': 'RP',
 			Saarland: 'SL',
-			Saxony: 'SN',
-			'Saxony-Anhalt': 'ST',
+			Sachsen: 'SN',
+			'Sachsen-Anhalt': 'ST',
 			'Schleswig-Holstein': 'SH',
-			Thuringia: 'TH'
+			Thüringen: 'TH'
 		};
 
 		var parentDiv = document.getElementById('doughnutchart-parent');
@@ -248,8 +263,8 @@
 
 		const arc = d3
 			.arc()
-			.outerRadius(radius - 10)
-			.innerRadius(radius - 70);
+			.outerRadius((d) => (d.data.state === highlightState ? radius : radius - 10))
+			.innerRadius((d) => (d.data.state === highlightState ? radius - 70 - 10 : radius - 70));
 
 		const pie = d3
 			.pie()

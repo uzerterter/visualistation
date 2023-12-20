@@ -37,7 +37,7 @@
 
     <div class="visualizations">
         <div class="left-viz viz-border" id="doughnutchart-parent"> 
-            <DoughnutChart/>
+            <DoughnutChart stateName={stateName}/>
         </div>
 
         <div class="center-viz"> 
