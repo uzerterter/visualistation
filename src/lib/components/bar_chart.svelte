@@ -137,7 +137,7 @@
 		// Create a class string for bars of the selected year
 		function getClassForYear(year) {
 			const className = `year-${year}`;
-			console.log(className);
+			// console.log(className);
 			return className;
 		}
 
@@ -302,9 +302,9 @@
 			{/each}
 		</select>
 	</div>
-	<div id="barchart-flag">
+	<!-- <div id="barchart-flag">
 		<img src={base}/{`${stateName}-flag.png`} alt={`flag of ${stateName}`} id="flag" />
-	</div>
+	</div> -->
 </div>
 
 <div bind:this={tabs} class="tabs">
@@ -408,16 +408,16 @@
 	}
 
 	#barchart-toprow {
-		/*position: sticky;
-  		top: 0;*/
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
 		height: 10%;
 		width: 100%;
+		/* justify-content: right; */
 	}
-	#barchart-flag {
+	
+	/* #barchart-flag {
 		border: solid 3px;
 		border-radius: 15px;
 		border-color: black;
@@ -435,11 +435,11 @@
 		height: 100%;
 		max-width: 100%;
 		max-height: 100%;
-	}
+	} */
 
 	#barchart-dropdown {
 		width: 45%;
-		float: left;
+		float: right;
 	}
 
 	#barchart-dropdown select {

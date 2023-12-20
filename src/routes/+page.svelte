@@ -9,6 +9,9 @@
     import Map from '$lib/components/map.svelte';
     import DoughnutChart from '$lib/components/doughnut_chart.svelte';
     import ColorLegend from '$lib/components/color_legend.svelte'; // Import the ColorLegend component
+
+	import { base } from '$app/paths';
+
     let mapContainer;
 
     import { selectedYear } from '$lib/components/timeline.svelte';
@@ -18,9 +21,18 @@
         selectedYearValue = value;
     });
 
+    let showToprowContent = false;
     let stateName = "Deutschland"; // Default to Germany
     function handleStateClick(event) {
         stateName = event.detail.stateName ||  "Deutschland";
+        showToprowContent = stateName !== 'Deutschland';
+        let toprow = document.getElementById("center-viz-toprow");
+        if (showToprowContent) {
+            toprow.style.opacity = 1;
+        } else {
+            toprow.style.opacity = 0;
+        } 
+        console.log(showToprowContent);
     }
 </script>
 
@@ -41,6 +53,16 @@
         </div>
 
         <div class="center-viz"> 
+            <div id="center-viz-toprow">
+                {#if showToprowContent}
+                <div id="statename">
+                    <h2>{stateName}</h2>
+                </div>
+                <div id="flag">
+                    <img src={base}/{`${stateName}-flag.png`} alt={`flag of ${stateName}`} id="flag" />
+                </div>
+                {/if}
+            </div>
         
         </div>
 
@@ -84,7 +106,6 @@
     }
 
     .left-viz, .right-viz {
-        
         float: left;
         background-color: white;
         display: flex;
@@ -107,7 +128,10 @@
     .center-viz {
         z-index: 0;
         pointer-events: none;
-        
+        float: left;
+        display: flex;
+        flex-direction: column;
+        margin-top: 3vh;
     }
 
     .timeline {
@@ -150,5 +174,44 @@
         height: 65vh; /* Match the height of the visualizations */
         z-index: 0; /* Layered behind the side containers */
     }
+
+    #center-viz-toprow {
+		display: flex;
+		align-items: center;
+        flex-direction: column;
+		height: 15%;
+		width: 100%;	
+        opacity: 0; /* Start with opacity 0 */
+        transition: opacity 1s ease-in-out; /* Add a transition */
+    }
+
+    #statename {
+        width: 100%;
+        height: 30%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #flag {
+        height: 66%;
+        width: 22%;
+        /* margin-left: auto;
+        margin-right: auto; */
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        bottom: 0;
+	}
+
+	#flag img {
+		width: 90%;
+		height: 90%;
+		max-width: 100%;
+		max-height: 100%;
+        border: solid 3px black;
+        border-radius: 15px;
+	}
 
 </style>
