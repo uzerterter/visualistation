@@ -67,7 +67,7 @@
         // Handle the change of selected data
         // You can perform additional actions here if needed
     }
-    
+
     // Function to handle tab change
     let isActiveLeftViz = true;
     function handleTabChangeLeftViz(tab) {
@@ -197,7 +197,7 @@
                 </div>
             {/if}
         {/if}
-        </div>        
+        </div>
 
         <div class="center-viz">
             <div id="center-viz-toprow" class:fade-in={stateName !== "Deutschland"}>
@@ -271,7 +271,7 @@
                 <DoughnutChartGE data={originalData} stateName={stateName} isActive={isActiveRightViz}/>
             </div>
             <div class="bar-chart-container" id="barchart-parent" style="display: none;">
-                <BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} 
+                <BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue}
                 dropdownItems={dropdownItemsRightViz} selectedDropdownItem={selectedDropdownItemRightViz}/>
             </div>
             <!-- BAR CHART 2 -->
