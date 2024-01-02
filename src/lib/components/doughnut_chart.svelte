@@ -325,6 +325,15 @@
 			.style('text-anchor', 'middle')
 			.style('fill', '#fff');
 
+		// Append title
+		svg
+			.append('text')
+			.attr('text-anchor', 'middle')
+			.attr('dy', '.35em')
+			.style('font-size', '20px')
+			.style('fill', '#333')
+			.text('Income Distribution');
+
 		// Tooltip setup
 		const tooltip = d3.select('#chart').append('div').attr('class', 'tooltip').style('opacity', 0);
 
@@ -343,57 +352,21 @@
 
 <div>
 	<div id="chart" />
-	<div class="button-container">
-		{#each ['2017', '2018', '2019', '2020', '2021', '2022'] as year}
-			<button
-				on:click={() => updateChart(year)}
-				class:current={year === currentYear}
-				disabled={year === currentYear}
-			>
-				{year}
-			</button>
-		{/each}
+	<div class="year-container">
+		<span class="selected-year">{currentYear}</span>
 	</div>
 </div>
 
 <style>
-	.button-container {
+	.year-container {
 		margin-top: 10px;
 		text-align: center;
 	}
-	button {
-		background-color: var(--colorscheme-blue); /* Green */
-		border: 2px solid var(--colorscheme-blue);
-		color: white;
-		padding: 10px 10px;
-		text-align: center;
-		text-decoration: none;
-		display: inline-block;
-		font-size: 12px;
+
+	.selected-year {
+		color: var(--colorscheme-blue);
+		font-size: 20px; /* You can adjust the font size as needed */
 		margin: 4px 2px;
-		transition-duration: 0.4s;
-		cursor: pointer;
-		border-radius: 15px;
-	}
-
-	button:hover {
-		background-color: var(--colorscheme-orange);
-		opacity: 0.6;
-		color: white;
-		border: 2px solid var(--colorscheme-orange);
-	}
-
-	.current {
-		background-color: var(--colorscheme-orange); /* Darker grey */
-		color: white;
-		border: 2px solid var(--colorscheme-orange);
-		cursor: default;
-		pointer-events: none; /* Prevents click events on the current button */
-	}
-
-	button:disabled {
-		/* opacity: 0.6; */
-		cursor: not-allowed;
 	}
 
 	.tooltip {
