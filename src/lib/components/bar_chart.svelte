@@ -102,7 +102,9 @@
 		svg
 			.append('g')
 			.attr('transform', `translate(50, ${height - 30})`)
-			.call(axisYears);
+			.call(axisYears)
+			.selectAll('.tick text') // Select the text elements
+			.attr('class', (d) => `tick-text ${getClassForYear(d)}`);
 
 		svg
 			.append('g')
@@ -135,7 +137,7 @@
 		// Create a class string for bars of the selected year
 		function getClassForYear(year) {
 			const className = `year-${year}`;
-			console.log(className);
+			// console.log(className);
 			return className;
 		}
 
@@ -148,7 +150,6 @@
 				.enter()
 				.filter((d) => d.Art === c.orig)
 				.append('rect')
-				.attr('class', (d) => `bar ${getClassForYear(d.Jahr)}`)
 				.attr('fill', c.color)
 				.attr('transform', `translate(50, 0)`)
 				.on('mouseover', function (event, x) {
@@ -183,12 +184,12 @@
 		applyStylingToCurrentYear(selectedYearValue);
 	}
 
-	function toggleHighlighting() {
-		console.log(selectedYearValue);
-		highlightingActive = !highlightingActive;
-		console.log(highlightingActive);
-		applyStylingToCurrentYear(selectedYearValue);
-	}
+	// function toggleHighlighting() {
+	// 	console.log(selectedYearValue);
+	// 	highlightingActive = !highlightingActive;
+	// 	console.log(highlightingActive);
+	// 	applyStylingToCurrentYear(selectedYearValue);
+	// }
 
 	function handleResize() {
 		updateGraph();
@@ -221,17 +222,17 @@
 
 		if (selectedYearValue === undefined) return;
 
-		if (!highlightingActive){
-			const allYearClasses = [2017, 2018, 2019, 2020, 2021, 2022];
-			allYearClasses.forEach(year => {
-				const yearElements = document.querySelectorAll(`.year-${year}`);
-				yearElements.forEach(element => {
-					// Remove the styling or update it as needed
-					element.style.cssText = "";
-			});
-			});
-			return;
-		} 
+		// if (!highlightingActive){
+		// 	const allYearClasses = [2017, 2018, 2019, 2020, 2021, 2022];
+		// 	allYearClasses.forEach(year => {
+		// 		const yearElements = document.querySelectorAll(`.year-${year}`);
+		// 		yearElements.forEach(element => {
+		// 			// Remove the styling or update it as needed
+		// 			element.style.cssText = "";
+		// 	});
+		// 	});
+		// 	return;
+		// } 
 
 		// Remove styling from all years except the current one
 		const allYearClasses = [2017, 2018, 2019, 2020, 2021, 2022];
@@ -252,7 +253,7 @@
 		const currentYearElements = document.querySelectorAll(`.${selectedYearClass}`);
 		currentYearElements.forEach(element => {
 			// Apply the styling as needed
-			element.style.cssText += "filter:brightness(150%)";
+			element.style.cssText += "opacity:1; font-weight: bold; color: var(--colorscheme-orange); ";
 			// opacity??
 			// jahr: font-weight, größer? farblich?
 		});
@@ -301,15 +302,9 @@
 			{/each}
 		</select>
 	</div>
-	<!--  button for toggling highlighting -->
-	<div id="print-current-year">
-		<button on:click={toggleHighlighting}>
-			{highlightingActive ? "Disable Highlighting" : "Enable Highlighting"}
-		</button>
-	</div>
-	<div id="barchart-flag">
+	<!-- <div id="barchart-flag">
 		<img src={base}/{`${stateName}-flag.png`} alt={`flag of ${stateName}`} id="flag" />
-	</div>
+	</div> -->
 </div>
 
 <div bind:this={tabs} class="tabs">
@@ -394,7 +389,7 @@
 
 	#barchart-diagram {
 		width: 100%;
-		height: 85%;
+		height: 75%;
 	}
 
 	#barchart-checkboxes {
@@ -413,16 +408,16 @@
 	}
 
 	#barchart-toprow {
-		/*position: sticky;
-  		top: 0;*/
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
 		height: 10%;
 		width: 100%;
+		/* justify-content: right; */
 	}
-	#barchart-flag {
+	
+	/* #barchart-flag {
 		border: solid 3px;
 		border-radius: 15px;
 		border-color: black;
@@ -440,11 +435,11 @@
 		height: 100%;
 		max-width: 100%;
 		max-height: 100%;
-	}
+	} */
 
 	#barchart-dropdown {
-		width: 45%;
-		float: left;
+		width: 46%;
+		float: right;
 	}
 
 	#barchart-dropdown select {
@@ -453,7 +448,7 @@
 		border: 1px solid #ccc;
 		border-radius: 5px;
 		box-sizing: border-box;
-		font-size: 14px;
 		background-color: white;
+		font-size: 0.8vw;
 	}
 </style>
