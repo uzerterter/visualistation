@@ -329,10 +329,17 @@
 		svg
 			.append('text')
 			.attr('text-anchor', 'middle')
-			.attr('dy', '.35em')
+			.attr('x', 0) // center horizontally
+			.attr('y', '0') // position the entire text block
 			.style('font-size', '20px')
 			.style('fill', '#333')
-			.text('Income Distribution');
+			.selectAll('tspan')
+			.data(['Income Distribution', 'in €'])
+			.enter()
+			.append('tspan')
+			.attr('x', 0) // center horizontally
+			.attr('dy', (d, i) => `${i * 1.2}em`) // adjust line spacing
+			.text((d) => d);
 
 		// Tooltip setup
 		const tooltip = d3.select('#chart').append('div').attr('class', 'tooltip').style('opacity', 0);
