@@ -8,7 +8,7 @@
     import unimploymentData from '$lib/data/unemployment_rate.json';
     import Timeline from '../lib/components/timeline.svelte';
     import Map from '$lib/components/map.svelte';
-    import DoughnutChart from '$lib/components/doughnut_chart.svelte';
+    import DoughnutChartIN from '$lib/components/doughnut_chart_In.svelte';
     import DoughnutChartUR from '../lib/components/doughnut_chart_UR.svelte';
     import ColorLegend from '$lib/components/color_legend.svelte'; // Import the ColorLegend component
 
@@ -73,7 +73,7 @@
                 {/each}
             </select>
             {#if selectedData === incomeData}
-                <DoughnutChart realData={incomeData} stateName={stateName}/>
+                <DoughnutChartIN realData={incomeData} stateName={stateName}/>
             {:else if selectedData === unimploymentData}
                 <DoughnutChartUR realData={unimploymentData} stateName={stateName}/>
             {/if}
