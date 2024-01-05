@@ -9,6 +9,7 @@
     import Timeline from '../lib/components/timeline.svelte';
     import Map from '$lib/components/map.svelte';
     import DoughnutChart from '$lib/components/doughnut_chart.svelte';
+    import DoughnutChartUR from '../lib/components/doughnut_chart_UR.svelte';
     import ColorLegend from '$lib/components/color_legend.svelte'; // Import the ColorLegend component
 
 	import { base } from '$app/paths';
@@ -47,6 +48,7 @@
     ];
 
     function handleDataChange() {
+        console.log(selectedData);
         // Handle the change of selected data
         // You can perform additional actions here if needed
     }
@@ -70,8 +72,13 @@
                     <option value={option.value}>{option.label}</option>
                 {/each}
             </select>
-            <DoughnutChart realData={selectedData} stateName={stateName}/>
-        </div>        
+            {#if selectedData === incomeData}
+                <DoughnutChart realData={incomeData} stateName={stateName}/>
+            {:else if selectedData === unimploymentData}
+                <DoughnutChartUR realData={unimploymentData} stateName={stateName}/>
+            {/if}
+        </div>
+                
 
         <div class="center-viz">
             <div id="center-viz-toprow" class:fade-in={stateName !== "Deutschland"}>

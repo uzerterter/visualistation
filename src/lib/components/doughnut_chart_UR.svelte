@@ -10,6 +10,7 @@
 
 	function transformData(inputData) {
 		const years = ['2017', '2018', '2019', '2020', '2021', '2022'];
+        console.log(years);
 		let transformedData = [];
 
 		// Create a map to hold temporary data
@@ -20,7 +21,7 @@
 				if (!tempData.has(item.Bundesland)) {
 					tempData.set(item.Bundesland, {});
 				}
-				tempData.get(item.Bundesland)[item.Jahr] = item.Income;
+				tempData.get(item.Bundesland)[item.Jahr] = item.Prozent; // Update to use 'Prozent'
 			}
 		});
 
@@ -33,10 +34,8 @@
 		return transformedData;
 	}
 
-	// Example usage with your real data
 	let formattedData = transformData(realData);
 	let data = formattedData;
-
 
 	const customColors = [
 		'#1f77b4',
