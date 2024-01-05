@@ -438,7 +438,7 @@
 	} */
 
 	#barchart-dropdown {
-		width: 45%;
+		width: 46%;
 		float: right;
 	}
 
