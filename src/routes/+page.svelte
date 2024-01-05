@@ -39,6 +39,14 @@
         console.log(showToprowContent);
     }
 
+    //pass the dropdown data centrally to the right vizualisation, exrtacted from barchart
+    let dropdownItemsRightViz = [
+		{ id: 3, label: 'Anzahl Unternehmen', orig: 'Anzahl_Unternehmen' },
+		{ id: 4, label: 'Beförderte Personen in Mio', orig: 'Befoerderte_Personen_in_Mio' },
+		{ id: 5, label: 'Personenkilometer in Mio', orig: 'Personenkilometer_in_Mio' }
+	];
+    let selectedDropdownItemRightViz = dropdownItemsRightViz[1];
+
     let selectedData = incomeData; // Default data
 
     const dataOptions = [
@@ -64,13 +72,18 @@
     <!-- Three equally sized empty divs that take a third of the width of #main each -->
 
     <div class="visualizations">
-        <div class="left-viz viz-border" id="doughnutchart-parent">
+        <div class="left-viz viz-border">
             <select bind:value={selectedData} on:change={handleDataChange}>
                 {#each dataOptions as option (option.value)}
                     <option value={option.value}>{option.label}</option>
                 {/each}
             </select>
-            <DoughnutChart realData={selectedData} stateName={stateName}/>
+            <div id="doughnutchart-parent"> 
+                <DoughnutChart realData={selectedData} stateName={stateName}/>
+            </div>
+            <!-- <div class="bar-chart-container"  id="barchart-parent">
+                <BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue}/>
+            </div> -->
         </div>        
 
         <div class="center-viz">
@@ -88,8 +101,20 @@
         </div>
 
         <div class="right-viz viz-border"> 
+            <div id="right-viz-toprow">
+                <div id="right-viz-dropdown">
+                    <select bind:value={selectedDropdownItemRightViz}>
+                        {#each dropdownItemsRightViz as d}
+                            <option value={d}>
+                                {d.label}
+                            </option>
+                        {/each}
+                    </select>
+                </div>
+            </div>
             <div class="bar-chart-container"  id="barchart-parent">
-                <BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue}/>
+                <BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} 
+                dropdownItems={dropdownItemsRightViz} selectedDropdownItem={selectedDropdownItemRightViz}/>
             </div>
         </div>
     </div>
@@ -184,6 +209,16 @@
         justify-content: center;
     }
 
+    #doughnutchart-parent {
+        background-color: transparent;
+        width: 95%;
+        height: 95%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
     .map-background {
         position: fixed;
         z-index: 1;
@@ -238,4 +273,32 @@
         border: solid 3px black;
         border-radius: 15px;
     }
+
+    #right-viz-toprow {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		height: 10%;
+		width: 100%;
+        padding: 1%;
+        margin: 1%;
+	}
+	
+
+
+	#right-viz-dropdown {
+		width: 46%;
+        margin: 2%;
+	}
+
+	#right-viz-dropdown select {
+		width: 100%;
+		padding: 8px;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		box-sizing: border-box;
+		background-color: white;
+		font-size: 0.8vw;
+	}
 </style>

@@ -7,13 +7,6 @@
 
 	import { base } from '$app/paths';
 
-	export let dropdownItems = [
-		{ id: 3, label: 'Anzahl Unternehmen', orig: 'Anzahl_Unternehmen' },
-		{ id: 4, label: 'Beförderte Personen in Mio', orig: 'Befoerderte_Personen_in_Mio' },
-		{ id: 5, label: 'Personenkilometer in Mio', orig: 'Personenkilometer_in_Mio' }
-	];
-	export let selectedDropdownItem = dropdownItems[1];
-
 	let svgLocal;
 	let tooltip;
 
@@ -25,6 +18,12 @@
 	];
 	let selectedCheckboxes = [checkboxes[0]];
 
+	let dropdownItems = [
+		{ id: 3, label: 'Anzahl Unternehmen', orig: 'Anzahl_Unternehmen' },
+		{ id: 4, label: 'Beförderte Personen in Mio', orig: 'Befoerderte_Personen_in_Mio' },
+		{ id: 5, label: 'Personenkilometer in Mio', orig: 'Personenkilometer_in_Mio' }
+	];
+	let selectedDropdownItem = dropdownItems[0];
 
 	import * as d3 from 'd3';
 	import { onMount } from 'svelte';
@@ -59,9 +58,9 @@
 
 		var parentDiv = document.getElementById('barchart-parent');
 		var checkboxHeight = document.getElementById('barchart-checkboxes').clientHeight;
-		// var dropdownHeight = document.getElementById('barchart-dropdown').clientHeight;
+		var dropdownHeight = document.getElementById('barchart-dropdown').clientHeight;
 		var width = parentDiv.clientWidth;
-		var height = 0.95 * parentDiv.clientHeight - checkboxHeight - 20; 
+		var height = 0.95 * parentDiv.clientHeight - (checkboxHeight + dropdownHeight) - 40;
 
 		d3.select(svgLocal).selectAll('*').remove();
 
@@ -292,8 +291,9 @@
 
 </script>
 
-<!-- <div id="barchart-toprow">
+<div id="barchart-toprow">
 	<div id="barchart-dropdown">
+		<!-- DROPDOWN -->
 		<select bind:value={selectedDropdownItem}>
 			{#each dropdownItems as d}
 				<option value={d}>
@@ -302,7 +302,10 @@
 			{/each}
 		</select>
 	</div>
-</div> -->
+	<!-- <div id="barchart-flag">
+		<img src={base}/{`${stateName}-flag.png`} alt={`flag of ${stateName}`} id="flag" />
+	</div> -->
+</div>
 
 <div bind:this={tabs} class="tabs">
 	<button class="tab {activeTabId==='barchart1'?'active':''}" on:click={e=>openTab(e, 'barchart1')}>
@@ -386,12 +389,12 @@
 
 	#barchart-diagram {
 		width: 100%;
-		height: 90%;
+		height: 75%;
 	}
 
 	#barchart-checkboxes {
 		width: 100%;
-		height: 10%;
+		height: 5%;
 	}
 
 	/* Style for checkboxes */
@@ -404,33 +407,17 @@
 		margin-right: 1px;
 	}
 
-	/* #barchart-toprow {
+	#barchart-toprow {
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
 		height: 10%;
 		width: 100%;
+		/* justify-content: right; */
 	}
 	
-
-
-	#barchart-dropdown {
-		width: 46%;
-		float: right;
-	}
-
-	#barchart-dropdown select {
-		width: 100%;
-		padding: 8px;
-		border: 1px solid #ccc;
-		border-radius: 5px;
-		box-sizing: border-box;
-		background-color: white;
-		font-size: 0.8vw;
-	} */
-
-		/* #barchart-flag {
+	/* #barchart-flag {
 		border: solid 3px;
 		border-radius: 15px;
 		border-color: black;
@@ -449,4 +436,19 @@
 		max-width: 100%;
 		max-height: 100%;
 	} */
+
+	#barchart-dropdown {
+		width: 46%;
+		float: right;
+	}
+
+	#barchart-dropdown select {
+		width: 100%;
+		padding: 8px;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		box-sizing: border-box;
+		background-color: white;
+		font-size: 0.8vw;
+	}
 </style>
