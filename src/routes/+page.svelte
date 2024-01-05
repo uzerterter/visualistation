@@ -3,7 +3,9 @@
     let group = "group08"
     import TestComponent from '$lib/test_component.svelte';
     import BarChart from '$lib/components/bar_chart.svelte';
-    import originalData from '$lib/data/final_genesis_traffic.json';	
+    import originalData from '$lib/data/final_genesis_traffic.json';
+    import incomeData from '$lib/data/income.json';	
+    import unimploymentData from '$lib/data/unemployment_rate.json';
     import Timeline from '../lib/components/timeline.svelte';
     import Map from '$lib/components/map.svelte';
     import DoughnutChart from '$lib/components/doughnut_chart.svelte';
@@ -36,6 +38,18 @@
         }
         console.log(showToprowContent);
     }
+
+    let selectedData = incomeData; // Default data
+
+    const dataOptions = [
+        { label: 'Income Data', value: incomeData },
+        { label: 'Unemployment Rate', value: unimploymentData },
+    ];
+
+    function handleDataChange() {
+        // Handle the change of selected data
+        // You can perform additional actions here if needed
+    }
 </script>
 
 
@@ -50,9 +64,14 @@
     <!-- Three equally sized empty divs that take a third of the width of #main each -->
 
     <div class="visualizations">
-        <div class="left-viz viz-border"> 
-            <DoughnutChart/>
-        </div>
+        <div class="left-viz viz-border" id="doughnutchart-parent">
+            <select bind:value={selectedData} on:change={handleDataChange}>
+                {#each dataOptions as option (option.value)}
+                    <option value={option.value}>{option.label}</option>
+                {/each}
+            </select>
+            <DoughnutChart realData={selectedData} stateName={stateName}/>
+        </div>        
 
         <div class="center-viz">
             <div id="center-viz-toprow" class:fade-in={stateName !== "Deutschland"}>
