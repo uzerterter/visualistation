@@ -10,7 +10,7 @@
 
 	function transformData(inputData) {
 		const years = ['2017', '2018', '2019', '2020', '2021', '2022'];
-        console.log(years);
+		console.log(years);
 		let transformedData = [];
 
 		// Create a map to hold temporary data
@@ -185,7 +185,7 @@
 			.style('font-size', '20px')
 			.style('fill', '#333')
 			.selectAll('tspan')
-			.data(['Income Distribution', 'in €'])
+			.data(['Unemployment Rate', 'in %'])
 			.enter()
 			.append('tspan')
 			.attr('x', 0) // center horizontally
@@ -227,7 +227,7 @@
 		margin: 4px 2px;
 	}
 
-	.tooltip {
+	:global(.tooltip) {
 		position: absolute;
 		text-align: center;
 		width: 60px;

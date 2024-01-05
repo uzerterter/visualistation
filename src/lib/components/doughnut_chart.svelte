@@ -37,7 +37,6 @@
 	let formattedData = transformData(realData);
 	let data = formattedData;
 
-
 	const customColors = [
 		'#1f77b4',
 		'#ff7f0e',
@@ -228,7 +227,7 @@
 		margin: 4px 2px;
 	}
 
-	.tooltip {
+	:global(.tooltip) {
 		position: absolute;
 		text-align: center;
 		width: 60px;
