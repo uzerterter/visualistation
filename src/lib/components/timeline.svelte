@@ -206,4 +206,8 @@
 		border-radius: 20px;
 		cursor: pointer;
 	}
+
+	input {
+		cursor: pointer;
+	}
 </style>

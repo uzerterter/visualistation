@@ -402,6 +402,7 @@
 
 	input {
 		margin-right: 1px;
+		cursor: pointer;
 	}
 
 	/* #barchart-toprow {
