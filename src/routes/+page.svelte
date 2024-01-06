@@ -189,7 +189,7 @@
             </div>
             {#if selectedTabRightViz === 'doughnut'}
                 <div id="doughnutchart-parent">
-                        <DoughnutChartGen data={originalData} stateName={stateName} />
+                        <DoughnutChartGE data={originalData} stateName={stateName} selectedDropdownItem={selectedDropdownItemRightViz}/>
                 </div>
                 <div class="bar-chart-container" id="barchart-parent" style="display: none;">
                     <BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} 
@@ -199,7 +199,7 @@
             {#if selectedTabRightViz === 'bar'}
                 <!-- Bitte verzeiht mir für diesen Workaround :_) -->
                 <div id="doughnutchart-parent" style="display: none;">
-                    <DoughnutChartGen data={originalData} stateName={stateName} />
+                    <DoughnutChartGE data={originalData} stateName={stateName} />
                 </div>
                 <div class="bar-chart-container" id="barchart-parent">
                     <BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} 

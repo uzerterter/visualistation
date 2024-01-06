@@ -1,26 +1,25 @@
 <!-- MyDoughnutChart.svelte -->
 
 <script>
-	import { onMount } from 'svelte';
+	import { onMount, afterUpdate } from 'svelte';
 	import * as d3 from 'd3';
 	import { selectedYear } from '$lib/components/timeline.svelte';
 
 	export let stateName = 'Deutschland';
 	export let data = [];
-
+	export let dropdownItems = [
+		{ id: 3, label: 'Anzahl Unternehmen', orig: 'Anzahl_Unternehmen' },
+		{ id: 4, label: 'Beförderte Personen in Mio', orig: 'Befoerderte_Personen_in_Mio' },
+		{ id: 5, label: 'Personenkilometer in Mio', orig: 'Personenkilometer_in_Mio' }
+	];
+	export let selectedDropdownItem = dropdownItems[1];
 
 	let selectedArt = 'Liniennahverkehr mit Eisenbahnen';
-	let selectedField = 'Anzahl_Unternehmen';
 	let currentYear = 2017;
-    let highlightedState = '';
+	let highlightedState = '';
 
 	function handleToggle(art) {
 		selectedArt = art;
-		updateChart();
-	}
-
-	function handleFieldChange(event) {
-		selectedField = event.target.value;
 		updateChart();
 	}
 
@@ -59,7 +58,7 @@
 		);
 
 		const chartData = filteredData.map((entry) => ({
-			value: entry[selectedField],
+			value: entry[selectedDropdownItem.orig],
 			state: entry.Bundesland
 		}));
 
@@ -135,7 +134,7 @@
 		updateChart();
 	});
 
-    $: {
+	afterUpdate(() => {
 		if (stateName !== 'Deutschland') {
 			highlightedState = stateName;
 		} else {
@@ -144,17 +143,8 @@
 		if (typeof window !== 'undefined') {
 			updateChart();
 		}
-	}
+	});
 </script>
-
-<div>
-	<label for="dataField">Select Data Field:</label>
-	<select id="dataField" bind:value={selectedField} on:change={handleFieldChange}>
-		<option value="Anzahl_Unternehmen">Anzahl Unternehmen</option>
-		<option value="Befoerderte_Personen_in_Mio">Beförderte Personen in Mio</option>
-		<option value="Personenkilometer_in_Mio">Personenkilometer in Mio</option>
-	</select>
-</div>
 
 <div id="chart-container" />
 
