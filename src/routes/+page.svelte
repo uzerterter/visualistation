@@ -8,7 +8,9 @@
     import unimploymentData from '$lib/data/unemployment_rate.json';
     import Timeline from '../lib/components/timeline.svelte';
     import Map from '$lib/components/map.svelte';
-    import DoughnutChart from '$lib/components/doughnut_chart.svelte';
+    import DoughnutChartIN from '$lib/components/doughnut_chart_In.svelte';
+    import DoughnutChartUR from '../lib/components/doughnut_chart_UR.svelte';
+    import DoughnutChartGE from '../lib/components/doughnut_chart_Gen.svelte';
     import ColorLegend from '$lib/components/color_legend.svelte'; // Import the ColorLegend component
     import BarChartEconomic from '../lib/components/bar_chart_economic.svelte';
 
@@ -57,6 +59,7 @@
     ];
 
     function handleDataChange() {
+        console.log(selectedData);
         // Handle the change of selected data
         // You can perform additional actions here if needed
     }
@@ -108,13 +111,21 @@
             <!-- Content based on selected tab -->
             {#if selectedTabLeftViz === 'doughnut'}
                 <div id="doughnutchart-parent">
-                    <DoughnutChart realData={selectedData} stateName={stateName} isActive={isActive}/>
+                    {#if selectedData === incomeData}
+                        <DoughnutChartIN realData={incomeData} stateName={stateName} isActive={isActive}/>
+                    {:else if selectedData === unimploymentData}
+                        <DoughnutChartUR realData={unimploymentData} stateName={stateName} isActive={isActive}/>
+                    {/if}
                 </div>
             {/if}
             {#if selectedTabLeftViz === 'bar'}
             <!-- Bitte verzeiht mir für diesen Workaround :_) -->
             <div id="doughnutchart-parent" style="display: none;">
-                <DoughnutChart realData={selectedData} stateName={stateName} isActive={isActive}/>
+                {#if selectedData === incomeData}
+                    <DoughnutChartIN realData={incomeData} stateName={stateName} isActive={isActive}/>
+                {:else if selectedData === unimploymentData}
+                    <DoughnutChartUR realData={unimploymentData} stateName={stateName} isActive={isActive}/>
+                {/if}
             </div>
                 <div class="bar-chart-container" id="barchart-leftViz-parent">
                     <BarChartEconomic data={incomeData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} />
