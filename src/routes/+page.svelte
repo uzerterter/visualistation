@@ -10,6 +10,7 @@
     import Map from '$lib/components/map.svelte';
     import DoughnutChartIN from '$lib/components/doughnut_chart_In.svelte';
     import DoughnutChartUR from '../lib/components/doughnut_chart_UR.svelte';
+    import DoughnutChartGE from '../lib/components/doughnut_chart_Gen.svelte';
     import ColorLegend from '$lib/components/color_legend.svelte'; // Import the ColorLegend component
 
 	import { base } from '$app/paths';
@@ -96,7 +97,7 @@
 
         <div class="right-viz viz-border"> 
             <div class="bar-chart-container"  id="barchart-parent">
-                <BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue}/>
+                <DoughnutChartGE data={originalData} stateName={stateName}/>
             </div>
         </div>
     </div>
