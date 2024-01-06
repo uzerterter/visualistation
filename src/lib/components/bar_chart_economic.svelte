@@ -34,10 +34,9 @@
   
 	  let maxVal = d3.max(d, entry => entry.Income);
   
-	  var parentDiv = document.getElementById('barchart-parent');
-		var checkboxHeight = document.getElementById('barchart-checkboxes').clientHeight;
+	  var parentDiv = document.getElementById('barchart-leftViz-parent');
 		var width = parentDiv.clientWidth;
-		var height = 0.95 * parentDiv.clientHeight - checkboxHeight - 20; 
+		var height = 0.95 * parentDiv.clientHeight - 20; 
   
 	  d3.select(svgLocal).selectAll('*').remove();
   
