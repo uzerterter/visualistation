@@ -18,7 +18,7 @@
 		filteredData = {
 			...data,
 			data: data.data
-				.filter(item => item.Bundesland === stateName && item.Jahr >= 2017)
+				.filter(item => item.Bundesland === stateName && (item.Jahr >= 2017 && item.Jahr <= 2022))
 				.sort((a, b) => a.Jahr - b.Jahr) // Sort data by Jahr in ascending order
 		};
 	}
