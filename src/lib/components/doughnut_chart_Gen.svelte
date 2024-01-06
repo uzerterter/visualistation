@@ -172,4 +172,7 @@
 
 <style>
 	/* Add your styles here if needed */
+	input[type='radio'] {
+		cursor: pointer;
+	}
 </style>

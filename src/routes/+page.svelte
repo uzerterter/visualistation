@@ -390,6 +390,7 @@
 		background-color: white;
 		font-size: 0.8vw;
         float: left;
+        cursor: pointer;
 	}
 
     .tab-buttons {
@@ -424,11 +425,11 @@
         align-items: center;
         padding: .75em .5em;
         width: 100%;
+        cursor: pointer;
     }
 
         /* Style for the selected tab */
     .tab-buttons button.selected {
         background-color: #ccc;
     }
-
 </style>
