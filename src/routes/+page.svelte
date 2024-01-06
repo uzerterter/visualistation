@@ -4,7 +4,7 @@
     import TestComponent from '$lib/test_component.svelte';
     import BarChart from '$lib/components/bar_chart.svelte';
     import originalData from '$lib/data/final_genesis_traffic.json';
-    import incomeData from '$lib/data/income.json';	
+    import incomeData from '$lib/data/income.json';
     import unimploymentData from '$lib/data/unemployment_rate.json';
     import Timeline from '../lib/components/timeline.svelte';
     import Map from '$lib/components/map.svelte';
@@ -15,6 +15,7 @@
     import BarChartEconomicIN from '../lib/components/bar_chart_economic_IN.svelte';
     import BarChartEconomicUR from '../lib/components/bar_chart_economic_UR.svelte';
     import BarChart_2 from '../lib/components/bar_chart_2.svelte';
+		import Info from '$lib/components/info.svelte';
 
 	import { base } from '$app/paths';
 
@@ -243,7 +244,7 @@
                         <DoughnutChartGE data={originalData} stateName={stateName} selectedDropdownItem={selectedDropdownItemRightViz} isActive={isActiveRightViz}/>
                 </div>
                 <div class="bar-chart-container" id="barchart-parent" style="display: none;">
-                    <BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} 
+                    <BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue}
                     dropdownItems={dropdownItemsRightViz} selectedDropdownItem={selectedDropdownItemRightViz}/>
                 </div>
                 <!-- BAR CHART 2 -->
@@ -257,7 +258,7 @@
                     <DoughnutChartGE data={originalData} stateName={stateName} isActive={isActiveRightViz}/>
                 </div>
                 <div class="bar-chart-container" id="barchart-parent">
-                    <BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} 
+                    <BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue}
                     dropdownItems={dropdownItemsRightViz} selectedDropdownItem={selectedDropdownItemRightViz}/>
                 </div>
                 <!-- BAR CHART 2 -->
@@ -286,6 +287,9 @@
             <Timeline/>
         </div>
     </div>
+    <div class="Test">
+        <Info title="This is a Tooltip"/>
+    </div>
 </div>
 
 
@@ -310,7 +314,7 @@
     .left-viz, .center-viz, .right-viz {
         width: 33.33%; 
         height: 60vh;
-        z-index: 2; 
+        z-index: 2;
     }
 
     .left-viz, .right-viz {
@@ -451,7 +455,7 @@
 	#right-viz-dropdown, #left-viz-dropdown {
 		width: 46%;
         margin: 2%;
-        display: flex;    
+        display: flex;
     }
 
 	#right-viz-dropdown select, #left-viz-dropdown select {
@@ -485,7 +489,7 @@
         flex: 1;
         width: 100%;
     }
-    
+
 
     .tab-buttons button {
         appearance: none;
