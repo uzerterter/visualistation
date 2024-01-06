@@ -8,6 +8,9 @@
 
 	export let realData = [];
 
+	export let isActive = false;
+	let ready = false;
+
 	function transformData(inputData) {
 		const years = ['2017', '2018', '2019', '2020', '2021', '2022'];
 		let transformedData = [];
@@ -70,18 +73,6 @@
 		}
 	});
 
-	onMount(() => {
-		if (typeof window !== 'undefined') {
-			createDoughnutChart(data, currentYear);
-		}
-
-		window.addEventListener('resize', handleResize);
-		return () => {
-			window.removeEventListener('resize', handleResize);
-			//unsubscribe();
-		};
-	});
-
 	$: {
 		if (stateName !== 'Deutschland') {
 			highlightedState = stateName;
@@ -107,7 +98,15 @@
 		}
 	}
 
+	
 	function createDoughnutChart(data, year, highlightState) {
+		if (isActive === false) {
+			return;
+		}
+		console.log("Is active", isActive);
+
+		if (!ready) return;
+
 		// Clear existing SVG if any
 		d3.select('#chart').selectAll('*').remove();
 
@@ -207,6 +206,19 @@
 			tooltip.transition().duration(500).style('opacity', 0);
 		});
 	}
+
+	onMount(() => {	
+		ready = true;
+		if (typeof window !== 'undefined') {
+			createDoughnutChart(data, currentYear);
+		}
+
+		window.addEventListener('resize', handleResize);
+		return () => {
+			window.removeEventListener('resize', handleResize);
+			//unsubscribe();
+		};
+	});
 </script>
 
 <div>
