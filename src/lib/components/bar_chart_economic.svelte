@@ -5,7 +5,6 @@
 	export let selectedYearValue = 2017;
 	export let year;
 
-	import { base } from '$app/paths';
 
 	export let dropdownItems = [
 		{ id: 3, label: 'Anzahl Unternehmen', orig: 'Anzahl_Unternehmen' },
@@ -185,12 +184,6 @@
 		applyStylingToCurrentYear(selectedYearValue);
 	}
 
-	// function toggleHighlighting() {
-	// 	console.log(selectedYearValue);
-	// 	highlightingActive = !highlightingActive;
-	// 	console.log(highlightingActive);
-	// 	applyStylingToCurrentYear(selectedYearValue);
-	// }
 
 	function handleResize() {
 		updateGraph();
@@ -222,18 +215,6 @@
 		if (!ready) return;
 
 		if (selectedYearValue === undefined) return;
-
-		// if (!highlightingActive){
-		// 	const allYearClasses = [2017, 2018, 2019, 2020, 2021, 2022];
-		// 	allYearClasses.forEach(year => {
-		// 		const yearElements = document.querySelectorAll(`.year-${year}`);
-		// 		yearElements.forEach(element => {
-		// 			// Remove the styling or update it as needed
-		// 			element.style.cssText = "";
-		// 	});
-		// 	});
-		// 	return;
-		// } 
 
 		// Remove styling from all years except the current one
 		const allYearClasses = [2017, 2018, 2019, 2020, 2021, 2022];
@@ -292,18 +273,6 @@
 
 </script>
 
-<!-- <div id="barchart-toprow">
-	<div id="barchart-dropdown">
-		<select bind:value={selectedDropdownItem}>
-			{#each dropdownItems as d}
-				<option value={d}>
-					{d.label}
-				</option>
-			{/each}
-		</select>
-	</div>
-</div> -->
-
 <div bind:this={tabs} class="tabs">
 	<button class="tab {activeTabId==='barchart1'?'active':''}" on:click={e=>openTab(e, 'barchart1')}>
 		Jahre (absolut)
@@ -318,21 +287,6 @@
 <div id="barchart-diagram" style="display: {'barchart1'===activeTabId?'block':'none'}">
 	<!-- BAR CHART -->
 	<svg bind:this={svgLocal} id="bar-chart" />
-</div>
-<div id="barchart-checkboxes" style="display: {'barchart1'===activeTabId?'block':'none'}">
-	<!-- CHECKBOXES-->
-	{#each checkboxes as c, i (c.id)}
-		<label>
-			<input
-				type="checkbox"
-				value={c}
-				disabled={selectedCheckboxes.length === 1 && selectedCheckboxes[0] === c}
-				bind:group={selectedCheckboxes}
-				style="accent-color:{c.color};"
-			/>
-			{c.label}
-		</label>
-	{/each}
 </div>
 
 <!-- BAR CHART 2 -->
@@ -389,64 +343,4 @@
 		height: 90%;
 	}
 
-	#barchart-checkboxes {
-		width: 100%;
-		height: 10%;
-	}
-
-	/* Style for checkboxes */
-	#barchart-checkboxes label {
-		display: inline-block;
-		margin-right: 15px; /* Adjust as needed for spacing between checkboxes */
-	}
-
-	input {
-		margin-right: 1px;
-	}
-
-	/* #barchart-toprow {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		align-items: center;
-		height: 10%;
-		width: 100%;
-	}
-	
-
-
-	#barchart-dropdown {
-		width: 46%;
-		float: right;
-	}
-
-	#barchart-dropdown select {
-		width: 100%;
-		padding: 8px;
-		border: 1px solid #ccc;
-		border-radius: 5px;
-		box-sizing: border-box;
-		background-color: white;
-		font-size: 0.8vw;
-	} */
-
-		/* #barchart-flag {
-		border: solid 3px;
-		border-radius: 15px;
-		border-color: black;
-		width: 22%;
-		height: 100%;
-		float: right;
-		display: flex;
-		overflow: hidden;
-		align-items: center;
-		justify-content: center;
-	}
-
-	#barchart-flag img {
-		width: 100%;
-		height: 100%;
-		max-width: 100%;
-		max-height: 100%;
-	} */
 </style>
