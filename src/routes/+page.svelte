@@ -12,7 +12,8 @@
     import DoughnutChartUR from '../lib/components/doughnut_chart_UR.svelte';
     import DoughnutChartGE from '../lib/components/doughnut_chart_Gen.svelte';
     import ColorLegend from '$lib/components/color_legend.svelte'; // Import the ColorLegend component
-    import BarChartEconomic from '../lib/components/bar_chart_economic.svelte';
+    import BarChartEconomicIN from '../lib/components/bar_chart_economic_IN.svelte';
+    import BarChartEconomicUR from '../lib/components/bar_chart_economic_UR.svelte';
 
 	import { base } from '$app/paths';
 
@@ -122,32 +123,39 @@
             </div>
             <!-- Content based on selected tab -->
             {#if selectedTabLeftViz === 'doughnut'}
-                <div id="doughnutchart-parent">
-                    {#if selectedData === incomeData}
+                {#if selectedData === incomeData}
+                    <div id="doughnutchart-parent">
                         <DoughnutChartIN realData={incomeData} stateName={stateName} isActive={isActiveLeftViz}/>
-                        <div class="bar-chart-container" id="barchart-leftViz-parent" style="display: none;">
-                            <BarChartEconomic data={incomeData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} />
-                        </div>
+                    </div>
+                    <div class="bar-chart-container" id="barchart-leftViz-parent" style="display: none;">
+                        <BarChartEconomicIN data={incomeData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} />
+                    </div>
                     {:else if selectedData === unimploymentData}
-                        <DoughnutChartUR realData={unimploymentData} stateName={stateName} isActive={isActiveLeftViz}/>
+                        <div id="doughnutchart-parent">
+                            <DoughnutChartUR realData={unimploymentData} stateName={stateName} isActive={isActiveLeftViz}/>
+                        </div>
                         <div class="bar-chart-container" id="barchart-leftViz-parent" style="display: none;">
-                            <BarChartEconomic data={incomeData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} />
+                            <BarChartEconomicUR data={unimploymentData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} />
                         </div>
                     {/if}
-                </div>
-            {/if}
-            {#if selectedTabLeftViz === 'bar'}
-            <!-- Bitte verzeiht mir für diesen Workaround :_) -->
-            <div id="doughnutchart-parent" style="display: none;">
-                {#if selectedData === incomeData}
-                    <DoughnutChartIN realData={incomeData} stateName={stateName} isActive={isActiveLeftViz}/>
-                {:else if selectedData === unimploymentData}
-                    <DoughnutChartUR realData={unimploymentData} stateName={stateName} isActive={isActiveLeftViz}/>
                 {/if}
-            </div>
-                <div class="bar-chart-container" id="barchart-leftViz-parent">
-                    <BarChartEconomic data={incomeData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} />
-                </div>
+            {#if selectedTabLeftViz === 'bar'}
+                <!-- Bitte verzeiht mir für diesen Workaround :_) -->
+                {#if selectedData === incomeData}
+                    <div id="doughnutchart-parent" style="display: none;">
+                        <DoughnutChartIN realData={incomeData} stateName={stateName} isActive={isActiveLeftViz}/>
+                    </div>
+                    <div class="bar-chart-container" id="barchart-leftViz-parent">
+                        <BarChartEconomicIN data={incomeData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} />
+                    </div>
+                {:else if selectedData === unimploymentData}
+                    <div id="doughnutchart-parent" style="display: none;">
+                        <DoughnutChartUR realData={unimploymentData} stateName={stateName} isActive={isActiveLeftViz}/>
+                    </div>
+                    <div class="bar-chart-container" id="barchart-leftViz-parent">
+                        <BarChartEconomicUR data={unimploymentData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} />
+                    </div>
+                {/if}
             {/if}
         </div>        
 
