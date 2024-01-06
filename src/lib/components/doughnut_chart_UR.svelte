@@ -8,6 +8,9 @@
 
 	export let realData = [];
 
+	export let isActive = false;
+	let ready = false;
+
 	function transformData(inputData) {
 		const years = ['2017', '2018', '2019', '2020', '2021', '2022'];
 		console.log(years);
@@ -70,6 +73,7 @@
 	});
 
 	onMount(() => {
+		ready = true;
 		if (typeof window !== 'undefined') {
 			createDoughnutChart(data, currentYear);
 		}
@@ -107,6 +111,12 @@
 	}
 
 	function createDoughnutChart(data, year, highlightState) {
+		if (isActive === false) {
+			return;
+		}
+
+		if (!ready) return;
+
 		// Clear existing SVG if any
 		d3.select('#chart').selectAll('*').remove();
 
