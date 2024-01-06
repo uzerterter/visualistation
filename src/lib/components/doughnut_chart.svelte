@@ -103,7 +103,6 @@
 		if (isActive === false) {
 			return;
 		}
-		console.log("Is active", isActive);
 
 		if (!ready) return;
 

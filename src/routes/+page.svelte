@@ -62,9 +62,14 @@
     }
     
     // Function to handle tab change
+    let isActive = true;
     function handleTabChangeLeftViz(tab) {
         selectedTabLeftViz = tab;
-        console.log("Selected Tab:", selectedTabLeftViz);
+        if (tab == 'doughnut') {
+            isActive = true;
+        } else {
+            isActive = false;
+        }
     }
 </script>
 
@@ -103,11 +108,15 @@
             <!-- Content based on selected tab -->
             {#if selectedTabLeftViz === 'doughnut'}
                 <div id="doughnutchart-parent">
-                    <DoughnutChart realData={selectedData} stateName={stateName} isActive={true}/>
+                    <DoughnutChart realData={selectedData} stateName={stateName} isActive={isActive}/>
                 </div>
             {/if}
             {#if selectedTabLeftViz === 'bar'}
-                <div class="bar-chart-container" id="barchart-parent">
+            <!-- Bitte verzeiht mir für diesen Workaround :_) -->
+            <div id="doughnutchart-parent" style="display: none;">
+                <DoughnutChart realData={selectedData} stateName={stateName} isActive={isActive}/>
+            </div>
+                <div class="bar-chart-container" id="barchart-leftViz-parent">
                     <BarChartEconomic data={incomeData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} />
                 </div>
             {/if}
