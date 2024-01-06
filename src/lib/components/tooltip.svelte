@@ -6,13 +6,13 @@
 
 	function mouseOver(event) {
 		isHovered = true;
-		x = event.pageX;
-		y = event.pageY;
+		x = event.pageX + 5;
+		y = event.pageY + 5;
 	}
 
 	function mouseMove(event) {
-		x = event.pageX;
-		y = event.pageY;
+		x = event.pageX + 5;
+		y = event.pageY + 5;
 	}
 
 	function mouseLeave() {
@@ -31,7 +31,7 @@
 </div>
 
 {#if isHovered}
-	<div style="top:{x}px; left: {y}px;" class="tooltip">
+	<div style="top: {y}px; left:{x}px;" class="tooltip">
 		{title}
 	</div>
 {/if}

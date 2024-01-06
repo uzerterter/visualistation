@@ -5,14 +5,14 @@
 
 <Tooltip
 	title={title}>
-	<div class="info">
+	<button class="info">
 		i
-	</div>
+	</button>
 </Tooltip>
 
 <style>
 
-    .info {
+    button {
         text-align: center;
         background-color: white;
         border: 2px;
@@ -25,7 +25,7 @@
         height: 4vh;
     }
 
-    .info:hover {
+    button:hover {
         border: white;
         color: white;
         background-color: var(--colorscheme-blue);
