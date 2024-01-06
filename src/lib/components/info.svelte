@@ -1,14 +1,17 @@
 <script>
 	import Tooltip from './tooltip.svelte';
+
 	export let title = '';
 </script>
 
-<Tooltip
-	title={title}>
-	<button class="info">
-		i
-	</button>
-</Tooltip>
+<div class="tooltip-wrapper">
+	<Tooltip
+		title={title}>
+		<button class="info">
+			i
+		</button>
+	</Tooltip>
+</div>
 
 <style>
 
@@ -29,6 +32,11 @@
         border: white;
         color: white;
         background-color: var(--colorscheme-blue);
+    }
+
+    .tooltip-wrapper {
+        padding: 1.5vh;
+        margin: 1vh;
     }
 
 </style>

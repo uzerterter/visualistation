@@ -112,6 +112,9 @@
                         {/each}
                     </select>
                 </div>
+							<Info
+								title="This Chart displays economic data,
+								e.g. unemployment- or income rates for each federal state in germany." />
             </div>
             <div class="tab-buttons">
                 <ul>
@@ -312,7 +315,7 @@
     }
 
     .left-viz, .center-viz, .right-viz {
-        width: 33.33%; 
+        width: 33.33%;
         height: 60vh;
         z-index: 2;
     }
@@ -330,7 +333,7 @@
 
     .left-viz {
         margin-right: 4%;
-        
+
     }
 
     .right-viz {
@@ -442,30 +445,30 @@
     }
 
     #right-viz-toprow, #left-viz-toprow {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		align-items: center;
-		height: 10%;
-		width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        height: 10%;
+        width: 100%;
         padding: 1%;
         margin: 1%;
-	}
+    }
 
-	#right-viz-dropdown, #left-viz-dropdown {
-		width: 46%;
+    #right-viz-dropdown, #left-viz-dropdown {
+        width: 46%;
         margin: 2%;
         display: flex;
     }
 
-	#right-viz-dropdown select, #left-viz-dropdown select {
-		width: 100%;
-		padding: 8px;
-		border: 1px solid #ccc;
-		border-radius: 5px;
-		box-sizing: border-box;
-		background-color: white;
-		font-size: 0.8vw;
+    #right-viz-dropdown select, #left-viz-dropdown select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        background-color: white;
+        font-size: 0.8vw;
         float: left;
         cursor: pointer;
 	}
@@ -505,7 +508,7 @@
         cursor: pointer;
     }
 
-        /* Style for the selected tab */
+    /* Style for the selected tab */
     .tab-buttons button.selected {
         background-color: #ccc;
     }

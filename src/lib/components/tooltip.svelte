@@ -6,13 +6,13 @@
 
 	function mouseOver(event) {
 		isHovered = true;
-		x = event.pageX + 5;
-		y = event.pageY + 5;
+		x = event.pageX + 15;
+		y = event.pageY + 15;
 	}
 
 	function mouseMove(event) {
-		x = event.pageX + 5;
-		y = event.pageY + 5;
+		x = event.pageX + 15;
+		y = event.pageY + 15;
 	}
 
 	function mouseLeave() {
@@ -45,9 +45,11 @@
 				background: white;
         border-radius: 4px;
         padding: 4px;
-        white-space: pre-line;
-				text-align: left;
 				position: fixed;
+        inline-size: fit-content;
+        font-size: small;
+        text-align: left;
+        white-space: pre-line;
     }
 
 </style>
