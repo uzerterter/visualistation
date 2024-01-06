@@ -19,7 +19,7 @@
 		let tempData = new Map();
 
 		inputData.data.forEach((item) => {
-			if (years.includes(item.Jahr.toString())) {
+			if (years.includes(item.Jahr.toString()) && item.Bundesland !== 'Deutschland') {
 				if (!tempData.has(item.Bundesland)) {
 					tempData.set(item.Bundesland, {});
 				}
@@ -39,7 +39,6 @@
 	// Example usage with your real data
 	let formattedData = transformData(realData);
 	let data = formattedData;
-
 
 	const customColors = [
 		'#1f77b4',
@@ -103,7 +102,6 @@
 		if (isActive === false) {
 			return;
 		}
-		console.log("Is active", isActive);
 
 		if (!ready) return;
 
@@ -240,7 +238,7 @@
 		margin: 4px 2px;
 	}
 
-	.tooltip {
+	:global(.tooltip) {
 		position: absolute;
 		text-align: center;
 		width: 60px;

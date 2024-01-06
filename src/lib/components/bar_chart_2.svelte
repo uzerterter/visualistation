@@ -46,7 +46,7 @@
         ];
 
         // size
-        var parentDiv = document.getElementById('barchart-parent');
+        var parentDiv = document.getElementById('barchart-parent') ?? document.getElementById('barchart-leftViz-parent');
 		var radioButtonsHeight = document.getElementById('barchart-radio-buttons').clientHeight;
 		var width = parentDiv.clientWidth;
 		var height = 0.95 * parentDiv.clientHeight - (radioButtonsHeight) - 70;

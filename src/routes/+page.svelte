@@ -8,7 +8,9 @@
     import unimploymentData from '$lib/data/unemployment_rate.json';
     import Timeline from '../lib/components/timeline.svelte';
     import Map from '$lib/components/map.svelte';
-    import DoughnutChart from '$lib/components/doughnut_chart.svelte';
+    import DoughnutChartIN from '$lib/components/doughnut_chart_In.svelte';
+    import DoughnutChartUR from '../lib/components/doughnut_chart_UR.svelte';
+    import DoughnutChartGE from '../lib/components/doughnut_chart_Gen.svelte';
     import ColorLegend from '$lib/components/color_legend.svelte'; // Import the ColorLegend component
     import BarChartEconomic from '../lib/components/bar_chart_economic.svelte';
 
@@ -17,6 +19,7 @@
     let mapContainer;
 
     import { selectedYear } from '$lib/components/timeline.svelte';
+	import DoughnutChartGen from '../lib/components/doughnut_chart_Gen.svelte';
     let selectedYearValue;
     
     selectedYear.subscribe(value => {
@@ -50,6 +53,7 @@
 
     let selectedData = incomeData; // Default data
     let selectedTabLeftViz = 'doughnut'; // Default tab for left vizualisation
+    let selectedTabRightViz = 'bar'; // Default tab for right vizualisation
 
     const dataOptions = [
         { label: 'Income Data', value: incomeData },
@@ -57,14 +61,30 @@
     ];
 
     function handleDataChange() {
+        console.log(selectedData);
         // Handle the change of selected data
         // You can perform additional actions here if needed
     }
     
     // Function to handle tab change
+    let isActiveLeftViz = true;
     function handleTabChangeLeftViz(tab) {
         selectedTabLeftViz = tab;
-        console.log("Selected Tab:", selectedTabLeftViz);
+        if (tab == 'doughnut') {
+            isActiveLeftViz = true;
+        } else {
+            isActiveLeftViz = false;
+        }
+    }
+
+    let isActiveRightViz = true;
+    function handleTabChangeRightViz(tab) {
+        selectedTabRightViz = tab;
+        if (tab == 'doughnut') {
+            isActiveRightViz = true;
+        } else {
+            isActiveRightViz = false;
+        }
     }
 </script>
 
@@ -103,11 +123,29 @@
             <!-- Content based on selected tab -->
             {#if selectedTabLeftViz === 'doughnut'}
                 <div id="doughnutchart-parent">
-                    <DoughnutChart realData={selectedData} stateName={stateName} isActive={true}/>
+                    {#if selectedData === incomeData}
+                        <DoughnutChartIN realData={incomeData} stateName={stateName} isActive={isActiveLeftViz}/>
+                        <div class="bar-chart-container" id="barchart-leftViz-parent" style="display: none;">
+                            <BarChartEconomic data={incomeData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} />
+                        </div>
+                    {:else if selectedData === unimploymentData}
+                        <DoughnutChartUR realData={unimploymentData} stateName={stateName} isActive={isActiveLeftViz}/>
+                        <div class="bar-chart-container" id="barchart-leftViz-parent" style="display: none;">
+                            <BarChartEconomic data={incomeData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} />
+                        </div>
+                    {/if}
                 </div>
             {/if}
             {#if selectedTabLeftViz === 'bar'}
-                <div class="bar-chart-container" id="barchart-parent">
+            <!-- Bitte verzeiht mir für diesen Workaround :_) -->
+            <div id="doughnutchart-parent" style="display: none;">
+                {#if selectedData === incomeData}
+                    <DoughnutChartIN realData={incomeData} stateName={stateName} isActive={isActiveLeftViz}/>
+                {:else if selectedData === unimploymentData}
+                    <DoughnutChartUR realData={unimploymentData} stateName={stateName} isActive={isActiveLeftViz}/>
+                {/if}
+            </div>
+                <div class="bar-chart-container" id="barchart-leftViz-parent">
                     <BarChartEconomic data={incomeData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} />
                 </div>
             {/if}
@@ -139,10 +177,35 @@
                     </select>
                 </div>
             </div>
-            <div class="bar-chart-container"  id="barchart-parent">
-                <BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} 
-                dropdownItems={dropdownItemsRightViz} selectedDropdownItem={selectedDropdownItemRightViz}/>
+            <div class="tab-buttons">
+                <ul>
+                    <li>
+                        <button on:click={() => handleTabChangeRightViz('doughnut')} class:selected={selectedTabRightViz === 'doughnut'}>Distribution</button>
+                    </li>
+                    <li>
+                        <button on:click={() => handleTabChangeRightViz('bar')} class:selected={selectedTabRightViz === 'bar'}>Absolute / relative comparison</button>
+                    </li>
+                </ul>
             </div>
+            {#if selectedTabRightViz === 'doughnut'}
+                <div id="doughnutchart-parent">
+                        <DoughnutChartGE data={originalData} stateName={stateName} selectedDropdownItem={selectedDropdownItemRightViz}/>
+                </div>
+                <div class="bar-chart-container" id="barchart-parent" style="display: none;">
+                    <BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} 
+                    dropdownItems={dropdownItemsRightViz} selectedDropdownItem={selectedDropdownItemRightViz}/>
+                </div>
+            {/if}
+            {#if selectedTabRightViz === 'bar'}
+                <!-- Bitte verzeiht mir für diesen Workaround :_) -->
+                <div id="doughnutchart-parent" style="display: none;">
+                    <DoughnutChartGE data={originalData} stateName={stateName} />
+                </div>
+                <div class="bar-chart-container" id="barchart-parent">
+                    <BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} 
+                    dropdownItems={dropdownItemsRightViz} selectedDropdownItem={selectedDropdownItemRightViz}/>
+                </div>
+            {/if}
         </div>
     </div>
     <div class="timeline">
