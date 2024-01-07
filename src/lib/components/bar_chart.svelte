@@ -135,7 +135,7 @@
 		// Create a class string for bars of the selected year
 		function getClassForYear(year) {
 			const className = `year-${year}`;
-			console.log(className);
+			//console.log(className);
 			return className;
 		}
 
@@ -184,9 +184,9 @@
 	}
 
 	function toggleHighlighting() {
-		console.log(selectedYearValue);
+		//console.log(selectedYearValue);
 		highlightingActive = !highlightingActive;
-		console.log(highlightingActive);
+		//console.log(highlightingActive);
 		applyStylingToCurrentYear(selectedYearValue);
 	}
 

@@ -9,10 +9,9 @@
     import Map from '$lib/components/map.svelte';
     import DoughnutChart from '$lib/components/doughnut_chart.svelte';
     import ColorLegend from '$lib/components/color_legend.svelte'; // Import the ColorLegend component
-    let mapContainer;
-
     import { selectedYear } from '$lib/components/timeline.svelte';
     let selectedYearValue;
+    let mapContainer;
     
     selectedYear.subscribe(value => {
         selectedYearValue = value;
