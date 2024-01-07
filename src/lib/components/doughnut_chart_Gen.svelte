@@ -23,6 +23,27 @@
 		updateChart();
 	}
 
+	const customColors = [
+		'#1f77b4',
+		'#ff7f0e',
+		'#2ca02c',
+		'#d62728',
+		'#9467bd',
+		'#8c564b',
+		'#e377c2',
+		'#7f7f7f',
+		'#bcbd22',
+		'#17becf',
+		'#393b79',
+		'#637939',
+		'#8c6d31',
+		'#843c39',
+		'#7b4173',
+		'#bd9e39',
+		'#ad494a',
+		'#d6616b'
+	];
+
 	const abbreviations = {
 		'Baden-Württemberg': 'BW',
 		Bayern: 'BY',
@@ -69,7 +90,7 @@
 		var height = 0.8 * parentDiv.clientHeight;
 		var radius = Math.min(width, height) / 2;
 
-		const color = d3.scaleOrdinal(d3.schemeCategory10);
+		const color = d3.scaleOrdinal(customColors);
 
 		const svg = d3
 			.select('#chart-container')
