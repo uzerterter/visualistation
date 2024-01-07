@@ -158,6 +158,9 @@
 
 	<input type="radio" id="bus" name="transport" bind:group={selectedArt} value="Liniennahverkehr mit Omnibussen" on:change={() => handleToggle('Liniennahverkehr mit Omnibussen')} />
 	<label for="bus">Bus</label>
+
+	<input type="radio" id="total" name="total" bind:group={selectedArt} value="Liniennahverkehr insgesamt" on:change={() => handleToggle ('Liniennahverkehr insgesamt')} />
+	<label for="total">Total</label>
 </div>
 
 <style>
