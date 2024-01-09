@@ -85,7 +85,7 @@
 
 		d3.select('#chart-container svg').remove();
 
-		var parentDiv = document.getElementById('doughnutchart-parent');
+		var parentDiv = document.getElementById('doughnutchart-RightViz-parent');
 		var width = 0.8 * parentDiv.clientWidth;
 		var height = 0.8 * parentDiv.clientHeight;
 		var radius = Math.min(width, height) / 2;

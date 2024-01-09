@@ -135,7 +135,7 @@
                         <BarChartEconomicIN data={incomeData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} />
                     </div>
                     <div class="bar-chart-container" id= "barchart2-leftViz-parent" style="display: none;">
-                        <BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue} selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
+                        <BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue} ></BarChart_2>
                     </div>
                     {:else if selectedData === unimploymentData}
                         <div id="doughnutchart-parent">
@@ -145,7 +145,7 @@
                             <BarChartEconomicUR data={unimploymentData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} />
                         </div>
                     <div class="bar-chart-container" id= "barchart2-leftViz-parent" style="display: none;">
-                        <BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue} selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
+                        <BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue} ></BarChart_2>
                     </div>
                     {/if}
                 {/if}
@@ -159,7 +159,7 @@
                         <BarChartEconomicIN data={incomeData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} />
                     </div>
                     <div class="bar-chart-container" id= "barchart2-leftViz-parent" style="display: none;">
-                        <BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue} selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
+                        <BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue} ></BarChart_2>
                     </div>
                 {:else if selectedData === unimploymentData}
                     <div id="doughnutchart-parent" style="display: none;">
@@ -169,7 +169,7 @@
                         <BarChartEconomicUR data={unimploymentData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} />
                     </div>
                     <div class="bar-chart-container" id= "barchart2-leftViz-parent" style="display: none;">
-                        <BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue} selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
+                        <BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}></BarChart_2>
                     </div>
                 {/if}
             {/if}
@@ -183,7 +183,7 @@
                     <BarChartEconomicIN data={incomeData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} />
                 </div>
                 <div class="bar-chart-container" id= "barchart2-leftViz-parent">
-                    <BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue} selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
+                    <BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}></BarChart_2>
                 </div>
             {:else if selectedData === unimploymentData}
                 <div id="doughnutchart-parent" style="display: none;">
@@ -193,7 +193,7 @@
                     <BarChartEconomicUR data={unimploymentData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} />
                 </div>
                 <div class="bar-chart-container" id= "barchart2-leftViz-parent" >
-                    <BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue} selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
+                    <BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}></BarChart_2>
                 </div>
             {/if}
         {/if}
@@ -239,7 +239,7 @@
                 </ul>
             </div>
             {#if selectedTabRightViz === 'doughnut'}
-                <div id="doughnutchart-parent">
+                <div id="doughnutchart-RightViz-parent">
                         <DoughnutChartGE data={originalData} stateName={stateName} selectedDropdownItem={selectedDropdownItemRightViz}/>
                 </div>
                 <div class="bar-chart-container" id="barchart-parent" style="display: none;">
@@ -253,7 +253,7 @@
             {/if}
             {#if selectedTabRightViz === 'bar'}
                 <!-- Bitte verzeiht mir für diesen Workaround :_) -->
-                <div id="doughnutchart-parent" style="display: none;">
+                <div id="doughnutchart-RightViz-parent" style="display: none;">
                     <DoughnutChartGE data={originalData} stateName={stateName} />
                 </div>
                 <div class="bar-chart-container" id="barchart-parent">
@@ -267,7 +267,7 @@
             {/if}
             {#if selectedTabRightViz === 'bar2'}
             <!-- Bitte verzeiht mir für diesen Workaround :_) -->
-            <div id="doughnutchart-parent" style="display: none;">
+            <div id="doughnutchart-RightViz-parent" style="display: none;">
                 <DoughnutChartGE data={originalData} stateName={stateName} />
             </div>
             <div class="bar-chart-container" id="barchart-parent" style="display: none;">
@@ -362,7 +362,7 @@
         border-color: var(--colorscheme-blue);
     }
 
-    .bar-chart-container {
+    .bar-chart-container, #barchart-leftViz-parent, #barchart2-leftViz-parent, #barchart-parent, #barchart2-parent {
         background-color: transparent;
         width: 95%;
         height: 95%;
@@ -372,7 +372,7 @@
         justify-content: center;
     }
 
-    #doughnutchart-parent {
+    #doughnutchart-parent, #doughnutchart-RightViz-parent {
         background-color: transparent;
         width: 95%;
         height: 95%;
