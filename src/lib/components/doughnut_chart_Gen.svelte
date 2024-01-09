@@ -18,7 +18,12 @@
 	let currentYear = 2017;
 	let highlightedState = '';
 
+	export let isActive = false;
+	let ready = false;
+
 	function handleToggle(art) {
+		if(!isActive) {	
+			return; }
 		selectedArt = art;
 		updateChart();
 	}
@@ -66,11 +71,16 @@
 	selectedYear.subscribe((value) => {
 		currentYear = value;
 		if (typeof window !== 'undefined') {
+			if(!isActive) {	
+			return; }
 			updateChart();
 		}
 	});
 
 	function updateChart() {
+		if(!isActive) {	
+			return; }
+
 		const filteredData = data.data.filter(
 			(entry) =>
 				entry.Jahr === currentYear &&
@@ -85,7 +95,7 @@
 
 		d3.select('#chart-container svg').remove();
 
-		var parentDiv = document.getElementById('doughnutchart-parent');
+		var parentDiv = document.getElementById('doughnutchart-RightViz-parent');
 		var width = 0.8 * parentDiv.clientWidth;
 		var height = 0.8 * parentDiv.clientHeight;
 		var radius = Math.min(width, height) / 2;
@@ -154,13 +164,16 @@
 
 	function handleResize() {
 		if (typeof window !== 'undefined') {
+			if(!isActive) {	
+			return; }
 			updateChart();
 		}
 	}
 
 	onMount(() => {
+		if(!isActive) {	
+			return; }
 		updateChart();
-
 		window.addEventListener('resize', handleResize);
 		return () => {
 			window.removeEventListener('resize', handleResize);
@@ -175,6 +188,8 @@
 			highlightedState = '';
 		}
 		if (typeof window !== 'undefined') {
+			if(!isActive) {	
+			return; }
 			updateChart();
 		}
 	});
