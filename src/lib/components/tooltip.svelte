@@ -61,7 +61,7 @@
 
     .tooltip {
         border: 1px solid var(--colorscheme-blue);
-        box-shadow: 1px 1px 1px #444444;
+        box-shadow: 5px 5px 5px #444444;
         background: white;
         border-radius: 4px;
         padding: 8px;
@@ -69,6 +69,8 @@
         max-width: 200px;
         z-index: 9999;
         word-wrap: break-word;
+        width: fit-content;
+        block-size: fit-content;
     }
 
     .tooltip-content {
@@ -77,6 +79,7 @@
         color: #333;
         line-height: 1.4;
         max-width: 100%;
+				text-align: left;
     }
 
 </style>

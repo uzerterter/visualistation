@@ -24,7 +24,7 @@
     import { selectedYear } from '$lib/components/timeline.svelte';
 	import DoughnutChartGen from '../lib/components/doughnut_chart_Gen.svelte';
     let selectedYearValue;
-    
+
     selectedYear.subscribe(value => {
         selectedYearValue = value;
     });
@@ -214,10 +214,10 @@
                     </div>
                 {/if}
             </div>
-        
+
         </div>
 
-        <div class="right-viz viz-border"> 
+        <div class="right-viz viz-border">
             <div id="right-viz-toprow">
                 <div id="right-viz-dropdown">
                     <select bind:value={selectedDropdownItemRightViz}>
@@ -228,6 +228,9 @@
                         {/each}
                     </select>
                 </div>
+							<Info
+								title="This Chart displays economic data,
+								e.g. unemployment- or income rates for each federal state in germany." />
             </div>
             <div class="tab-buttons">
                 <ul>
@@ -286,7 +289,7 @@
         </div>
     </div>
     <div class="timeline">
-        <div class="timeline-viz"> 
+        <div class="timeline-viz">
             <Timeline/>
         </div>
     </div>
