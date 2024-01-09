@@ -11,7 +11,7 @@
 		y = event.pageY + 15;
 
 		const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
-		showOnLeft = viewportWidth - event.clientX < 200;
+		showOnLeft = viewportWidth - event.clientX <= 300;
 	}
 
 	function mouseMove(event) {
