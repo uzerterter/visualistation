@@ -8,7 +8,6 @@
   
 	import * as d3 from 'd3';
 	import { onMount } from 'svelte';
-	import BarChart_2 from './bar_chart_2.svelte';
   
 	// update graph reactively
 	$: data, stateName, filterData(), updateGraph();
@@ -237,15 +236,6 @@
 	}
   </script>
   
-  <div bind:this={tabs} class="tabs">
-	<button class="tab {activeTabId==='barchart1'?'active':''}" on:click={e=>openTab(e, 'barchart1')}>
-	  Jahre (absolut)
-	</button>
-	<button class="tab {activeTabId==='barchart2'?'active':''}" on:click={e=>openTab(e, 'barchart2')}>
-	  Bundesländer (relativ)
-	</button>
-  </div>
-  
   <!-- BAR CHART 1 -->
   <div bind:this={tooltip} class="tooltip" style="display: {'barchart1'===activeTabId?'block':'none'}"/>
   <div id="barchart-diagram" style="display: {'barchart1'===activeTabId?'block':'none'}">
@@ -253,13 +243,9 @@
 	<svg bind:this={svgLocal} id="bar-chart" />
   </div>
   
-  <!-- BAR CHART 2 -->
-  <div style="display: {'barchart2'===activeTabId?'block':'none'}; height:85%; background-color:transparent">
-	<BarChart_2 bind:this={barChart2} data={data} stateName={stateName} year={year}></BarChart_2>
-  </div>
   
   <style>
-	.tabs {           
+	/* .tabs {           
 	  margin-top:10px;
 	  margin-bottom:0px;
 	  width:100%;
@@ -286,7 +272,7 @@
   
 	.tabs button.active {
 	  border-bottom-color: #444;
-	}
+	} */
   
 	.tooltip {
 	  position: absolute;

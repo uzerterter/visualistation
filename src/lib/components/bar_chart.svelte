@@ -28,7 +28,6 @@
 
 	import * as d3 from 'd3';
 	import { onMount } from 'svelte';
-	import BarChart_2 from './bar_chart_2.svelte';
 
 	// update graph reactively
 	$: selectedDropdownItem, selectedCheckboxes, updateGraph();
@@ -61,7 +60,8 @@
 		var checkboxHeight = document.getElementById('barchart-checkboxes').clientHeight;
 		// var dropdownHeight = document.getElementById('barchart-dropdown').clientHeight;
 		var width = parentDiv.clientWidth;
-		var height = 0.95 * parentDiv.clientHeight - checkboxHeight - 20; 
+		// var height = 0.95 * parentDiv.clientHeight - checkboxHeight - 20; 
+		var height = 0.95 * parentDiv.clientHeight -  20; 
 
 		d3.select(svgLocal).selectAll('*').remove();
 
@@ -304,14 +304,14 @@
 	</div>
 </div> -->
 
-<div bind:this={tabs} class="tabs">
+<!-- <div bind:this={tabs} class="tabs">
 	<button class="tab {activeTabId==='barchart1'?'active':''}" on:click={e=>openTab(e, 'barchart1')}>
 		Jahre (absolut)
 	</button>
 	<button class="tab {activeTabId==='barchart2'?'active':''}" on:click={e=>openTab(e, 'barchart2')}>
 		Bundesländer (relativ)
 	</button>
-</div>
+</div> -->
 
 <!-- BAR CHART 1 -->
 <div bind:this={tooltip} class="tooltip" style="display: {'barchart1'===activeTabId?'block':'none'}"/>
@@ -335,13 +335,8 @@
 	{/each}
 </div>
 
-<!-- BAR CHART 2 -->
-<div style="display: {'barchart2'===activeTabId?'block':'none'}; height:85%; background-color:transparent">
-	<BarChart_2 bind:this={barChart2} data={data} stateName={stateName} year={year}></BarChart_2>
-</div>
-
 <style>
-	.tabs {						
+	/* .tabs {						
 		margin-top:10px;
 		margin-bottom:0px;
 		width:100%;
@@ -368,7 +363,7 @@
 
 	.tabs button.active {
 		border-bottom-color: #444;
-	}
+	} */
 
 	.tooltip {
 		position: absolute;
