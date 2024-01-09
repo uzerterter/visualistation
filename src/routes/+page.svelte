@@ -240,7 +240,7 @@
             </div>
             {#if selectedTabRightViz === 'doughnut'}
                 <div id="doughnutchart-RightViz-parent">
-                        <DoughnutChartGE data={originalData} stateName={stateName} selectedDropdownItem={selectedDropdownItemRightViz}/>
+                        <DoughnutChartGE data={originalData} stateName={stateName} selectedDropdownItem={selectedDropdownItemRightViz} isActive={isActiveRightViz}/>
                 </div>
                 <div class="bar-chart-container" id="barchart-parent" style="display: none;">
                     <BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} 
@@ -254,7 +254,7 @@
             {#if selectedTabRightViz === 'bar'}
                 <!-- Bitte verzeiht mir für diesen Workaround :_) -->
                 <div id="doughnutchart-RightViz-parent" style="display: none;">
-                    <DoughnutChartGE data={originalData} stateName={stateName} />
+                    <DoughnutChartGE data={originalData} stateName={stateName} isActive={isActiveRightViz}/>
                 </div>
                 <div class="bar-chart-container" id="barchart-parent">
                     <BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} 
@@ -268,7 +268,7 @@
             {#if selectedTabRightViz === 'bar2'}
             <!-- Bitte verzeiht mir für diesen Workaround :_) -->
             <div id="doughnutchart-RightViz-parent" style="display: none;">
-                <DoughnutChartGE data={originalData} stateName={stateName} />
+                <DoughnutChartGE data={originalData} stateName={stateName} isActive={isActiveRightViz}/>
             </div>
             <div class="bar-chart-container" id="barchart-parent" style="display: none;">
                 <BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue} year={selectedYearValue} 
