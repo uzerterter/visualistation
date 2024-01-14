@@ -37,7 +37,7 @@
 
 {#if isHovered}
 	{#if showOnLeft}
-		<div style="top: {y}px; right: {window.innerWidth - x}px;" class="tooltip">
+		<div style="top: {y}px; right: {window.innerWidth - x + 15}px;" class="tooltip">
 			<div class="tooltip-content">
 				{title}
 			</div>
@@ -71,6 +71,7 @@
         word-wrap: break-word;
         width: fit-content;
         block-size: fit-content;
+
     }
 
     .tooltip-content {
