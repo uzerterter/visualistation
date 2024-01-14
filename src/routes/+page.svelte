@@ -1,7 +1,6 @@
 <script>
     import '../styles/global.css';
     let group = "group08"
-    import TestComponent from '$lib/test_component.svelte';
     import BarChart from '$lib/components/bar_chart.svelte';
     import originalData from '$lib/data/final_genesis_traffic.json';
     import incomeData from '$lib/data/income.json';
@@ -11,7 +10,7 @@
     import DoughnutChartIN from '$lib/components/doughnut_chart_In.svelte';
     import DoughnutChartUR from '../lib/components/doughnut_chart_UR.svelte';
     import DoughnutChartGE from '../lib/components/doughnut_chart_Gen.svelte';
-    import ColorLegend from '$lib/components/color_legend.svelte'; // Import the ColorLegend component
+    import ColorLegend from '$lib/components/color_legend.svelte';
     import BarChartEconomicIN from '../lib/components/bar_chart_economic_IN.svelte';
     import BarChartEconomicUR from '../lib/components/bar_chart_economic_UR.svelte';
     import BarChart_2 from '../lib/components/bar_chart_2.svelte';
@@ -22,7 +21,6 @@
     let mapContainer;
 
     import { selectedYear } from '$lib/components/timeline.svelte';
-	import DoughnutChartGen from '../lib/components/doughnut_chart_Gen.svelte';
     let selectedYearValue;
 
     selectedYear.subscribe(value => {
