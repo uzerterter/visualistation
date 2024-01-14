@@ -68,10 +68,8 @@
         position: fixed;
         max-width: 200px;
         z-index: 9999;
-        word-wrap: break-word;
         width: fit-content;
         block-size: fit-content;
-
     }
 
     .tooltip-content {
@@ -81,6 +79,8 @@
         line-height: 1.4;
         max-width: 100%;
 				text-align: left;
+        word-wrap: break-word;
+				white-space: pre-line;
     }
 
 </style>
