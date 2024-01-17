@@ -170,8 +170,6 @@
         .call(zoom.transform, transform);
 
       dispatch('stateClicked', { stateName: d.properties.NAME_1 });
-      // Disable zoom and drag behavior when zoomed in
-      svg.on('.zoom', null); // Remove existing zoom handlers
     }    
   }
 
@@ -257,7 +255,7 @@
 
 <style>
   :global(.state) {
-    fill: #003049 !important;
+    fill: #003049;
     stroke: #fff;
     stroke-width: 1.25px;
     transition: 0.5s;

@@ -30,6 +30,13 @@ export let maxPercentage = writable(11.2);
   const dispatch = createEventDispatcher();
   export const stateData = {...trafficData, data: trafficData.data.filter(v => v.Bundesland === 'Bayern')};
 
+  $: if ($selectedYear && isMapInitialized) {
+    year = $selectedYear;
+    console.log(getUnemploymentPercentagesByYear(year));
+    getUnemploymentPercentagesByYear(year);
+    updateMapOpacities();
+  }
+
   onMount(() => {
 
     var parentDiv = document.getElementById('map-parent');
@@ -175,7 +182,7 @@ export let maxPercentage = writable(11.2);
       minPercentage.set(Math.min(...stateRow.filter(val => val !== null)));
       maxPercentage.set(Math.max(...stateRow.filter(val => val !== null)));
 
-      console.log(unemploymentOpacityMap[d.properties.NAME_1]);
+      // console.log(unemploymentOpacityMap[d.properties.NAME_1]);
 
     }    
   }
@@ -304,11 +311,13 @@ export let maxPercentage = writable(11.2);
     return opacity;
   }
 
-  console.log("min percentage: " + $minPercentage + " max percentage: "+ $maxPercentage);
+  
 
-  console.log("mapPercentageToMap(4.0)" + mapPercentageToMap(4.0));
 
   function mapPercentageToState(percentage, min, max) {
+    // console.log("Min: " + min);
+    // console.log("Max: " + max);
+    // console.log("Percentage: " + percentage);
     if (min === max) return 1; // Avoid division by zero if min and max are equal
     return $minPercentage + ((percentage - min) / (max - min)) * ($maxPercentage - $minPercentage);
   }
