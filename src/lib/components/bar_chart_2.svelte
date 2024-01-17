@@ -16,7 +16,7 @@
 		{ id: 9, label: 'Total', orig: 'Liniennahverkehr insgesamt', color: 'var(--colorscheme-yellow)' }
 	];
 	let selectedRadioButton = radioButtons[0];
-    $: selectedRadioButton // console.log("radio", selectedRadioButton)
+    //$: selectedRadioButton, console.log("radio", selectedRadioButton)
 
 	import * as d3 from 'd3';
 	import { onMount } from 'svelte';
@@ -112,7 +112,7 @@
 		var width = parentDiv.clientWidth;
 		var height = 0.95 * parentDiv.clientHeight - (radioButtonsHeight) - 70;
 
-        console.log(parentDiv.clientWidth, parentDiv.clientHeight)
+        //console.log(parentDiv.clientWidth, parentDiv.clientHeight)
 
 		d3.select(svgLocal).selectAll('*').remove();
         //if(!stateName || stateName === "Deutschland") return; doppelt?
