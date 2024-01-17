@@ -19,7 +19,7 @@ export let maxPercentage = writable(11.2);
   import { createEventDispatcher } from 'svelte';
   import { selectedYear } from '$lib/components/timeline.svelte'; // Import the selectedYear store
   
-  let width, height, geoPath, projection;
+  let width, height, geoPath, projection, normalizedOpacity;
   let svg, g, zoom; // Define zoom and SVG selections
   let centroidMatrix = [];
   let focused = null; // Store the currently focused element
@@ -32,7 +32,6 @@ export let maxPercentage = writable(11.2);
 
   $: if ($selectedYear && isMapInitialized) {
     year = $selectedYear;
-    console.log(getUnemploymentPercentagesByYear(year));
     getUnemploymentPercentagesByYear(year);
     updateMapOpacities();
   }
@@ -91,7 +90,6 @@ export let maxPercentage = writable(11.2);
 
     // Initial call to set opacities based on the default year
     getUnemploymentPercentagesByYear(year);
-    // console.log(getStateOpacity("Bayern"));
 
   });
 
@@ -139,6 +137,7 @@ export let maxPercentage = writable(11.2);
     if (isZoomedIn) {
       // If already zoomed in, reset the zoom
       resetZoom();
+      updateMapOpacities();
       minPercentage.set(2.8);
       maxPercentage.set(11.2);
       dispatch('stateClicked', { stateName: null });
@@ -147,6 +146,12 @@ export let maxPercentage = writable(11.2);
       focused = d;
       isZoomedIn = true;
       dispatch('stateClicked', { stateName: d.properties.NAME_1 });
+
+      const { stateRow } = createUnemploymentMatrixForState(unemploymentData, d.properties.NAME_1);
+      minPercentage.set(Math.min(...stateRow.filter(val => val !== null)));
+      maxPercentage.set(Math.max(...stateRow.filter(val => val !== null)));
+
+      updateMapOpacities();
       
 
       // Set opacity of all states to transparent, except the clicked one
@@ -176,13 +181,7 @@ export let maxPercentage = writable(11.2);
       // Disable zoom and drag behavior when zoomed in
       svg.on('.zoom', null); // Remove existing zoom handlers
 
-      updateMapOpacities();
-      // newLegend(d.properties.NAME_1);
-      const { stateRow } = createUnemploymentMatrixForState(unemploymentData, d.properties.NAME_1);
-      minPercentage.set(Math.min(...stateRow.filter(val => val !== null)));
-      maxPercentage.set(Math.max(...stateRow.filter(val => val !== null)));
 
-      // console.log(unemploymentOpacityMap[d.properties.NAME_1]);
 
     }    
   }
@@ -190,7 +189,7 @@ export let maxPercentage = writable(11.2);
   function resetZoom() {
     // Reset opacity of all states
     g.selectAll('.state')
-      .transition().duration(500)
+      // .transition().duration(500)
       .style('opacity', d => getStateOpacity(d.properties.NAME_1));
 
     focused = null;
@@ -199,7 +198,8 @@ export let maxPercentage = writable(11.2);
     // Reset the zoom transform
     svg.transition()
       .duration(1000)
-      .call(zoom.transform, d3.zoomIdentity);    
+      .call(zoom.transform, d3.zoomIdentity);   
+    
   }
 
   function getZoomFactor(stateName) {
@@ -226,29 +226,29 @@ export let maxPercentage = writable(11.2);
   }
 
   function getUnemploymentPercentagesByYear(year) {
-    const startYear = 2017;
-    const endYear = 2022;
+  const startYear = 2017;
+  const endYear = 2022;
 
-    // Filter data for the specified year and within the range of 2017 to 2022
-    let filteredData = unemploymentData.data.filter(entry => 
-        entry.Jahr === year && entry.Jahr >= startYear && entry.Jahr <= endYear
-    );
+  // Filter data for the specified year and within the range of 2017 to 2022
+  let filteredData = unemploymentData.data.filter(entry => 
+    entry.Jahr === year && entry.Jahr >= startYear && entry.Jahr <= endYear
+  );
 
-    // Sort the filtered data alphabetically by Bundesland
-    const sortedData = filteredData.sort((a, b) => a.Bundesland.localeCompare(b.Bundesland));
+  // Sort the filtered data alphabetically by Bundesland
+  const sortedData = filteredData.sort((a, b) => a.Bundesland.localeCompare(b.Bundesland));
 
-    const unemploymentPercentages = sortedData.map(entry => ({
-        Bundesland: entry.Bundesland,
-        Prozent: entry.Prozent
-    }));
+  // Extract only the 'Prozent' values from the sorted data
+  const unemploymentPercentages = sortedData.map(entry => entry.Prozent);
 
+  unemploymentPercentages.forEach((percentage, index) => {
+    normalizedOpacity = mapPercentageToMap(percentage);
+    // Now, you have the percentage value and the corresponding opacity value
+    unemploymentOpacityMap[sortedData[index].Bundesland] = normalizedOpacity;
+  });
 
-    unemploymentPercentages.forEach(entry => {
-      const normalizedOpacity = mapPercentageToMap(entry.Prozent);
-      unemploymentOpacityMap[entry.Bundesland] = normalizedOpacity;
-    });
-    return unemploymentPercentages;
-  }
+  return unemploymentPercentages;
+}
+
 
   function createUnemploymentMatrixForState(unemploymentData, stateName) {
     const startYear = 2017;
@@ -287,14 +287,16 @@ export let maxPercentage = writable(11.2);
         const max = Math.max(...stateRow.filter(val => val !== null));
 
         g.selectAll('.state')
-          .style('opacity', d => {
-            if (d === focused) {
-              // Find the unemployment percentage for the focused state in the selected year
-              const percentage = unemploymentData.data.find(entry => entry.Jahr === year && entry.Bundesland === d.properties.NAME_1)?.Prozent || min; // Use min as a fallback
-              return mapPercentageToState(percentage, min, max);
-            }
-            return 0; // Other states remain transparent
-          });
+        .style('opacity', d => {
+          if (d === focused) {
+            // Find the unemployment percentage for the focused state in the selected year
+            const percentage = unemploymentData.data.find(entry => entry.Jahr === year && entry.Bundesland === d.properties.NAME_1)?.Prozent || min; // Use min as a fallback
+            const opacity = mapPercentageToState(percentage, min, max);
+
+            return opacity;
+          }
+          return 0; // Other states remain transparent
+        });
 
       } else {
         // If the map is not zoomed in, update all states normally
@@ -307,20 +309,16 @@ export let maxPercentage = writable(11.2);
   function mapPercentageToMap(percentage) {
     let minOpacity = 0.1;
     let maxOpacity = 1;
-    const opacity = minOpacity + ((percentage - $minPercentage) * (maxOpacity - minOpacity)) / ($maxPercentage - $minPercentage);
-    return opacity;
+    return minOpacity + ((percentage - $minPercentage) * (maxOpacity - minOpacity)) / ($maxPercentage - $minPercentage);
   }
-
-  
-
 
   function mapPercentageToState(percentage, min, max) {
-    // console.log("Min: " + min);
-    // console.log("Max: " + max);
-    // console.log("Percentage: " + percentage);
     if (min === max) return 1; // Avoid division by zero if min and max are equal
-    return $minPercentage + ((percentage - min) / (max - min)) * ($maxPercentage - $minPercentage);
+    const minOpacity = 0.1;
+    const maxOpacity = 1;
+    return minOpacity + ((percentage - min) * (maxOpacity - minOpacity)) / (max - min);
   }
+
 
 
 
@@ -335,9 +333,9 @@ export let maxPercentage = writable(11.2);
     stroke-width: 1.25px;
     transition: 0.5s;
   }
-  :global(.state.active) {
+  /* :global(.state.active) {
     fill: #003049 !important;
-  }
+  } */
 
 
 </style>
