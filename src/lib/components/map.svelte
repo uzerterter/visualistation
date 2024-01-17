@@ -130,6 +130,11 @@ export let maxPercentage = writable(11.2);
         isZoomedIn = true;
         dispatch('stateClicked', { stateName: d.properties.NAME_1 });
 
+        const { stateRow } = createUnemploymentMatrixForState(unemploymentData, d.properties.NAME_1);
+        minPercentage.set(Math.min(...stateRow.filter(val => val !== null)));
+        maxPercentage.set(Math.max(...stateRow.filter(val => val !== null)));
+
+
         // Set opacity for the focused state based on the matrix
         const focusedOpacity = opacityMatrix[d.properties.NAME_1][year];
         g.selectAll('.state')
@@ -254,36 +259,39 @@ export let maxPercentage = writable(11.2);
 
   function updateMapOpacities() {
     if (g) {
-      console.log('Updating map opacities for the year:', year);
-
       if (isZoomedIn && focused) {
-        console.log('Map is zoomed in. Focused on state:', focused.properties.NAME_1);
+        const { stateRow } = createUnemploymentMatrixForState(unemploymentData, focused.properties.NAME_1);
+
+        // Find min and max values for the focused state
+        const min = Math.min(...stateRow.filter(val => val !== null));
+        const max = Math.max(...stateRow.filter(val => val !== null));
 
         g.selectAll('.state')
-          .style('opacity', d => {
-            if (d === focused) {
-              const opacity = opacityMatrix[d.properties.NAME_1][year];
-              console.log(`Setting opacity for ${d.properties.NAME_1}:`, opacity);
-              return opacity;
-            }
-            console.log(`State ${d.properties.NAME_1} is not focused. Setting opacity to 0.`);
-            return 0; // Other states remain transparent
-          });
+        .style('opacity', d => {
+          if (d === focused) {
+            // Find the unemployment percentage for the focused state in the selected year
+            const percentage = unemploymentData.data.find(entry => entry.Jahr === year && entry.Bundesland === d.properties.NAME_1)?.Prozent || min; // Use min as a fallback
+            const opacity = mapPercentageToState(percentage, min, max);
+
+            return opacity;
+          }
+          return 0; // Other states remain transparent
+        });
 
       } else {
-        console.log('Map is not zoomed in. Updating all states.');
+
 
         g.selectAll('.state')
           .each(function(d) {
             const opacity = opacityMatrix[d.properties.NAME_1][year];
-            console.log(`State ${d.properties.NAME_1}, opacity:`, opacity);
+
           })
           .style('opacity', d => opacityMatrix[d.properties.NAME_1][year]);
       }
     } else {
-      console.log('SVG group element not defined. Cannot update map opacities.');
+
     }
-}
+  }
 
 
 
