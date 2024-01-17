@@ -289,6 +289,7 @@
 				<!-- BAR CHART 2 -->
 				<div id="barchart2-parent" style="display: none;">
 					<BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}
+											dropdownItems={dropdownItemsRightViz} 
 											selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
 				</div>
 			{/if}
@@ -305,6 +306,7 @@
 				<!-- BAR CHART 2 -->
 				<div id="barchart2-parent" style="display: none;">
 					<BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}
+											dropdownItems={dropdownItemsRightViz} 
 											selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
 				</div>
 			{/if}
@@ -321,6 +323,7 @@
 				<!-- BAR CHART 2 -->
 				<div class="bar-chart-container" id="barchart2-parent">
 					<BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}
+											dropdownItems={dropdownItemsRightViz} 
 											selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
 				</div>
 			{/if}
