@@ -77,13 +77,14 @@ export let maxPercentage = writable(11.2);
           clickState(d, i);
         })
         .on('mouseover', (event, d) => applyHoverStyle(event, d))
-        .on('mouseout', (event, d) => removeHoverStyle(event, d));;
+        .on('mouseout', (event, d) => removeHoverStyle(event, d));
     });
     // After setting up the map, set the flag to true
     isMapInitialized = true;
 
     // Initial call to set opacities based on the default year
     getUnemploymentPercentagesByYear(year);
+    // console.log(getStateOpacity("Bayern"));
 
   });
 
@@ -171,10 +172,10 @@ export let maxPercentage = writable(11.2);
       updateMapOpacities();
       // newLegend(d.properties.NAME_1);
       const { stateRow } = createUnemploymentMatrixForState(unemploymentData, d.properties.NAME_1);
-      // let minPercentage = Math.min(...stateRow.filter(val => val !== null));
-      // let maxPercentage = Math.max(...stateRow.filter(val => val !== null));
       minPercentage.set(Math.min(...stateRow.filter(val => val !== null)));
       maxPercentage.set(Math.max(...stateRow.filter(val => val !== null)));
+
+      console.log(unemploymentOpacityMap[d.properties.NAME_1]);
 
     }    
   }
@@ -226,9 +227,6 @@ export let maxPercentage = writable(11.2);
         entry.Jahr === year && entry.Jahr >= startYear && entry.Jahr <= endYear
     );
 
-    
-
-
     // Sort the filtered data alphabetically by Bundesland
     const sortedData = filteredData.sort((a, b) => a.Bundesland.localeCompare(b.Bundesland));
 
@@ -270,48 +268,52 @@ export let maxPercentage = writable(11.2);
   }
 
   function updateMapOpacities() {
-  if (g) {
+    if (g) {
 
-    // Check if the map is zoomed in
-    if (isZoomedIn && focused) {
-      // Get the unemployment data for only the focused state
-      const { stateRow } = createUnemploymentMatrixForState(unemploymentData, focused.properties.NAME_1);
+      // Check if the map is zoomed in
+      if (isZoomedIn && focused) {
+        // Get the unemployment data for only the focused state
+        const { stateRow } = createUnemploymentMatrixForState(unemploymentData, focused.properties.NAME_1);
 
-      // Find min and max values for the focused state
-      const min = Math.min(...stateRow.filter(val => val !== null));
-      const max = Math.max(...stateRow.filter(val => val !== null));
+        // Find min and max values for the focused state
+        const min = Math.min(...stateRow.filter(val => val !== null));
+        const max = Math.max(...stateRow.filter(val => val !== null));
 
-      g.selectAll('.state')
-        .style('opacity', d => {
-          if (d === focused) {
-            // Find the unemployment percentage for the focused state in the selected year
-            const percentage = unemploymentData.data.find(entry => entry.Jahr === year && entry.Bundesland === d.properties.NAME_1)?.Prozent || min; // Use min as a fallback
-            return mapPercentageToState(percentage, min, max);
-          }
-          return 0; // Other states remain transparent
-        });
+        g.selectAll('.state')
+          .style('opacity', d => {
+            if (d === focused) {
+              // Find the unemployment percentage for the focused state in the selected year
+              const percentage = unemploymentData.data.find(entry => entry.Jahr === year && entry.Bundesland === d.properties.NAME_1)?.Prozent || min; // Use min as a fallback
+              return mapPercentageToState(percentage, min, max);
+            }
+            return 0; // Other states remain transparent
+          });
 
-    } else {
-      // If the map is not zoomed in, update all states normally
-      g.selectAll('.state')
-        .style('opacity', d => getStateOpacity(d.properties.NAME_1));
+      } else {
+        // If the map is not zoomed in, update all states normally
+        g.selectAll('.state')
+          .style('opacity', d => getStateOpacity(d.properties.NAME_1));
+      }
     }
   }
-}
 
-function mapPercentageToMap(percentage) {
-      let minOpacity = 0.1;
-      let maxOpacity = 1;
-      const opacity = minOpacity + ((percentage - minPercentage) * (maxOpacity - minOpacity)) / (maxPercentage - minPercentage);
-      return opacity;
+  function mapPercentageToMap(percentage) {
+    let minOpacity = 0.1;
+    let maxOpacity = 1;
+    const opacity = minOpacity + ((percentage - $minPercentage) * (maxOpacity - minOpacity)) / ($maxPercentage - $minPercentage);
+    return opacity;
   }
 
-function mapPercentageToState(percentage, min, max) {
-  let minOpacity = 0.1;
-  let maxOpacity = 1;
-  if (min === max) return maxOpacity; // Avoid division by zero if min and max are equal
-  return minOpacity + ((percentage - min) / (max - min)) * (maxOpacity - minOpacity);
-}
+  console.log("min percentage: " + $minPercentage + " max percentage: "+ $maxPercentage);
+
+  console.log("mapPercentageToMap(4.0)" + mapPercentageToMap(4.0));
+
+  function mapPercentageToState(percentage, min, max) {
+    if (min === max) return 1; // Avoid division by zero if min and max are equal
+    return $minPercentage + ((percentage - min) / (max - min)) * ($maxPercentage - $minPercentage);
+  }
+
+
 
 
 

@@ -60,7 +60,6 @@
     minPercentage.subscribe(value => {
         newMinPercentage = value;
         if (typeof window !== 'undefined') {
-            console.log("Current min value: " + newMinPercentage);
             foo();
             colorScale.domain([newMinPercentage, newMaxPercentage]);
 
@@ -70,7 +69,6 @@
     maxPercentage.subscribe(value => {
         newMaxPercentage = value;
         if (typeof window !== 'undefined') {
-            console.log("Current max value: " + newMaxPercentage);
             foo();
             colorScale.domain([newMinPercentage, newMaxPercentage]);
         }
@@ -78,7 +76,6 @@
 
     function foo() {
         if (!svg || !colorScale || !axisScale) return;
-        console.log("foo");
 
         // Remove the old legend elements
         svg.select(".axis").remove();
