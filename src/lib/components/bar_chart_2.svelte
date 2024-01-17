@@ -2,6 +2,7 @@
 	export let stateName = 'Deutschland';
 	export let data = [];
     export let year = null;
+    export let parentId
 
 	let svgLocal;
 	let tooltip;
@@ -107,7 +108,7 @@
         })()
 
         // size
-        var parentDiv = document.getElementById('barchart2-parent') ?? document.getElementById('barchart2-leftViz-parent');
+        var parentDiv = document.getElementById(parentId)
 		var radioButtonsHeight = document.getElementById('barchart-radio-buttons').clientHeight;
 		var width = parentDiv.clientWidth;
 		var height = 0.95 * parentDiv.clientHeight - (radioButtonsHeight) - 70;
