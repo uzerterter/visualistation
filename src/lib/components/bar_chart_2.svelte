@@ -13,7 +13,7 @@
 		{ id: 9, label: 'Total', orig: 'Liniennahverkehr insgesamt', color: 'var(--colorscheme-yellow)' }
 	];
 	let selectedRadioButton = radioButtons[0];
-    $: selectedRadioButton, console.log("radio", selectedRadioButton)
+    $: selectedRadioButton // console.log("radio", selectedRadioButton)
 
 	import * as d3 from 'd3';
 	import { onMount } from 'svelte';
