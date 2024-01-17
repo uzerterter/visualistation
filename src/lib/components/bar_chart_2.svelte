@@ -6,6 +6,9 @@
 	let svgLocal;
 	let tooltip;
 
+    export let dropdownItems = null
+    export let selectedDropdownItem = null
+
 	let radioButtons = [
 		{ id: 6, label: 'Tram', orig: 'Liniennahverkehr mit Straßenbahnen', color: 'var(--colorscheme-red)' },
 		{ id: 7, label: 'Bus', orig: 'Liniennahverkehr mit Omnibussen', color: 'var(--colorscheme-orange)' },
@@ -13,22 +16,25 @@
 		{ id: 9, label: 'Total', orig: 'Liniennahverkehr insgesamt', color: 'var(--colorscheme-yellow)' }
 	];
 	let selectedRadioButton = radioButtons[0];
-    $: selectedRadioButton // console.log("radio", selectedRadioButton)
+    //$: selectedRadioButton, console.log("radio", selectedRadioButton)
 
 	import * as d3 from 'd3';
 	import { onMount } from 'svelte';
 
 	// update graph reactively
-	$: data, selectedRadioButton, updateGraph();
+	$: data, selectedRadioButton, selectedDropdownItem, dropdownItems, updateGraph();
 
 	let ready = false;
 	async function updateGraph() {
 		if (!ready) return;
         await tick(); // otherwise layout does weird stuff?
+                
+        if (!stateName || stateName === "Deutschland") return
+        if (!selectedDropdownItem) return
+        if (!dropdownItems) return        
+        if (!year) return
 
-        
-
-        const bl = [
+        let bl = [
             { abbr: 'BW', full: 'Baden-Württemberg' },
             { abbr: 'BY', full: 'Bayern' },
             { abbr: 'BE', full: 'Berlin' },
@@ -46,6 +52,59 @@
             { abbr: 'SH', full: 'Schleswig-Holstein' },
             { abbr: 'TH', full: 'Thüringen' },
         ];
+        bl = bl.filter(x=>x.full !== stateName)
+
+        const dOth = {...data, data: data.data.filter(item => 
+            item.Bundesland !== stateName && item.Bundesland !== "Deutschland" &&
+            item.Jahr === year &&
+            item.Art === selectedRadioButton.orig)
+        }        
+        const dBl = {...data, data: data.data.filter(item =>
+            item.Bundesland === stateName &&
+            item.Jahr === year &&
+            item.Art === selectedRadioButton.orig)
+        }
+
+        const dOth2 = dOth.data.reduce((acc,item) => {
+            if (!acc[item.Bundesland]) acc[item.Bundesland] = 0;
+            acc[item.Bundesland] += item[selectedDropdownItem.orig];
+            return acc;
+        }, {})
+        const dBl2 = dBl.data.reduce((acc,cur) => acc + cur[selectedDropdownItem.orig], 0)
+
+        for(let x of Object.values(bl)) {
+            if (!dOth2[x.full]) dOth2[x.full] = 0
+        }
+
+        const bl2 = []        
+        for(const d of Object.keys(dOth2)) {
+            const clicked = dBl2;
+            const other = dOth2[d];
+            const val = -(100 - other/clicked*100)
+            bl2.push({...bl.filter(x=>x.full === d)[0], dataVal: val})
+        }
+
+        bl = bl2        
+        bl.sort((a,b)=>a.full>b.full)
+        const dataValues = bl.map(x=>x.dataVal)
+
+        // push center clicked value
+        bl.push(0)
+        dataValues.push(0)
+
+        // decide if we need to equalize left and right side
+        const min = dataValues.reduce((acc,cur)=>Math.min(acc,cur), Infinity)
+        const max = dataValues.reduce((acc,cur)=>Math.max(acc,cur), -Infinity)
+        let equalized = (() => {
+            if (Math.abs(min) > Math.abs(max)) {
+                bl.push(-min)
+                dataValues.push(-min)
+            } else if (Math.abs(max) > Math.abs(min)) {
+                bl.push(-max)
+                dataValues.push(-max)
+            } else { return false }
+            return true
+        })()
 
         // size
         var parentDiv = document.getElementById('barchart2-parent') ?? document.getElementById('barchart2-leftViz-parent');
@@ -53,16 +112,23 @@
 		var width = parentDiv.clientWidth;
 		var height = 0.95 * parentDiv.clientHeight - (radioButtonsHeight) - 70;
 
-        console.log(parentDiv.clientWidth, parentDiv.clientHeight)
+        //console.log(parentDiv.clientWidth, parentDiv.clientHeight)
 
 		d3.select(svgLocal).selectAll('*').remove();
-        if(!stateName || stateName === "Deutschland") return;
+        //if(!stateName || stateName === "Deutschland") return; doppelt?
+
+        if (dBl2 === 0) {
+            // do something else if clicked element has no value
+        }
 
 		const svg = d3
 			.select(svgLocal)
             .style("background-color", "transparent")
 			.attr('width', width)
 			.attr('height', height);
+
+        bl.pop() // remove clicked Bundesland
+        if (equalized) bl.pop() // remove equalizer
 
         let pad = ({top: 0, right: 10, bottom: 30, left: 140});
         const scaleBL = d3
@@ -71,15 +137,9 @@
 			.range([0, height-pad.bottom-pad.top])
 			.padding(0.1);
 
-        //const dummySelf = 0;
-        const dummyValues = [-80, -70, -60, -50, -40, -30, -20, -10, 10, 20, 30, 40, 50, 60, 70, 80];
-        //const dummyConcat = [].concat(dummySelf, dummyValues);
-        const blIndex = bl.findIndex(x => x.full === stateName);
-        dummyValues[blIndex] = 0;
-
         const scaleValues = d3
             .scaleLinear()
-			.domain([d3.min(dummyValues), d3.max(dummyValues)])
+			.domain([d3.min(dataValues), d3.max(dataValues)])
 			.range([0, width-pad.left-pad.right]);
             
         const axisBL = d3.axisLeft(scaleBL);
@@ -99,36 +159,21 @@
             .enter()
             .append('rect')
             .attr('class', 'bar')
-            .attr('fill', 'red')
+            .attr('fill', selectedRadioButton.color)
             .attr('transform', `translate(${pad.left}, 0)`)           
             .attr('x', function(d) {
-                const val = dummyValues[bl.indexOf(d)];
-                return val < 0 ? scaleValues(dummyValues[bl.indexOf(d)]) : scaleValues(0);
+                const val = dataValues[bl.indexOf(d)];
+                return val < 0 ? scaleValues(dataValues[bl.indexOf(d)]) : scaleValues(0);
             })
             .attr('y', function(d) {
                 return scaleBL(d.full)
             })
             .attr('width', function(d) {
-                return Math.abs(scaleValues(0) - scaleValues(dummyValues[bl.indexOf(d)]));
+                return Math.abs(scaleValues(0) - scaleValues(dataValues[bl.indexOf(d)]));
             })
             .attr('height', function(d) {
                 return scaleBL.bandwidth();
             });
-        g.append('circle')
-         .attr('cx', scaleValues(0) + pad.left)
-         .attr('cy', scaleBL(bl[blIndex].full) + scaleBL.bandwidth()/2)
-         .attr('r', 8)
-         .style('fill', 'var(--colorscheme-orange)')
-
-        g.append("text")
-        .attr("x", 30+scaleValues(0) + pad.left)
-        .attr("y", scaleBL(bl[blIndex].full) + scaleBL.bandwidth()/2)
-        .attr("dy", "0.35em")
-        .attr("text-anchor", "middle")
-        .style("fill", "#000")
-        .text(year);
-
-        
 	}
 
     function handleResize() {
