@@ -85,9 +85,7 @@ export let maxPercentage = writable(11.2);
         .on('click', (event, d) => {
           const i = collection.features.indexOf(d);
           clickState(d, i);
-        })
-        .on('mouseover', (event, d) => applyHoverStyle(event, d))
-        .on('mouseout', (event, d) => removeHoverStyle(event, d));
+        });
     });
     // After setting up the map, set the flag to true
     isMapInitialized = true;
@@ -119,75 +117,49 @@ export let maxPercentage = writable(11.2);
 
   let isZoomedIn = false; // Track zoom state
 
-  function applyHoverStyle(event, d) {
-    // Change the style only if the map is not zoomed in, or if it's the focused state
-    if (!isZoomedIn || (isZoomedIn && focused === d)) {
-      d3.select(event.currentTarget)
-        .style('fill', '#003049')
-        .style('opacity', '100');
-    }
-  }
-
-  function removeHoverStyle(event, d) {
-    // Reset the style only if the map is not zoomed in, or if it's the focused state
-    if (!isZoomedIn || (isZoomedIn && focused === d)) {
-      d3.select(event.currentTarget)
-        .style('fill', null)
-        .style('opacity', d => getStateOpacity(d.properties.NAME_1));
-    }
-  }
-
   function clickState(d, i) {
     if (isZoomedIn) {
-      // If already zoomed in, reset the zoom
-      resetZoom();
-      minPercentage.set(2.8);
-      maxPercentage.set(11.2);
-      dispatch('stateClicked', { stateName: null });
+        // If already zoomed in, reset the zoom
+        resetZoom();
+        minPercentage.set(2.8);
+        maxPercentage.set(11.2);
+        dispatch('stateClicked', { stateName: null });
     } else {
-      // Logic for zooming in
-      focused = d;
-      isZoomedIn = true;
-      dispatch('stateClicked', { stateName: d.properties.NAME_1 });
+        // Logic for zooming in
+        focused = d;
+        isZoomedIn = true;
+        dispatch('stateClicked', { stateName: d.properties.NAME_1 });
 
-      const { stateRow } = createUnemploymentMatrixForState(unemploymentData, d.properties.NAME_1);
-      minPercentage.set(Math.min(...stateRow.filter(val => val !== null)));
-      maxPercentage.set(Math.max(...stateRow.filter(val => val !== null)));
+        // Set opacity for the focused state based on the matrix
+        const focusedOpacity = opacityMatrix[d.properties.NAME_1][year];
+        g.selectAll('.state')
+          .transition().duration(500)
+          .style('opacity', (_, j) => i === j ? focusedOpacity : 0);
 
-      updateMapOpacities();
-      
+        const centroid = centroidMatrix[i];
+        if (!centroid) {
+            console.error('No centroid found for feature at index:', i);
+            return;
+        }
 
-      // Set opacity of all states to transparent, except the clicked one
-      g.selectAll('.state')
-        .transition().duration(500)
-        .style('opacity', (_, j) => i === j ? 1 : 0);
+        const [x, y] = centroid;
+        const k = getZoomFactor(d.properties.NAME_1);
 
-      const centroid = centroidMatrix[i];
-      if (!centroid) {
-        console.error('No centroid found for feature at index:', i);
-        return;
-      }
+        // Compute the translation and scale to center the centroid
+        const transform = d3.zoomIdentity
+            .translate(width / 2, height / 2)
+            .scale(k)
+            .translate(-x, -y);
 
-      const [x, y] = centroid;
-      const k = getZoomFactor(d.properties.NAME_1);
+        svg.transition()
+            .duration(1000)
+            .call(zoom.transform, transform);
 
-      // Compute the translation and scale to center the centroid
-      const transform = d3.zoomIdentity
-        .translate(width / 2, height / 2)
-        .scale(k)
-        .translate(-x, -y);
-
-      svg.transition()
-        .duration(1000)
-        .call(zoom.transform, transform);
-
-      // Disable zoom and drag behavior when zoomed in
-      svg.on('.zoom', null); // Remove existing zoom handlers
-
-
-
+        // Disable zoom and drag behavior when zoomed in
+        svg.on('.zoom', null); // Remove existing zoom handlers
     }    
-  }
+}
+
 
   function resetZoom() {
     // Reset opacity of all states
