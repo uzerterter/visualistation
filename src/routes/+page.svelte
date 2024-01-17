@@ -20,6 +20,7 @@
     let stateName = "Deutschland"; // Default to Germany
     function handleStateClick(event) {
         stateName = event.detail.stateName ||  "Deutschland";
+       
     }
 </script>
 

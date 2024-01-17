@@ -1,42 +1,34 @@
 <!-- MapComponent.svelte -->
 <div id="map"></div>
 
-<script>
+<script context="module">
+
+import { writable, derived } from 'svelte/store';
+
+export let minPercentage = writable(2.8);
+export let maxPercentage = writable(11.2);
+
+</script>
+
+
+<script >
   import { onMount } from 'svelte';
   import * as d3 from 'd3'; 
   import trafficData from '$lib/data/final_genesis_traffic.json';
   import unemploymentData from '$lib/data/unemployment_rate.json';
   import { createEventDispatcher } from 'svelte';
   import { selectedYear } from '$lib/components/timeline.svelte'; // Import the selectedYear store
-
+  
   let width, height, geoPath, projection;
   let svg, g, zoom; // Define zoom and SVG selections
   let centroidMatrix = [];
   let focused = null; // Store the currently focused element
   let isMapInitialized = false; // Flag to track if the map is initialized
-  let minPercentage = 2.8;
-  let maxPercentage = 11.2;
-
-
-  const dispatch = createEventDispatcher();
-
-  export const stateData = {...trafficData, data: trafficData.data.filter(v => v.Bundesland === 'Bayern')};
-  
-
   let unemploymentOpacityMap = {};
   let year = 2017; // initial year for the map color coding
 
-  $: if ($selectedYear && isMapInitialized) {
-    year = $selectedYear;
-    createUnemploymentMatrixForState(unemploymentData);
-    getUnemploymentPercentagesByYear(year);
-    updateMapOpacities();
-  }
-
-  // Define a color scale for the legend
-  const colorScale = d3.scaleLinear()
-    .domain([2.8, 11.2]) // Min and max values of unemployment percentages
-    .range(["#eeeff0", "#003049"]); // Change these colors as needed
+  const dispatch = createEventDispatcher();
+  export const stateData = {...trafficData, data: trafficData.data.filter(v => v.Bundesland === 'Bayern')};
 
   onMount(() => {
 
@@ -139,12 +131,15 @@
     if (isZoomedIn) {
       // If already zoomed in, reset the zoom
       resetZoom();
+      minPercentage.set(2.8);
+      maxPercentage.set(11.2);
       dispatch('stateClicked', { stateName: null });
     } else {
       // Logic for zooming in
       focused = d;
       isZoomedIn = true;
       dispatch('stateClicked', { stateName: d.properties.NAME_1 });
+      
 
       // Set opacity of all states to transparent, except the clicked one
       g.selectAll('.state')
@@ -174,6 +169,13 @@
       svg.on('.zoom', null); // Remove existing zoom handlers
 
       updateMapOpacities();
+      // newLegend(d.properties.NAME_1);
+      const { stateRow } = createUnemploymentMatrixForState(unemploymentData, d.properties.NAME_1);
+      // let minPercentage = Math.min(...stateRow.filter(val => val !== null));
+      // let maxPercentage = Math.max(...stateRow.filter(val => val !== null));
+      minPercentage.set(Math.min(...stateRow.filter(val => val !== null)));
+      maxPercentage.set(Math.max(...stateRow.filter(val => val !== null)));
+
     }    
   }
 
@@ -191,7 +193,6 @@
       .duration(1000)
       .call(zoom.transform, d3.zoomIdentity);    
   }
-
 
   function getZoomFactor(stateName) {
     const zoomFactors = {
@@ -221,11 +222,12 @@
     const endYear = 2022;
 
     // Filter data for the specified year and within the range of 2017 to 2022
-    const filteredData = unemploymentData.data.filter(entry => 
+    let filteredData = unemploymentData.data.filter(entry => 
         entry.Jahr === year && entry.Jahr >= startYear && entry.Jahr <= endYear
     );
 
-    console.log(filteredData);
+    
+
 
     // Sort the filtered data alphabetically by Bundesland
     const sortedData = filteredData.sort((a, b) => a.Bundesland.localeCompare(b.Bundesland));
@@ -235,10 +237,9 @@
         Prozent: entry.Prozent
     }));
 
-    // console.log(unemploymentPercentages);
 
     unemploymentPercentages.forEach(entry => {
-      const normalizedOpacity = mapPercentageToOpacity(entry.Prozent);
+      const normalizedOpacity = mapPercentageToMap(entry.Prozent);
       unemploymentOpacityMap[entry.Bundesland] = normalizedOpacity;
     });
     return unemploymentPercentages;
@@ -270,7 +271,6 @@
 
   function updateMapOpacities() {
   if (g) {
-    console.log("if g");
 
     // Check if the map is zoomed in
     if (isZoomedIn && focused) {
@@ -280,9 +280,6 @@
       // Find min and max values for the focused state
       const min = Math.min(...stateRow.filter(val => val !== null));
       const max = Math.max(...stateRow.filter(val => val !== null));
-      console.log(stateRow);
-      console.log(min);
-      console.log(max);
 
       g.selectAll('.state')
         .style('opacity', d => {
@@ -298,21 +295,20 @@
       // If the map is not zoomed in, update all states normally
       g.selectAll('.state')
         .style('opacity', d => getStateOpacity(d.properties.NAME_1));
-      console.log("else");
     }
   }
 }
 
-function mapPercentageToOpacity(percentage) {
-      const minOpacity = 0.1;
-      const maxOpacity = 1;
+function mapPercentageToMap(percentage) {
+      let minOpacity = 0.1;
+      let maxOpacity = 1;
       const opacity = minOpacity + ((percentage - minPercentage) * (maxOpacity - minOpacity)) / (maxPercentage - minPercentage);
       return opacity;
   }
 
 function mapPercentageToState(percentage, min, max) {
-  const minOpacity = 0.1;
-  const maxOpacity = 1;
+  let minOpacity = 0.1;
+  let maxOpacity = 1;
   if (min === max) return maxOpacity; // Avoid division by zero if min and max are equal
   return minOpacity + ((percentage - min) / (max - min)) * (maxOpacity - minOpacity);
 }
