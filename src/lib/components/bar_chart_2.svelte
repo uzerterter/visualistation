@@ -26,6 +26,8 @@
 		if (!ready) return;
         await tick(); // otherwise layout does weird stuff?
 
+        
+
         const bl = [
             { abbr: 'BW', full: 'Baden-Württemberg' },
             { abbr: 'BY', full: 'Bayern' },
@@ -46,10 +48,12 @@
         ];
 
         // size
-        var parentDiv = document.getElementById('barchart-parent');
+        var parentDiv = document.getElementById('barchart2-parent') ?? document.getElementById('barchart2-leftViz-parent');
 		var radioButtonsHeight = document.getElementById('barchart-radio-buttons').clientHeight;
 		var width = parentDiv.clientWidth;
 		var height = 0.95 * parentDiv.clientHeight - (radioButtonsHeight) - 70;
+
+        console.log(parentDiv.clientWidth, parentDiv.clientHeight)
 
 		d3.select(svgLocal).selectAll('*').remove();
         if(!stateName || stateName === "Deutschland") return;

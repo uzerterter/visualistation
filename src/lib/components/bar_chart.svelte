@@ -7,6 +7,13 @@
 
 	import { base } from '$app/paths';
 
+	export let dropdownItems = [
+		{ id: 3, label: 'Anzahl Unternehmen', orig: 'Anzahl_Unternehmen' },
+		{ id: 4, label: 'Beförderte Personen in Mio', orig: 'Befoerderte_Personen_in_Mio' },
+		{ id: 5, label: 'Personenkilometer in Mio', orig: 'Personenkilometer_in_Mio' }
+	];
+	export let selectedDropdownItem = dropdownItems[1];
+
 	let svgLocal;
 	let tooltip;
 
@@ -18,16 +25,9 @@
 	];
 	let selectedCheckboxes = [checkboxes[0]];
 
-	let dropdownItems = [
-		{ id: 3, label: 'Anzahl Unternehmen', orig: 'Anzahl_Unternehmen' },
-		{ id: 4, label: 'Beförderte Personen in Mio', orig: 'Befoerderte_Personen_in_Mio' },
-		{ id: 5, label: 'Personenkilometer in Mio', orig: 'Personenkilometer_in_Mio' }
-	];
-	let selectedDropdownItem = dropdownItems[0];
 
 	import * as d3 from 'd3';
 	import { onMount } from 'svelte';
-	import BarChart_2 from './bar_chart_2.svelte';
 
 	// update graph reactively
 	$: selectedDropdownItem, selectedCheckboxes, updateGraph();
@@ -58,9 +58,10 @@
 
 		var parentDiv = document.getElementById('barchart-parent');
 		var checkboxHeight = document.getElementById('barchart-checkboxes').clientHeight;
-		var dropdownHeight = document.getElementById('barchart-dropdown').clientHeight;
+		// var dropdownHeight = document.getElementById('barchart-dropdown').clientHeight;
 		var width = parentDiv.clientWidth;
-		var height = 0.95 * parentDiv.clientHeight - (checkboxHeight + dropdownHeight) - 40;
+		// var height = 0.95 * parentDiv.clientHeight - checkboxHeight - 20; 
+		var height = 0.95 * parentDiv.clientHeight -  20; 
 
 		d3.select(svgLocal).selectAll('*').remove();
 
@@ -102,7 +103,9 @@
 		svg
 			.append('g')
 			.attr('transform', `translate(50, ${height - 30})`)
-			.call(axisYears);
+			.call(axisYears)
+			.selectAll('.tick text') // Select the text elements
+			.attr('class', (d) => `tick-text ${getClassForYear(d)}`);
 
 		svg
 			.append('g')
@@ -135,7 +138,7 @@
 		// Create a class string for bars of the selected year
 		function getClassForYear(year) {
 			const className = `year-${year}`;
-			//console.log(className);
+			// console.log(className);
 			return className;
 		}
 
@@ -148,7 +151,6 @@
 				.enter()
 				.filter((d) => d.Art === c.orig)
 				.append('rect')
-				.attr('class', (d) => `bar ${getClassForYear(d.Jahr)}`)
 				.attr('fill', c.color)
 				.attr('transform', `translate(50, 0)`)
 				.on('mouseover', function (event, x) {
@@ -183,12 +185,12 @@
 		applyStylingToCurrentYear(selectedYearValue);
 	}
 
-	function toggleHighlighting() {
-		//console.log(selectedYearValue);
-		highlightingActive = !highlightingActive;
-		//console.log(highlightingActive);
-		applyStylingToCurrentYear(selectedYearValue);
-	}
+	// function toggleHighlighting() {
+	// 	console.log(selectedYearValue);
+	// 	highlightingActive = !highlightingActive;
+	// 	console.log(highlightingActive);
+	// 	applyStylingToCurrentYear(selectedYearValue);
+	// }
 
 	function handleResize() {
 		updateGraph();
@@ -221,17 +223,17 @@
 
 		if (selectedYearValue === undefined) return;
 
-		if (!highlightingActive){
-			const allYearClasses = [2017, 2018, 2019, 2020, 2021, 2022];
-			allYearClasses.forEach(year => {
-				const yearElements = document.querySelectorAll(`.year-${year}`);
-				yearElements.forEach(element => {
-					// Remove the styling or update it as needed
-					element.style.cssText = "";
-			});
-			});
-			return;
-		} 
+		// if (!highlightingActive){
+		// 	const allYearClasses = [2017, 2018, 2019, 2020, 2021, 2022];
+		// 	allYearClasses.forEach(year => {
+		// 		const yearElements = document.querySelectorAll(`.year-${year}`);
+		// 		yearElements.forEach(element => {
+		// 			// Remove the styling or update it as needed
+		// 			element.style.cssText = "";
+		// 	});
+		// 	});
+		// 	return;
+		// } 
 
 		// Remove styling from all years except the current one
 		const allYearClasses = [2017, 2018, 2019, 2020, 2021, 2022];
@@ -252,7 +254,7 @@
 		const currentYearElements = document.querySelectorAll(`.${selectedYearClass}`);
 		currentYearElements.forEach(element => {
 			// Apply the styling as needed
-			element.style.cssText += "filter:brightness(150%)";
+			element.style.cssText += "opacity:1; font-weight: bold; color: var(--colorscheme-orange); ";
 			// opacity??
 			// jahr: font-weight, größer? farblich?
 		});
@@ -290,9 +292,8 @@
 
 </script>
 
-<div id="barchart-toprow">
+<!-- <div id="barchart-toprow">
 	<div id="barchart-dropdown">
-		<!-- DROPDOWN -->
 		<select bind:value={selectedDropdownItem}>
 			{#each dropdownItems as d}
 				<option value={d}>
@@ -301,25 +302,16 @@
 			{/each}
 		</select>
 	</div>
-	<!--  button for toggling highlighting -->
-	<div id="print-current-year">
-		<button on:click={toggleHighlighting}>
-			{highlightingActive ? "Disable Highlighting" : "Enable Highlighting"}
-		</button>
-	</div>
-	<div id="barchart-flag">
-		<img src={base}/{`${stateName}-flag.png`} alt={`flag of ${stateName}`} id="flag" />
-	</div>
-</div>
+</div> -->
 
-<div bind:this={tabs} class="tabs">
+<!-- <div bind:this={tabs} class="tabs">
 	<button class="tab {activeTabId==='barchart1'?'active':''}" on:click={e=>openTab(e, 'barchart1')}>
 		Jahre (absolut)
 	</button>
 	<button class="tab {activeTabId==='barchart2'?'active':''}" on:click={e=>openTab(e, 'barchart2')}>
 		Bundesländer (relativ)
 	</button>
-</div>
+</div> -->
 
 <!-- BAR CHART 1 -->
 <div bind:this={tooltip} class="tooltip" style="display: {'barchart1'===activeTabId?'block':'none'}"/>
@@ -343,13 +335,8 @@
 	{/each}
 </div>
 
-<!-- BAR CHART 2 -->
-<div style="display: {'barchart2'===activeTabId?'block':'none'}; height:85%; background-color:transparent">
-	<BarChart_2 bind:this={barChart2} data={data} stateName={stateName} year={year}></BarChart_2>
-</div>
-
 <style>
-	.tabs {						
+	/* .tabs {						
 		margin-top:10px;
 		margin-bottom:0px;
 		width:100%;
@@ -376,7 +363,7 @@
 
 	.tabs button.active {
 		border-bottom-color: #444;
-	}
+	} */
 
 	.tooltip {
 		position: absolute;
@@ -394,12 +381,12 @@
 
 	#barchart-diagram {
 		width: 100%;
-		height: 85%;
+		height: 90%;
 	}
 
 	#barchart-checkboxes {
 		width: 100%;
-		height: 5%;
+		height: 10%;
 	}
 
 	/* Style for checkboxes */
@@ -410,11 +397,10 @@
 
 	input {
 		margin-right: 1px;
+		cursor: pointer;
 	}
 
-	#barchart-toprow {
-		/*position: sticky;
-  		top: 0;*/
+	/* #barchart-toprow {
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
@@ -422,7 +408,25 @@
 		height: 10%;
 		width: 100%;
 	}
-	#barchart-flag {
+	
+
+
+	#barchart-dropdown {
+		width: 46%;
+		float: right;
+	}
+
+	#barchart-dropdown select {
+		width: 100%;
+		padding: 8px;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		box-sizing: border-box;
+		background-color: white;
+		font-size: 0.8vw;
+	} */
+
+		/* #barchart-flag {
 		border: solid 3px;
 		border-radius: 15px;
 		border-color: black;
@@ -440,20 +444,5 @@
 		height: 100%;
 		max-width: 100%;
 		max-height: 100%;
-	}
-
-	#barchart-dropdown {
-		width: 45%;
-		float: left;
-	}
-
-	#barchart-dropdown select {
-		width: 100%;
-		padding: 8px;
-		border: 1px solid #ccc;
-		border-radius: 5px;
-		box-sizing: border-box;
-		font-size: 14px;
-		background-color: white;
-	}
+	} */
 </style>

@@ -53,6 +53,19 @@ We will be using the following technologies to build our website:
 
 [Here](https://iv2324-projects.pages.gitlab.lrz.de/team08/) you can find our hosted visualization website.
 
+## Feature List
+- **Timeline**
+- **Map**
+- **For the Economic Datasets**
+    - Barchart (Left)
+    - Doughnutchart (Left)
+    - Horizontal-Barchart (Left)
+
+- **For The Genesis Dataset**
+    - Barchart (Right)
+    - Doughnutchart (Right)
+    - Horizontal-Barchart (Right)
+
 ## Installation
 
 1. Clone this repository
