@@ -47,6 +47,17 @@
 		console.log(showToprowContent);
 	}
 
+	let radioButtonsLeft = [
+		{ color: 'var(--colorscheme-blue)' },
+	];
+
+	let radioButtonsRight = [
+		{ id: 6, label: 'Tram', orig: 'Liniennahverkehr mit Straßenbahnen', color: 'var(--colorscheme-red)' },
+		{ id: 7, label: 'Bus', orig: 'Liniennahverkehr mit Omnibussen', color: 'var(--colorscheme-orange)' },
+		{ id: 8, label: 'Train', orig: 'Liniennahverkehr mit Eisenbahnen', color: 'var(--colorscheme-blue)' },
+		{ id: 9, label: 'Total', orig: 'Liniennahverkehr insgesamt', color: 'var(--colorscheme-yellow)' }
+	];
+
 	//pass the dropdown data centrally to the right vizualisation, exrtacted from barchart
 	let dropdownItemsRightViz = [
 		{ id: 3, label: 'Anzahl Unternehmen', orig: 'Anzahl_Unternehmen' },
@@ -60,9 +71,9 @@
 	let selectedTabRightViz = 'bar'; // Default tab for right vizualisation
 
 	const dataOptions = [
-		{ label: 'Income Data', value: incomeData },
-		{ label: 'Unemployment Rate', value: unimploymentData }
-	];
+		{ label: 'Income Data', value: incomeData, orig: "Income" },
+		{ label: 'Unemployment Rate', value: unimploymentData, orig: "Prozent" }
+	];	
 
 	function handleDataChange() {
 		console.log(selectedData);
@@ -153,9 +164,9 @@
 																year={selectedYearValue} />
 					</div>
 					<div class="bar-chart-container" id="barchart2-leftViz-parent" style="display: none;">
-						<BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={dropdownItemsRightViz} parentId="barchart2-leftViz-parent"
-											selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
+						<BarChart_2 data={incomeData} stateName={stateName} year={selectedYearValue}
+											dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+											selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
 					</div>
 				{:else if selectedData === unimploymentData}
 					<div id="doughnutchart-parent">
@@ -166,9 +177,9 @@
 																year={selectedYearValue} />
 					</div>
 					<div class="bar-chart-container" id="barchart2-leftViz-parent" style="display: none;">
-						<BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={dropdownItemsRightViz} parentId="barchart2-leftViz-parent"
-											selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
+						<BarChart_2 data={unimploymentData} stateName={stateName} year={selectedYearValue}
+											dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+											selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
 					</div>
 				{/if}
 			{/if}
@@ -183,9 +194,9 @@
 																year={selectedYearValue} />
 					</div>
 					<div class="bar-chart-container" id="barchart2-leftViz-parent" style="display: none;">
-						<BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={dropdownItemsRightViz} parentId="barchart2-leftViz-parent"
-											selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
+						<BarChart_2 data={incomeData} stateName={stateName} year={selectedYearValue}
+											dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+											selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
 					</div>
 				{:else if selectedData === unimploymentData}
 					<div id="doughnutchart-parent" style="display: none;">
@@ -196,9 +207,9 @@
 																year={selectedYearValue} />
 					</div>
 					<div class="bar-chart-container" id="barchart2-leftViz-parent" style="display: none;">
-						<BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={dropdownItemsRightViz} parentId="barchart2-leftViz-parent"
-											selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
+						<BarChart_2 data={unimploymentData} stateName={stateName} year={selectedYearValue}
+											dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+											selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
 					</div>
 				{/if}
 			{/if}
@@ -213,9 +224,9 @@
 																year={selectedYearValue} />
 					</div>
 					<div class="bar-chart-container" id="barchart2-leftViz-parent">
-						<BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={dropdownItemsRightViz} parentId="barchart2-leftViz-parent"
-											selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
+						<BarChart_2 data={incomeData} stateName={stateName} year={selectedYearValue}
+											dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+											selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
 					</div>
 				{:else if selectedData === unimploymentData}
 					<div id="doughnutchart-parent" style="display: none;">
@@ -226,9 +237,9 @@
 																year={selectedYearValue} />
 					</div>
 					<div class="bar-chart-container" id="barchart2-leftViz-parent">
-						<BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={dropdownItemsRightViz} parentId="barchart2-leftViz-parent"
-											selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
+						<BarChart_2 data={unimploymentData} stateName={stateName} year={selectedYearValue}
+											dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+											selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
 					</div>
 				{/if}
 			{/if}
@@ -301,7 +312,7 @@
 				<!-- BAR CHART 2 -->
 				<div id="barchart2-parent" style="display: none;">
 					<BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={dropdownItemsRightViz} parentId="barchart2-parent"
+											dropdownItems={dropdownItemsRightViz} radioButtons={radioButtonsRight} parentId="barchart2-parent"
 											selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
 				</div>
 			{/if}
@@ -318,7 +329,7 @@
 				<!-- BAR CHART 2 -->
 				<div id="barchart2-parent" style="display: none;">
 					<BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={dropdownItemsRightViz} parentId="barchart2-parent"
+											dropdownItems={dropdownItemsRightViz} radioButtons={radioButtonsRight} parentId="barchart2-parent"
 											selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
 				</div>
 			{/if}
@@ -335,7 +346,7 @@
 				<!-- BAR CHART 2 -->
 				<div class="bar-chart-container" id="barchart2-parent">
 					<BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={dropdownItemsRightViz} parentId="barchart2-parent"
+											dropdownItems={dropdownItemsRightViz} radioButtons={radioButtonsRight} parentId="barchart2-parent"
 											selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
 				</div>
 			{/if}

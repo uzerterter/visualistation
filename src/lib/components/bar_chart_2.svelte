@@ -10,12 +10,8 @@
     export let dropdownItems = null
     export let selectedDropdownItem = null
 
-	let radioButtons = [
-		{ id: 6, label: 'Tram', orig: 'Liniennahverkehr mit Straßenbahnen', color: 'var(--colorscheme-red)' },
-		{ id: 7, label: 'Bus', orig: 'Liniennahverkehr mit Omnibussen', color: 'var(--colorscheme-orange)' },
-		{ id: 8, label: 'Train', orig: 'Liniennahverkehr mit Eisenbahnen', color: 'var(--colorscheme-blue)' },
-		{ id: 9, label: 'Total', orig: 'Liniennahverkehr insgesamt', color: 'var(--colorscheme-yellow)' }
-	];
+	export let radioButtons    
+
 	let selectedRadioButton = radioButtons[0];
     //$: selectedRadioButton, console.log("radio", selectedRadioButton)
 
@@ -23,16 +19,19 @@
 	import { onMount } from 'svelte';
 
 	// update graph reactively
-	$: data, selectedRadioButton, selectedDropdownItem, dropdownItems, updateGraph();
+	$: data, selectedRadioButton, selectedDropdownItem, /*dropdownItems,*/ updateGraph();
 
 	let ready = false;
 	async function updateGraph() {
 		if (!ready) return;
+        if (radioButtons.length === 1) {
+            document.getElementById('barchart-radio-buttons').style.opacity=0
+        }
         await tick(); // otherwise layout does weird stuff?
                 
         if (!stateName || stateName === "Deutschland") return
         if (!selectedDropdownItem) return
-        if (!dropdownItems) return        
+        //if (!dropdownItems) return        
         if (!year) return
 
         let bl = [
@@ -58,12 +57,12 @@
         const dOth = {...data, data: data.data.filter(item => 
             item.Bundesland !== stateName && item.Bundesland !== "Deutschland" &&
             item.Jahr === year &&
-            item.Art === selectedRadioButton.orig)
+            (!selectedRadioButton.orig ? true : (item.Art === selectedRadioButton.orig)))
         }        
         const dBl = {...data, data: data.data.filter(item =>
             item.Bundesland === stateName &&
             item.Jahr === year &&
-            item.Art === selectedRadioButton.orig)
+            (!selectedRadioButton.orig ? true : (item.Art === selectedRadioButton.orig)))
         }
 
         const dOth2 = dOth.data.reduce((acc,item) => {
