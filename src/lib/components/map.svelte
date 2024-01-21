@@ -7,7 +7,7 @@ import { writable, derived } from 'svelte/store';
 
 export let minPercentage = writable(2.8);
 export let maxPercentage = writable(11.2);
-
+ 
 </script>
 
 
@@ -18,6 +18,7 @@ export let maxPercentage = writable(11.2);
   import unemploymentData from '$lib/data/unemployment_rate.json';
   import { createEventDispatcher } from 'svelte';
   import { selectedYear } from '$lib/components/timeline.svelte'; // Import the selectedYear store
+  import populationDensityData from '$lib/data/population_density.json';
   
   let width, height, geoPath, projection, normalizedOpacity;
   let svg, g, zoom; // Define zoom and SVG selections
@@ -37,6 +38,9 @@ export let maxPercentage = writable(11.2);
   }
 
   let opacityMatrix = calculateOpacityMatrix(unemploymentData);
+  let opacityMatrix2 = calculateOpacityMatrix2(populationDensityData);
+
+  console.log(opacityMatrix2);
 
   onMount(() => {
 
@@ -163,8 +167,7 @@ export let maxPercentage = writable(11.2);
         // Disable zoom and drag behavior when zoomed in
         svg.on('.zoom', null); // Remove existing zoom handlers
     }    
-}
-
+  }
 
   function resetZoom() {
     // Reset opacity of all states
@@ -304,49 +307,74 @@ export let maxPercentage = writable(11.2);
   function mapPercentageToState(percentage, min, max) {
     if (min === max) return 1; // Avoid division by zero if min and max are equal
     const minOpacity = 0.1;
-    const maxOpacity = 1;
+    const maxOpacity = 1; 
     return minOpacity + ((percentage - min) * (maxOpacity - minOpacity)) / (max - min);
   }
 
   
 
   function calculateOpacityMatrix(unemploymentData) {
-  const startYear = 2017;
-  const endYear = 2022; // Adjust this if you have data for more years
-  const states = Array.from(new Set(unemploymentData.data.map(entry => entry.Bundesland))).sort();
-  const opacityMatrix = {};
+    const startYear = 2017;
+    const endYear = 2022; // Adjust this if you have data for more years
+    const states = Array.from(new Set(unemploymentData.data.map(entry => entry.Bundesland))).sort();
+    const states2 = Array.from(new Set(populationDensityData.data.map(entry => entry.Bundesland))).sort();
+    const opacityMatrix = {};
 
-  states.forEach(state => {
-    opacityMatrix[state] = {};
-    for (let year = startYear; year <= endYear; year++) {
-      const entry = unemploymentData.data.find(e => e.Bundesland === state && e.Jahr === year);
-      const percentage = entry ? entry.Prozent : null; // Use null for missing data
-      if (percentage !== null) {
-        const opacity = mapPercentageToOpacity(percentage);
-        opacityMatrix[state][year] = opacity;
-      } else {
-        opacityMatrix[state][year] = null; // No data for this state-year
+    states.forEach(state => {
+      opacityMatrix[state] = {};
+      for (let year = startYear; year <= endYear; year++) {
+        const entry = unemploymentData.data.find(e => e.Bundesland === state && e.Jahr === year);
+        const percentage = entry ? entry.Prozent : null; // Use null for missing data
+        if (percentage !== null) {
+          const opacity = mapPercentageToOpacity(percentage);
+          opacityMatrix[state][year] = opacity;
+        } else {
+          opacityMatrix[state][year] = null; // No data for this state-year
+        }
       }
-    }
-  });
+    });
+    return opacityMatrix;
+  }
 
-  
+  function calculateOpacityMatrix2(populationDensityData) {
+    const startYear2 = 2017;
+    const endYear2 = 2022; // Adjust this if you have data for more years
+    const states2 = Array.from(new Set(populationDensityData.data.map(entry => entry.Bundesland))).sort();
+    const opacityMatrix2 = {};
 
-  
+    states2.forEach(state => {
+      opacityMatrix2[state] = {};
+      for (let year = startYear2; year <= endYear2; year++) {
+        const entry2 = populationDensityData.data.find(e => e.Bundesland === state && e.Jahr === year);
+        const percentage2 = entry2 ? entry2.EW_per_sqkm : null; // Use null for missing data
+        if (percentage2 !== null) {
+          const opacity2 = mapPercentageToOpacity2(percentage2);
+          opacityMatrix2[state][year] = opacity2;
+        } else {
+          opacityMatrix2[state][year] = null; // No data for this state-year
+        }
+      }
+    });
+    return opacityMatrix2;
+  }
 
-  return opacityMatrix;
-}
-function mapPercentageToOpacity(percentage) {
-  const minPercentageValue = 2.8; // These values should come from your actual data or be calculated dynamically
-  const maxPercentageValue = 11.2;
-  const minOpacity = 0.1;
-  const maxOpacity = 1;
-  let opacity = ((percentage - minPercentageValue) / (maxPercentageValue - minPercentageValue)) * (maxOpacity - minOpacity) + minOpacity;
-  return Math.max(minOpacity, Math.min(maxOpacity, opacity)); // Clamping the value between minOpacity and maxOpacity
-}
-console.log(opacityMatrix);
+  function mapPercentageToOpacity(percentage) {
+    const minPercentageValue = 2.8;
+    const maxPercentageValue = 11.2;
+    const minOpacity = 0.1;
+    const maxOpacity = 1;
+    let opacity = ((percentage - minPercentageValue) / (maxPercentageValue - minPercentageValue)) * (maxOpacity - minOpacity) + minOpacity;
+    return Math.max(minOpacity, Math.min(maxOpacity, opacity)); // Clamping the value between minOpacity and maxOpacity
+  }
 
-
+  function mapPercentageToOpacity2(percentage2) {
+    const minPD = 69;
+    const maxPD = 4214;
+    const minOpacity = 0.1;
+    const maxOpacity = 1;
+    let opacity = ((percentage2 - minPD) / (maxPD - minPD)) * (maxOpacity - minOpacity) + minOpacity;
+    return Math.max(minOpacity, Math.min(maxOpacity, opacity)); // Clamping the value between minOpacity and maxOpacity
+  }
 
 
 </script>
