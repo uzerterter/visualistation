@@ -186,16 +186,20 @@
 			.style('text-anchor', 'middle')
 			.style('fill', '#fff');
 
-		// Append title
+		// Append title with dynamic content
+		const titleText = highlightState
+			? `${[highlightState]}:\n${data.find((d) => d.state === highlightState)[year]}%`
+			: 'Unemployment Rate\nin %';
+
 		svg
 			.append('text')
 			.attr('text-anchor', 'middle')
-			.attr('x', 0) // center horizontally
-			.attr('y', '0') // position the entire text block
-			.style('font-size', '20px')
+			.attr('x', 0)
+			.attr('y', '0')
+			.style('font-size', '18px')
 			.style('fill', '#333')
 			.selectAll('tspan')
-			.data(['Unemployment Rate', 'in %'])
+			.data(titleText.split('\n'))
 			.enter()
 			.append('tspan')
 			.attr('x', 0) // center horizontally

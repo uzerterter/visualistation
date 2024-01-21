@@ -97,7 +97,6 @@
 		}
 	}
 
-	
 	function createDoughnutChart(data, year, highlightState) {
 		if (isActive === false) {
 			return;
@@ -174,21 +173,27 @@
 			.style('text-anchor', 'middle')
 			.style('fill', '#fff');
 
-		// Append title
+		// Append title with dynamic content
+		const titleText = highlightState
+			? `${[highlightState]}:\n${data.find((d) => d.state === highlightState)[year]}€`
+			: 'Income Distribution\n in €';
+
 		svg
 			.append('text')
 			.attr('text-anchor', 'middle')
-			.attr('x', 0) // center horizontally
-			.attr('y', '0') // position the entire text block
-			.style('font-size', '20px')
+			.attr('x', 0)
+			.attr('y', '0')
+			.style('font-size', '18px')
 			.style('fill', '#333')
 			.selectAll('tspan')
-			.data(['Income Distribution', 'in €'])
+			.data(titleText.split('\n'))
 			.enter()
 			.append('tspan')
 			.attr('x', 0) // center horizontally
 			.attr('dy', (d, i) => `${i * 1.2}em`) // adjust line spacing
 			.text((d) => d);
+
+		// ... (existing code)
 
 		// Tooltip setup
 		const tooltip = d3.select('#chart').append('div').attr('class', 'tooltip').style('opacity', 0);
@@ -197,15 +202,15 @@
 		g.on('mouseover', (event, d) => {
 			tooltip.transition().duration(200).style('opacity', 0.9);
 			tooltip
-				.html(d.data.state + ': ' + d.data[year])
+				.html(`${d.data[year]} €`)
 				.style('left', event.pageX + 'px')
-				.style('top', event.pageY - 28 + 'px');
+				.style('top', event.pageY + 'px');
 		}).on('mouseout', () => {
 			tooltip.transition().duration(500).style('opacity', 0);
 		});
 	}
 
-	onMount(() => {	
+	onMount(() => {
 		ready = true;
 		if (typeof window !== 'undefined') {
 			createDoughnutChart(data, currentYear);
@@ -241,13 +246,8 @@
 	:global(.tooltip) {
 		position: absolute;
 		text-align: center;
-		width: 60px;
-		height: 28px;
-		padding: 2px;
 		font: 12px sans-serif;
 		background: lightsteelblue;
-		border: 0px;
-		border-radius: 8px;
 		pointer-events: none;
 	}
 </style>
