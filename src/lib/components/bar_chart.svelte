@@ -200,7 +200,7 @@
 		filterData();
 		ready = true;		
 		updateGraph();
-		applyStylingToCurrentYear(2017);
+		applyStylingToCurrentYear(selectedYearValue);
 		//const unsubscribe = selectedYear.subscribe((value) => console.log("jaaaaahr", value))
 
 		window.addEventListener('resize', handleResize);

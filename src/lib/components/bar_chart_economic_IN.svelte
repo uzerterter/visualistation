@@ -163,7 +163,7 @@
 	  filterData();
 	  ready = true;
 	  updateGraph();
-	  applyStylingToCurrentYear(2017);
+	  applyStylingToCurrentYear(selectedYearValue);
   
 	  window.addEventListener('resize', handleResize);
 	  return () => {
