@@ -35,8 +35,8 @@
     }
 
     .tooltip-wrapper {
-        padding: 1.5vh;
-        margin: 1vh;
+        padding: 1%;
+        margin: 1%;
     }
 
 </style>
