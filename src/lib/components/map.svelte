@@ -140,16 +140,11 @@ export let maxPopulation = writable(4214);
         dispatch('stateClicked', { stateName: d.properties.NAME_1 });
 
         const { stateRow2 } = createUnemploymentMatrixForState2(populationDensityData, d.properties.NAME_1);
+        
         // minPercentage.set(Math.min(...stateRow2.filter(val => val !== null)));
         // maxPercentage.set(Math.max(...stateRow2.filter(val => val !== null)));
         minPopulation.set(Math.min(...stateRow2.filter(val => val !== null)));
         maxPopulation.set(Math.max(...stateRow2.filter(val => val !== null)));
-
-       console.log(createUnemploymentMatrixForState2(populationDensityData, "Bayern"));
-
-        console.log("stateRow2");
-        console.log(stateRow2);
-
 
         // Set opacity for the focused state based on the matrix
         const focusedOpacity = opacityMatrix2[d.properties.NAME_1][year];
@@ -317,7 +312,7 @@ export let maxPopulation = writable(4214);
     // Create a row for the specified state with filtered years
     let stateRow2 = years2.map(year => {
         let entry2 = populationDensityData.data.find(e => e.Bundesland === stateName && e.Jahr === year);
-        return entry2 ? entry2.Prozent : null; // Use null for missing data
+        return entry2 ? entry2.EW_per_sqkm : null; // Use null for missing data
     });
 
 
@@ -383,7 +378,7 @@ export let maxPopulation = writable(4214);
         .style('opacity', d => {
           if (d === focused) {
             // Find the unemployment percentage for the focused state in the selected year
-            const percentage = populationDensityData.data.find(entry => entry.Jahr === year && entry.Bundesland === d.properties.NAME_1)?.Prozent || min; // Use min as a fallback
+            const percentage = populationDensityData.data.find(entry => entry.Jahr === year && entry.Bundesland === d.properties.NAME_1)?.EW_per_sqkm || min; // Use min as a fallback
             const opacity = mapPercentageToState2(percentage, min, max);
 
             return opacity;
