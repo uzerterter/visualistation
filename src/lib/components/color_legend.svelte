@@ -1,10 +1,10 @@
 <script>
     import { onMount } from 'svelte';
     import * as d3 from 'd3';
-    import { minPercentage } from '$lib/components/map.svelte';
-    import { maxPercentage } from '$lib/components/map.svelte';
+    import { minPopulation } from '$lib/components/map.svelte';
+    import { maxPopulation } from '$lib/components/map.svelte';
 
-    let newMinPercentage, newMaxPercentage;
+    let newMinPopulation, newMaxPopulation;
     let svg, colorScale, axisScale, gradient;
 
     const width = 300; // Width of the color legend
@@ -24,19 +24,19 @@
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
         colorScale = d3.scaleLinear()
-            .domain([newMinPercentage, newMaxPercentage])
+            .domain([newMinPopulation, newMaxPopulation])
             .range(["#eeeff0", "#003049"]);
 
         axisScale = d3.scaleLinear()
-            .domain([newMinPercentage, newMaxPercentage])
+            .domain([newMinPopulation, newMaxPopulation])
             .range([0, width]);
 
         gradient = svg.append("defs")
             .append("linearGradient")
             .attr("id", "gradient");
 
-        gradient.append("stop").attr("offset", "0%").attr("stop-color", colorScale(newMinPercentage));
-        gradient.append("stop").attr("offset", "100%").attr("stop-color", colorScale(newMaxPercentage));
+        gradient.append("stop").attr("offset", "0%").attr("stop-color", colorScale(newMinPopulation));
+        gradient.append("stop").attr("offset", "100%").attr("stop-color", colorScale(newMaxPopulation));
 
         svg.append("rect")
             .attr("width", width)
@@ -54,23 +54,23 @@
             .attr("x", width / 2)
             .attr("y", 55)
             .style("text-anchor", "middle")
-            .text("Unemployment rate in %");
+            .text("Einwohner pro Quadratkilometer");
     });
 
-    minPercentage.subscribe(value => {
-        newMinPercentage = value;
+    minPopulation.subscribe(value => {
+        newMinPopulation = value;
         if (typeof window !== 'undefined') {
             foo();
-            colorScale.domain([newMinPercentage, newMaxPercentage]);
+            colorScale.domain([newMinPopulation, newMaxPopulation]);
 
         }
     });
 
-    maxPercentage.subscribe(value => {
-        newMaxPercentage = value;
+    maxPopulation.subscribe(value => {
+        newMaxPopulation = value;
         if (typeof window !== 'undefined') {
             foo();
-            colorScale.domain([newMinPercentage, newMaxPercentage]);
+            colorScale.domain([newMinPopulation, newMaxPopulation]);
         }
     });
 
@@ -81,7 +81,7 @@
         svg.select(".axis").remove();
 
         // Update the domain of the axis scale
-        axisScale.domain([newMinPercentage, newMaxPercentage]);
+        axisScale.domain([newMinPopulation, newMaxPopulation]);
 
         // Redraw the axis
         svg.append("g")
