@@ -579,6 +579,7 @@
     .tab-buttons ul li {
         flex: 1;
         width: 100%;
+        display: flex
     }
 
 
@@ -591,13 +592,27 @@
         color: inherit;
         display: flex;
         align-items: center;
+        vertical-align: middle;
         padding: .75em .5em;
-        width: 100%;
+        width: 80%;
+        margin: auto;
+        margin-bottom: 0px;
+        justify-content: center; 
         cursor: pointer;
     }
 
     /* Style for the selected tab */
     .tab-buttons button.selected {
-        background-color: #ccc;
+        border-bottom: 3px solid var(--colorscheme-blue);
+        cursor: default;
+    }
+
+    .tab-buttons button.selected:hover {
+        border-bottom: 3px solid var(--colorscheme-blue);
+        cursor: default;
+    }
+
+    .tab-buttons button:hover {
+        border-bottom: 2px solid var(--colorscheme-blue);
     }
 </style>
