@@ -357,10 +357,10 @@ console.log(opacityMatrix);
     stroke: #fff;
     stroke-width: 1.25px;
     transition: 0.5s;
+    cursor: pointer;
   }
   /* :global(.state.active) {
     fill: #003049 !important;
   } */
-
 
 </style>
