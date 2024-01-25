@@ -60,9 +60,9 @@
 
 	//pass the dropdown data centrally to the right vizualisation, exrtacted from barchart
 	let dropdownItemsRightViz = [
-		{ id: 3, label: 'Anzahl Unternehmen', orig: 'Anzahl_Unternehmen' },
-		{ id: 4, label: 'Beförderte Personen in Mio', orig: 'Befoerderte_Personen_in_Mio' },
-		{ id: 5, label: 'Personenkilometer in Mio', orig: 'Personenkilometer_in_Mio' }
+		{ id: 3, label: 'Number of public transport operators', orig: 'Anzahl_Unternehmen' },
+		{ id: 4, label: 'Passengers transported in mil.', orig: 'Befoerderte_Personen_in_Mio' },
+		{ id: 5, label: 'Kilometers travelled per Person in mil.', orig: 'Personenkilometer_in_Mio' }
 	];
 	let selectedDropdownItemRightViz = dropdownItemsRightViz[1];
 
@@ -71,8 +71,8 @@
 	let selectedTabRightViz = 'bar'; // Default tab for right vizualisation
 
 	const dataOptions = [
-		{ label: 'Income Data', value: incomeData, orig: "Income" },
-		{ label: 'Unemployment Rate', value: unimploymentData, orig: "Prozent" }
+		{ label: 'Average annual brutto employee income', value: incomeData, orig: "Income" },
+		{ label: 'Unemployment rate of Germany', value: unimploymentData, orig: "Prozent" }
 	];	
 
 	function handleDataChange() {
@@ -367,9 +367,6 @@
 			<Timeline />
 		</div>
 	</div>
-	<!-- <div class="Test">
-		<Info title="This is a Tooltip" />
-	</div> -->
 </div>
 
 
@@ -388,11 +385,17 @@
         align-items: center; */
     }
 
-    .left-viz, .center-viz, .right-viz {
-        width: 33.33%;
+    .left-viz, .right-viz {
+        width: 35%;
         height: 60vh;
         z-index: 2;
     }
+
+		.center-viz {
+        width: 30%;
+        height: 60vh;
+        z-index: 2;
+		}
 
     .left-viz, .right-viz {
         float: left;
@@ -530,7 +533,7 @@
     }
 
     #right-viz-dropdown, #left-viz-dropdown {
-        width: 46%;
+        width: 90%;
         margin: 2%;
         padding: 1%;
         display: flex;
