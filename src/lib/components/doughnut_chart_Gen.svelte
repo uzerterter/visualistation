@@ -156,6 +156,23 @@
 			.attr('x', 0) // center horizontally
 			.attr('dy', (d, i) => `${i * 1.2}em`) // adjust line spacing
 			.text((d) => d);
+
+		const tooltip = d3.select('#chart-container').append('div').attr('class', 'tooltip').style('opacity', 0);
+
+
+		arcs
+			.on('mouseover', (event, d) => {
+				tooltip.transition().duration(200).style('opacity', 0.9);
+				tooltip
+					.html(`${d.data.value}`)
+					.style('left', event.pageX + 'px')
+					.style('top', event.pageY + 'px')
+					.style('height', '30px')
+					.style('line-height', '30px');
+			})
+			.on('mouseout', () => {
+				tooltip.transition().duration(500).style('opacity', 0);
+			});
 	}
 
 	function handleResize() {
@@ -244,5 +261,18 @@
 	/* Add your styles here if needed */
 	input[type='radio'] {
 		cursor: pointer;
+	}
+
+	:global(.tooltip) {
+		position: absolute;
+		text-align: center;
+		width: 60px;
+		height: 28px;
+		padding: 2px;
+		font: 12px sans-serif;
+		background: lightsteelblue;
+		border: 0px;
+		border-radius: 8px;
+		pointer-events: none;
 	}
 </style>
