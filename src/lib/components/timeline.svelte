@@ -64,25 +64,6 @@
 </script>
 
 <div class="timeline-container">
-	<input
-		type="range"
-		min={startYear}
-		max={endYear}
-		step="1"
-		bind:value={$selectedYear}
-		on:input={updateYear}
-		on:mousedown={onThumbPress}
-		on:mouseup={onThumbRelease}
-		on:touchstart={onThumbPress}
-		on:touchend={onThumbRelease}
-		class:pressed={$isThumbPressed}
-		style={`background: linear-gradient(to right, #003049 0%, #003049 ${$fillPercentage}%, #ddd ${$fillPercentage}%, #ddd 100%); border-radius: 10px;`}
-	/>
-	<div class="timeline-labels">
-		{#each Array(endYear - startYear + 1) as _, i}
-			<span class="year-label">{startYear + i}</span>
-		{/each}
-	</div>
 	<button on:click={toggleAutoplay} id="autoplay-button">
 		{#if $isAutoplayActive}
 			<svg
@@ -106,13 +87,41 @@
 			</svg>
 		{/if}
 	</button>
+	<div class="timeline-wrapper">
+		<input
+			type="range"
+			min={startYear}
+			max={endYear}
+			step="1"
+			bind:value={$selectedYear}
+			on:input={updateYear}
+			on:mousedown={onThumbPress}
+			on:mouseup={onThumbRelease}
+			on:touchstart={onThumbPress}
+			on:touchend={onThumbRelease}
+			class:pressed={$isThumbPressed}
+			style={`background: linear-gradient(to right, #003049 0%, #003049 ${$fillPercentage}%, #ddd ${$fillPercentage}%, #ddd 100%); border-radius: 10px;`}
+		/>
+		<div class="timeline-labels">
+			{#each Array(endYear - startYear + 1) as _, i}
+				<span class="year-label">{startYear + i}</span>
+			{/each}
+		</div>
+	</div>
 </div>
 
 <style>
 	.timeline-container {
-		position: relative;
+		display: flex;
+		align-items: center; /* Center items vertically */
 		margin: 20px;
-		padding: 10px;
+		padding: 170px;
+	}
+
+	.timeline-wrapper {
+		flex-grow: 1; /* Grow to take remaining space */
+		margin-left: 20px; /* Adjust spacing between button and timeline */
+		position: relative;
 	}
 
 	.icon {
@@ -200,11 +209,12 @@
 	}
 
 	button {
-		transform: translateY(+20%);
+		transform: translateY(-20%);
 		padding: 8px 12px;
 		border: none;
 		border-radius: 20px;
 		cursor: pointer;
+		margin-right: 15px;
 	}
 
 	input {
