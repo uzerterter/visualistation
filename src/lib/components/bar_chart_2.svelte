@@ -167,8 +167,9 @@
             axisNode.selectAll('.tick').each(function() {
                 tickWidth = Math.max(tickWidth, this.getBBox().width);
             });
-            const _numberOfTicks = Math.floor(width / tickWidth);
-            const numberOfTicks = _numberOfTicks / 2;
+            const w = width - pad.left - pad.right;
+            const _numberOfTicks = Math.floor(w / (tickWidth*1.3));
+            const numberOfTicks = Math.floor(_numberOfTicks);
             axis.ticks(numberOfTicks);
             axisNode.remove();
         }
