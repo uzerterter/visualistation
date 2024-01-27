@@ -160,7 +160,22 @@
 
         svg.append('g')
            .attr('transform', `translate(${pad.left}, ${height-pad.bottom})`)
-		   .call(axisValues);
+		   .call(axisValues)
+           // Extend tick lines to the right edge
+           .call((g) => g.selectAll('.tick line').attr('y2', -height+pad.bottom+pad.top));
+
+        // Set opacity for the axis line
+		svg.selectAll('.domain')
+		   .style('opacity', 0.5)
+		   .style('stroke', 'rgb(114, 119, 123)');
+
+        // Set opacity for the tick lines
+        svg.selectAll('.tick line')
+		   .style('opacity', 0.5)
+		   .style('stroke', 'rgb(114, 119, 123)');
+
+        // Set opacity for the tick text
+		svg.selectAll('.tick text').style('opacity', 0.75)
 
         const g = svg.append('g');
         g.selectAll('.bar')
