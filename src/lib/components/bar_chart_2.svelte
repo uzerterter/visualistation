@@ -121,6 +121,13 @@
             // do something else if clicked element has no value
         }
 
+        function moveTooltip(event) {
+			tt.style('left', `${event.pageX - ttw / 2}px`).style('top', `${event.pageY - tth - 10}px`);
+		}
+
+        const tt = d3.select(tooltip);
+        let [ttw, tth] = [null, null];
+
 		const svg = d3
 			.select(svgLocal)
             .style("background-color", "transparent")
@@ -173,6 +180,22 @@
             })
             .attr('height', function(d) {
                 return scaleBL.bandwidth();
+            })
+            .on('mouseover', function (event, x) {
+                const val = dataValues[bl.indexOf(x)];
+                const color = selectedRadioButton.color
+                tt.transition().duration(0).style('opacity', 1).style('color', color);
+                tt.html(d3.format(',')(val.toFixed(2))+"%");
+                const rect = tt.node().getBoundingClientRect();
+                ttw = rect.width;
+                tth = rect.height;
+                moveTooltip(event);
+            })
+            .on('mousemove', function (event) {
+                moveTooltip(event);
+            })
+            .on('mouseout', function () {
+                tt.transition().duration(100).style('opacity', 0);
             });
 	}
 
@@ -213,6 +236,7 @@
 	
 </script>
 
+<div bind:this={tooltip} class="tooltip" style="display: block"/>
 <div style="display: {stateName!=='Deutschland'?'block':'none'}">
     <div id="barchart-diagram">
         <!-- BAR CHART -->
