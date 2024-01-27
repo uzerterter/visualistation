@@ -29,27 +29,6 @@
 		updateChart();
 	}
 
-	const customColors = [
-		'#1f77b4',
-		'#ff7f0e',
-		'#2ca02c',
-		'#d62728',
-		'#9467bd',
-		'#8c564b',
-		'#e377c2',
-		'#7f7f7f',
-		'#bcbd22',
-		'#17becf',
-		'#393b79',
-		'#637939',
-		'#8c6d31',
-		'#843c39',
-		'#7b4173',
-		'#bd9e39',
-		'#ad494a',
-		'#d6616b'
-	];
-
 	const abbreviations = {
 		'Baden-Württemberg': 'BW',
 		Bayern: 'BY',
@@ -80,6 +59,11 @@
 	});
 
 	function updateChart() {
+		const outlineColor = 'var(--colorscheme-blue)';
+		const backgroundColor = 'var(--colorscheme-sand)';
+		const highlightedOutlineColor = 'var(--colorscheme-sand)';
+		const highlightedBackgroundColor = 'var(--colorscheme-blue)';
+
 		if (!isActive) {
 			return;
 		}
@@ -98,17 +82,15 @@
 
 		d3.select('#chart-container svg').remove();
 
-		var parentDiv = document.getElementById('doughnutchart-RightViz-parent');
-		var width = 0.8 * parentDiv.offsetWidth;
-		var height = 0.8 * parentDiv.offsetHeight;
-		var radius = Math.min(width, height) / 2;
+		const parentDiv = document.getElementById('doughnutchart-RightViz-parent');
+		const width = 0.8 * parentDiv.offsetWidth;
+		const height = 0.8 * parentDiv.offsetHeight;
+		const radius = Math.min(width, height) / 2;
 
 		if (width <= 0 || height <= 0) {
 			// Avoid creating the chart if width or height is zero
 			return;
 		}
-
-		const color = d3.scaleOrdinal(customColors);
 
 		const svg = d3
 			.select('#chart-container')
@@ -138,13 +120,22 @@
 		arcs
 			.append('path')
 			.attr('d', arc)
-			.attr('fill', (d, i) => color(i));
+			.attr('fill', (d) =>
+				d.data.state === highlightedState ? highlightedBackgroundColor : backgroundColor
+			)
+			.attr('stroke', (d) =>
+				d.data.state === highlightedState ? highlightedOutlineColor : outlineColor
+			)
+			.attr('stroke-width', 2); // Adjust the outline thickness if needed
 
 		arcs
 			.append('text')
 			.attr('transform', (d) => `translate(${arc.centroid(d)})`)
 			.attr('dy', '0.35em')
 			.attr('text-anchor', 'middle')
+			.style('fill', (d) =>
+				d.data.state === highlightedState ? highlightedOutlineColor : outlineColor
+			)
 			.text((d) => abbreviations[d.data.state]);
 
 		const titleText = highlightedState
