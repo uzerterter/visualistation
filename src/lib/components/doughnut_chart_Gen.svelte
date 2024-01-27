@@ -80,9 +80,9 @@
 	});
 
 	function updateChart() {
-
-		if(!isActive || !ready) {
-			return; }
+		if (!isActive) {
+			return;
+		}
 
 		const filteredData = data.data.filter(
 			(entry) =>
@@ -99,9 +99,14 @@
 		d3.select('#chart-container svg').remove();
 
 		var parentDiv = document.getElementById('doughnutchart-RightViz-parent');
-		var width = 0.8 * parentDiv.width;
-		var height = 0.8 * parentDiv.height;
+		var width = 0.8 * parentDiv.offsetWidth;
+		var height = 0.8 * parentDiv.offsetHeight;
 		var radius = Math.min(width, height) / 2;
+
+		if (width <= 0 || height <= 0) {
+			// Avoid creating the chart if width or height is zero
+			return;
+		}
 
 		const color = d3.scaleOrdinal(customColors);
 
@@ -173,8 +178,9 @@
 
 	onMount(() => {
 		ready = true;
-		if(!isActive || !ready) {
-			return; }
+		if (!isActive || !ready) {
+			return;
+		}
 		updateChart();
 		window.addEventListener('resize', handleResize);
 		return () => {
