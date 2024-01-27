@@ -114,8 +114,7 @@
 	.timeline-container {
 		display: flex;
 		align-items: center; /* Center items vertically */
-		margin: 20px;
-		padding: 70px;
+		margin-top: 60px;
 	}
 
 	.timeline-wrapper {
