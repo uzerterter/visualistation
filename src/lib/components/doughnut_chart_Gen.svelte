@@ -22,8 +22,9 @@
 	let ready = false;
 
 	function handleToggle(art) {
-		if(!isActive) {	
-			return; }
+		if (!isActive) {
+			return;
+		}
 		selectedArt = art;
 		updateChart();
 	}
@@ -71,15 +72,17 @@
 	selectedYear.subscribe((value) => {
 		currentYear = value;
 		if (typeof window !== 'undefined') {
-			if(!isActive) {	
-			return; }
+			if (!isActive) {
+				return;
+			}
 			updateChart();
 		}
 	});
 
 	function updateChart() {
-		if(!isActive) {	
-			return; }
+		if (!isActive) {
+			return;
+		}
 
 		const filteredData = data.data.filter(
 			(entry) =>
@@ -115,7 +118,10 @@
 			.outerRadius((d) => (d.data.state === highlightedState ? radius : radius - 10))
 			.innerRadius((d) => (d.data.state === highlightedState ? radius - 70 - 10 : radius - 70));
 
-		const pie = d3.pie().sort(null).value((d) => d.value);
+		const pie = d3
+			.pie()
+			.sort(null)
+			.value((d) => d.value);
 
 		const arcs = svg
 			.selectAll('.arc')
@@ -127,14 +133,7 @@
 		arcs
 			.append('path')
 			.attr('d', arc)
-			.attr('fill', (d, i) => color(i))
-			.on('mouseover', function (event, d) {
-				const hoveredValue = d.data.value;
-				displayValueInCenter(hoveredValue);
-			})
-			.on('mouseout', function () {
-				d3.select('#chart-container svg text.center-text').remove();
-			});
+			.attr('fill', (d, i) => color(i));
 
 		arcs
 			.append('text')
@@ -142,37 +141,40 @@
 			.attr('dy', '0.35em')
 			.attr('text-anchor', 'middle')
 			.text((d) => abbreviations[d.data.state]);
-	}
 
-	function displayValueInCenter(value) {
-		d3.select('#chart-container svg text.center-text').remove();
-
-		const svg = d3.select('#chart-container svg');
-		const width = +svg.attr('width');
-		const height = +svg.attr('height');
+		const titleText = highlightedState
+			? `${highlightedState}:\n${data.find((d) => d.state === highlightedState)[year]}€`
+			: `${selectedDropdownItem.label}`;
 
 		svg
 			.append('text')
-			.attr('class', 'center-text')
 			.attr('text-anchor', 'middle')
-			.attr('dy', '0.35em')
-			.attr('x', width / 2)
-			.attr('y', height / 2)
-			.text(value)
-			.attr('fill', 'black');
+			.attr('x', 0)
+			.attr('y', '0')
+			.style('font-size', '18px')
+			.style('fill', '#333')
+			.selectAll('tspan')
+			.data(titleText.split('\n'))
+			.enter()
+			.append('tspan')
+			.attr('x', 0) // center horizontally
+			.attr('dy', (d, i) => `${i * 1.2}em`) // adjust line spacing
+			.text((d) => d);
 	}
 
 	function handleResize() {
 		if (typeof window !== 'undefined') {
-			if(!isActive) {	
-			return; }
+			if (!isActive) {
+				return;
+			}
 			updateChart();
 		}
 	}
 
 	onMount(() => {
-		if(!isActive) {	
-			return; }
+		if (!isActive) {
+			return;
+		}
 		updateChart();
 		window.addEventListener('resize', handleResize);
 		return () => {
@@ -188,8 +190,9 @@
 			highlightedState = '';
 		}
 		if (typeof window !== 'undefined') {
-			if(!isActive) {	
-			return; }
+			if (!isActive) {
+				return;
+			}
 			updateChart();
 		}
 	});
@@ -199,16 +202,44 @@
 
 <!-- Radio buttons -->
 <div>
-	<input type="radio" id="train" name="transport" bind:group={selectedArt} value="Liniennahverkehr mit Eisenbahnen" on:change={() => handleToggle('Liniennahverkehr mit Eisenbahnen')} />
+	<input
+		type="radio"
+		id="train"
+		name="transport"
+		bind:group={selectedArt}
+		value="Liniennahverkehr mit Eisenbahnen"
+		on:change={() => handleToggle('Liniennahverkehr mit Eisenbahnen')}
+	/>
 	<label for="train">Train</label>
 
-	<input type="radio" id="tram" name="transport" bind:group={selectedArt} value="Liniennahverkehr mit Straßenbahnen" on:change={() => handleToggle('Liniennahverkehr mit Straßenbahnen')} />
+	<input
+		type="radio"
+		id="tram"
+		name="transport"
+		bind:group={selectedArt}
+		value="Liniennahverkehr mit Straßenbahnen"
+		on:change={() => handleToggle('Liniennahverkehr mit Straßenbahnen')}
+	/>
 	<label for="tram">Tram</label>
 
-	<input type="radio" id="bus" name="transport" bind:group={selectedArt} value="Liniennahverkehr mit Omnibussen" on:change={() => handleToggle('Liniennahverkehr mit Omnibussen')} />
+	<input
+		type="radio"
+		id="bus"
+		name="transport"
+		bind:group={selectedArt}
+		value="Liniennahverkehr mit Omnibussen"
+		on:change={() => handleToggle('Liniennahverkehr mit Omnibussen')}
+	/>
 	<label for="bus">Bus</label>
 
-	<input type="radio" id="total" name="total" bind:group={selectedArt} value="Liniennahverkehr insgesamt" on:change={() => handleToggle ('Liniennahverkehr insgesamt')} />
+	<input
+		type="radio"
+		id="total"
+		name="total"
+		bind:group={selectedArt}
+		value="Liniennahverkehr insgesamt"
+		on:change={() => handleToggle('Liniennahverkehr insgesamt')}
+	/>
 	<label for="total">Total</label>
 </div>
 
