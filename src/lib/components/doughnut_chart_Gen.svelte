@@ -148,7 +148,7 @@
 			.text((d) => abbreviations[d.data.state]);
 
 		const titleText = highlightedState
-			? `${highlightedState}:\n${data.find((d) => d.state === highlightedState)[year]}€`
+			? `${highlightedState}:\n${chartData.find((d) => d.state === highlightedState).value}`
 			: `${selectedDropdownItem.label}`;
 
 		svg
