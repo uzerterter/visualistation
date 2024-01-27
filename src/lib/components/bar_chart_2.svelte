@@ -223,7 +223,8 @@
                 const val = dataValues[bl.indexOf(x)];
                 const color = selectedRadioButton.color
                 tt.transition().duration(0).style('opacity', 1).style('color', color);
-                tt.html(d3.format(',')(val.toFixed(2))+"%");
+                const t = d3.format(',')(val.toFixed(2))+"%";
+                tt.html(val>0?`+${t}`:t);
                 const rect = tt.node().getBoundingClientRect();
                 ttw = rect.width;
                 tth = rect.height;
