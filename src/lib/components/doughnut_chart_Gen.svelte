@@ -14,7 +14,7 @@
 	];
 	export let selectedDropdownItem = dropdownItems[1];
 
-	let selectedArt = 'Liniennahverkehr mit Eisenbahnen';
+	let selectedArt = 'Liniennahverkehr mit Straßenbahnen';
 	let currentYear = 2017;
 	let highlightedState = '';
 	let ready = false;
@@ -210,16 +210,6 @@
 <div>
 	<input
 		type="radio"
-		id="train"
-		name="transport"
-		bind:group={selectedArt}
-		value="Liniennahverkehr mit Eisenbahnen"
-		on:change={() => handleToggle('Liniennahverkehr mit Eisenbahnen')}
-	/>
-	<label for="train">Train</label>
-
-	<input
-		type="radio"
 		id="tram"
 		name="transport"
 		bind:group={selectedArt}
@@ -237,6 +227,16 @@
 		on:change={() => handleToggle('Liniennahverkehr mit Omnibussen')}
 	/>
 	<label for="bus">Bus</label>
+
+	<input
+		type="radio"
+		id="train"
+		name="transport"
+		bind:group={selectedArt}
+		value="Liniennahverkehr mit Eisenbahnen"
+		on:change={() => handleToggle('Liniennahverkehr mit Eisenbahnen')}
+	/>
+	<label for="train">Train</label>
 
 	<input
 		type="radio"
