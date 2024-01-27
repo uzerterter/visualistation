@@ -60,9 +60,9 @@
 
 	//pass the dropdown data centrally to the right vizualisation, exrtacted from barchart
 	let dropdownItemsRightViz = [
-		{ id: 3, label: 'Number of public transport operators', orig: 'Anzahl_Unternehmen' },
-		{ id: 4, label: 'Passengers transported in mil.', orig: 'Befoerderte_Personen_in_Mio' },
-		{ id: 5, label: 'Kilometers travelled per Person in mil.', orig: 'Personenkilometer_in_Mio' }
+		{ id: 3, label: 'Number of public\n transport operators', orig: 'Anzahl_Unternehmen' },
+		{ id: 4, label: 'Passengers transported\n in mil.', orig: 'Befoerderte_Personen_in_Mio' },
+		{ id: 5, label: 'Kilometers travelled\n per Person in mil.', orig: 'Personenkilometer_in_Mio' }
 	];
 	let selectedDropdownItemRightViz = dropdownItemsRightViz[1];
 
