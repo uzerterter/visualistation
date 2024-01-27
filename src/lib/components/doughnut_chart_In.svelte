@@ -85,7 +85,7 @@
 
 	function handleResize() {
 		if (typeof window !== 'undefined') {
-			createDoughnutChart(data, currentYear);
+			createDoughnutChart(data, currentYear, highlightedState);
 		}
 	}
 
@@ -215,7 +215,7 @@
 	onMount(() => {
 		ready = true;
 		if (typeof window !== 'undefined') {
-			createDoughnutChart(data, currentYear);
+			createDoughnutChart(data, currentYear, highlightedState);
 		}
 
 		window.addEventListener('resize', handleResize);
