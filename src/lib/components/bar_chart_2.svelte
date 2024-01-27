@@ -118,8 +118,16 @@
 		d3.select(svgLocal).selectAll('*').remove();
         //if(!stateName || stateName === "Deutschland") return; doppelt?
 
+        let pad = ({top: 0, right: 15, bottom: 30, left: 140});
+
         if (dBl2 === 0) {
-            // do something else if clicked element has no value
+            const label = selectedRadioButton.label;
+            d3.select(svgLocal).append("text")
+            .attr("x", pad.left + (width-pad.left-pad.right)/2)
+            .attr("y", (height-pad.bottom)/2)
+            .attr("text-anchor", "middle")
+            .style('opacity', 0.75)
+            .text(`No ${label?label+" data":"data"}`);
         }
 
         function moveTooltip(event) {
@@ -137,8 +145,7 @@
 
         bl.pop() // remove clicked Bundesland
         if (equalized) bl.pop() // remove equalizer
-
-        let pad = ({top: 0, right: 15, bottom: 30, left: 140});
+        
         const scaleBL = d3
 			.scaleBand()
 			.domain(bl.map(x=>x.full))
@@ -290,7 +297,7 @@
 </div>
 
 <div style="height:100%;align-items:center; justify-content:center; display: {stateName==='Deutschland'?'flex':'none'}">
-Bitte Bundesland auf der Karte auswählen.
+Please select a federal state on the map.
 </div>
 
 <!--<div style="height:100%;align-items:center; justify-content:center; display: {stateName!=='Deutschland'?'flex':'none'}">
