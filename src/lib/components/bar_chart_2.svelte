@@ -10,7 +10,8 @@
     export let dropdownItems = null
     export let selectedDropdownItem = null
 
-	export let radioButtons    
+	export let radioButtons
+    let radioButtonsDivs
 
 	let selectedRadioButton = radioButtons[0];
     //$: selectedRadioButton, console.log("radio", selectedRadioButton)
@@ -108,7 +109,7 @@
 
         // size
         var parentDiv = document.getElementById(parentId)
-		var radioButtonsHeight = document.getElementById('barchart-radio-buttons').clientHeight;
+		var radioButtonsHeight = radioButtonsDivs.clientHeight;
 		var width = parentDiv.clientWidth;
 		var height = 0.95 * parentDiv.clientHeight - (radioButtonsHeight) - 70;
 
@@ -201,6 +202,7 @@
 
     function handleResize() {
 		updateGraph();
+        updateGraph(); // two better for some reason
 	}
 
 	onMount(() => {
@@ -237,12 +239,13 @@
 </script>
 
 <div bind:this={tooltip} class="tooltip" style="display: block"/>
-<div style="display: {stateName!=='Deutschland'?'block':'none'}">
+<div style="height:90%;display: {stateName!=='Deutschland'?'block':'none'}">
     <div id="barchart-diagram">
         <!-- BAR CHART -->
         <svg bind:this={svgLocal} id="bar-chart" />
     </div>
-    <div id="barchart-radio-buttons">
+    <br>
+    <div id="barchart-radio-buttons" bind:this={radioButtonsDivs}>
         <!-- CHECKBOXES-->
         {#each radioButtons as c, i (c.id)}
             <label>
