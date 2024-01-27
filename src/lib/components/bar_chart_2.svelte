@@ -150,8 +150,8 @@
 			.domain([d3.min(dataValues), d3.max(dataValues)])
 			.range([0, width-pad.left-pad.right]);
             
-        const axisBL = d3.axisLeft(scaleBL);
-		const axisValues = d3.axisBottom(scaleValues);
+        const axisBL = d3.axisLeft(scaleBL).tickSizeOuter(0);
+		const axisValues = d3.axisBottom(scaleValues).tickSizeOuter(0);
         axisValues.tickFormat(x=>x+"%");
 
         svg.append('g')
