@@ -138,7 +138,7 @@
         bl.pop() // remove clicked Bundesland
         if (equalized) bl.pop() // remove equalizer
 
-        let pad = ({top: 0, right: 10, bottom: 30, left: 140});
+        let pad = ({top: 0, right: 15, bottom: 30, left: 140});
         const scaleBL = d3
 			.scaleBand()
 			.domain(bl.map(x=>x.full))
