@@ -159,7 +159,7 @@
             
         const axisBL = d3.axisLeft(scaleBL).tickSizeOuter(0);
 		const axisValues = d3.axisBottom(scaleValues).tickSizeOuter(0);
-        axisValues.tickFormat(x=>x+"%");
+        axisValues.tickFormat(x=>(x>0?`+${x}`:x)+"%");
 
         function adjustLabelFrequency(axis) {
             const axisNode = svg.append('g').call(axis);
