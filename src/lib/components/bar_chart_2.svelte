@@ -152,6 +152,7 @@
             
         const axisBL = d3.axisLeft(scaleBL);
 		const axisValues = d3.axisBottom(scaleValues);
+        axisValues.tickFormat(x=>x+"%");
 
         svg.append('g')
            .attr('transform', `translate(${pad.left}, ${pad.top})`)
@@ -244,7 +245,6 @@
         <!-- BAR CHART -->
         <svg bind:this={svgLocal} id="bar-chart" />
     </div>
-    <br>
     <div id="barchart-radio-buttons" bind:this={radioButtonsDivs}>
         <!-- CHECKBOXES-->
         {#each radioButtons as c, i (c.id)}
