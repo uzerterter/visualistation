@@ -154,6 +154,19 @@
 		const axisValues = d3.axisBottom(scaleValues).tickSizeOuter(0);
         axisValues.tickFormat(x=>x+"%");
 
+        function adjustLabelFrequency(axis) {
+            const axisNode = svg.append('g').call(axis);
+            let tickWidth = 0;
+            axisNode.selectAll('.tick').each(function() {
+                tickWidth = Math.max(tickWidth, this.getBBox().width);
+            });
+            const _numberOfTicks = Math.floor(width / tickWidth);
+            const numberOfTicks = _numberOfTicks / 2;
+            axis.ticks(numberOfTicks);
+            axisNode.remove();
+        }
+        adjustLabelFrequency(axisValues)
+
         svg.append('g')
            .attr('transform', `translate(${pad.left}, ${pad.top})`)
 		   .call(axisBL);
