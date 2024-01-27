@@ -17,9 +17,9 @@
 	let selectedArt = 'Liniennahverkehr mit Eisenbahnen';
 	let currentYear = 2017;
 	let highlightedState = '';
+	let ready = false;
 
 	export let isActive = false;
-	let ready = false;
 
 	function handleToggle(art) {
 		if (!isActive) {
@@ -80,9 +80,9 @@
 	});
 
 	function updateChart() {
-		if (!isActive) {
-			return;
-		}
+
+		if(!isActive || !ready) {
+			return; }
 
 		const filteredData = data.data.filter(
 			(entry) =>
@@ -99,8 +99,8 @@
 		d3.select('#chart-container svg').remove();
 
 		var parentDiv = document.getElementById('doughnutchart-RightViz-parent');
-		var width = 0.8 * parentDiv.clientWidth;
-		var height = 0.8 * parentDiv.clientHeight;
+		var width = 0.8 * parentDiv.width;
+		var height = 0.8 * parentDiv.height;
 		var radius = Math.min(width, height) / 2;
 
 		const color = d3.scaleOrdinal(customColors);
@@ -172,9 +172,9 @@
 	}
 
 	onMount(() => {
-		if (!isActive) {
-			return;
-		}
+		ready = true;
+		if(!isActive || !ready) {
+			return; }
 		updateChart();
 		window.addEventListener('resize', handleResize);
 		return () => {

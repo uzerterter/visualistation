@@ -60,9 +60,9 @@
 
 	//pass the dropdown data centrally to the right vizualisation, exrtacted from barchart
 	let dropdownItemsRightViz = [
-		{ id: 3, label: 'Anzahl Unternehmen', orig: 'Anzahl_Unternehmen' },
-		{ id: 4, label: 'Beförderte Personen in Mio', orig: 'Befoerderte_Personen_in_Mio' },
-		{ id: 5, label: 'Personenkilometer in Mio', orig: 'Personenkilometer_in_Mio' }
+		{ id: 3, label: 'Number of public transport operators', orig: 'Anzahl_Unternehmen' },
+		{ id: 4, label: 'Passengers transported in mil.', orig: 'Befoerderte_Personen_in_Mio' },
+		{ id: 5, label: 'Kilometers travelled per Person in mil.', orig: 'Personenkilometer_in_Mio' }
 	];
 	let selectedDropdownItemRightViz = dropdownItemsRightViz[1];
 
@@ -71,8 +71,8 @@
 	let selectedTabRightViz = 'bar'; // Default tab for right vizualisation
 
 	const dataOptions = [
-		{ label: 'Income Data', value: incomeData, orig: "Income" },
-		{ label: 'Unemployment Rate', value: unimploymentData, orig: "Prozent" }
+		{ label: 'Average annual brutto employee income', value: incomeData, orig: "Income" },
+		{ label: 'Unemployment rate of Germany', value: unimploymentData, orig: "Prozent" }
 	];	
 
 	function handleDataChange() {
@@ -125,7 +125,11 @@
 						{/each}
 					</select>
 				</div>
-				<Info
+                <div class="toprowCurrentStateNameContainer">
+                    <h4>{stateName}</h4>
+                </div>
+                <div class="toprowTooltipContainer">
+                    <Info
 					title="This Chart displays economic data, e.g. unemployment- or income rates for each federal state in germany.
 
                 Distribution: Distribution of data in germany, with possible highlighting of e.g. bavaria.
@@ -133,6 +137,7 @@
                 Detail: Shows development of e.g. the unemployment rate of bavaria over the years 2017-2022.
 
                 Comparison: Comparison between different means of public transportation in e.g. bavaria." />
+                </div>
 			</div>
 			<div class="tab-buttons">
 				<ul>
@@ -270,7 +275,11 @@
 						{/each}
 					</select>
 				</div>
-				<Info
+                <div class="toprowCurrentStateNameContainer">
+                    <h4>{stateName}</h4>
+                </div>
+                <div class="toprowTooltipContainer">
+                    <Info
 					title="This Chart displays public transportation data, e.g. number of transported passengers or passenger kilometers.
 					You can choose between Train, Tram, Bus or Total - which is the sum of all transportation possibilities.
 
@@ -279,6 +288,7 @@
 					Detail: Shows development of e.g. transported passengers per train for bavaria from 2017-2022.
 
 					Comparison: Shows e.g. number of transported passengers of all federal states in relation to bavaria." />
+                </div>
 			</div>
 			<div class="tab-buttons">
 				<ul>
@@ -357,9 +367,6 @@
 			<Timeline />
 		</div>
 	</div>
-	<div class="Test">
-		<Info title="This is a Tooltip" />
-	</div>
 </div>
 
 
@@ -378,11 +385,17 @@
         align-items: center; */
     }
 
-    .left-viz, .center-viz, .right-viz {
-        width: 33.33%;
+    .left-viz, .right-viz {
+        width: 35%;
         height: 60vh;
         z-index: 2;
     }
+
+		.center-viz {
+        width: 30%;
+        height: 60vh;
+        z-index: 2;
+		}
 
     .left-viz, .right-viz {
         float: left;
@@ -520,8 +533,9 @@
     }
 
     #right-viz-dropdown, #left-viz-dropdown {
-        width: 46%;
+        width: 90%;
         margin: 2%;
+        padding: 1%;
         display: flex;
     }
 
@@ -535,6 +549,19 @@
         font-size: 0.8vw;
         float: left;
         cursor: pointer;
+    }
+
+    .toprowCurrentStateNameContainer {
+        width: 34%;
+    }
+
+    .toprowCurrentStateNameContainer h4 {
+        text-align: center;
+        width: auto;
+    }
+
+    .toprowTooltipContainer {
+        width: 20%;
     }
 
     .tab-buttons {
@@ -555,6 +582,7 @@
     .tab-buttons ul li {
         flex: 1;
         width: 100%;
+        display: flex
     }
 
 
@@ -567,13 +595,27 @@
         color: inherit;
         display: flex;
         align-items: center;
+        vertical-align: middle;
         padding: .75em .5em;
-        width: 100%;
+        width: 80%;
+        margin: auto;
+        margin-bottom: 0px;
+        justify-content: center; 
         cursor: pointer;
     }
 
     /* Style for the selected tab */
     .tab-buttons button.selected {
-        background-color: #ccc;
+        border-bottom: 3px solid var(--colorscheme-blue);
+        cursor: default;
+    }
+
+    .tab-buttons button.selected:hover {
+        border-bottom: 3px solid var(--colorscheme-blue);
+        cursor: default;
+    }
+
+    .tab-buttons button:hover {
+        border-bottom: 2px solid var(--colorscheme-blue);
     }
 </style>
