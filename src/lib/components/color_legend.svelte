@@ -75,20 +75,24 @@
     });
 
     function foo() {
-        if (!svg || !colorScale || !axisScale) return;
+    if (!svg || !colorScale || !axisScale) return;
 
-        // Remove the old legend elements
-        svg.select(".axis").remove();
+    // Remove the old legend elements
+    svg.select(".axis").remove();
 
-        // Update the domain of the axis scale
-        axisScale.domain([newMinPopulation, newMaxPopulation]);
+    // Update the domain of the axis scale
+    axisScale.domain([newMinPopulation, newMaxPopulation]);
 
-        // Redraw the axis
-        svg.append("g")
-            .attr("class", "axis")
-            .attr("transform", `translate(0,20)`)
-            .call(d3.axisBottom(axisScale));
-    }
+    // Define a format with no decimal points
+    const tickFormat = d3.format(".0f");
+
+    // Redraw the axis with the new format
+    svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", `translate(0,20)`)
+        .call(d3.axisBottom(axisScale).tickFormat(tickFormat));
+}
+
 </script>
 
 <svg id="color-legend"></svg>

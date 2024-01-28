@@ -125,20 +125,19 @@ export let maxPopulation = writable(4214);
         dispatch('stateClicked', { stateName: null });
     } else {
         // Logic for zooming in
-        focused = d;
+        focused = d; // Update focused state here
         isZoomedIn = true;
         dispatch('stateClicked', { stateName: d.properties.NAME_1 });
 
+        // Update the domain of minPopulation and maxPopulation for the focused state
         const { stateRow } = createUnemploymentMatrixForState(populationDensityData, d.properties.NAME_1);
         minPopulation.set(Math.min(...stateRow.filter(val => val !== null)));
         maxPopulation.set(Math.max(...stateRow.filter(val => val !== null)));
 
-        // Set opacity for the focused state based on the matrix
-        const focusedOpacity = opacityMatrix[d.properties.NAME_1][year];
-        g.selectAll('.state')
-          .transition().duration(500)
-          .style('opacity', (_, j) => i === j ? focusedOpacity : 0);
+        // Now update map opacities
+        updateMapOpacities();
 
+        // Compute and set the zoom transformation
         const centroid = centroidMatrix[i];
         if (!centroid) {
             console.error('No centroid found for feature at index:', i);
@@ -147,8 +146,6 @@ export let maxPopulation = writable(4214);
 
         const [x, y] = centroid;
         const k = getZoomFactor(d.properties.NAME_1);
-
-        // Compute the translation and scale to center the centroid
         const transform = d3.zoomIdentity
             .translate(width / 2, height / 2)
             .scale(k)
@@ -159,9 +156,10 @@ export let maxPopulation = writable(4214);
             .call(zoom.transform, transform);
 
         // Disable zoom and drag behavior when zoomed in
-        svg.on('.zoom', null); // Remove existing zoom handlers
+        svg.on('.zoom', null);
     }    
-  }
+}
+
 
   function resetZoom() {
     // Reset opacity of all states
