@@ -68,6 +68,8 @@
 			return;
 		}
 
+		if (!ready) return;
+
 		const filteredData = data.data.filter(
 			(entry) =>
 				entry.Jahr === currentYear &&
