@@ -243,6 +243,8 @@
 	<svg bind:this={svgLocal} id="bar-chart" />
   </div>
   
+  <div id="barchart-checkboxes" style="display: {'barchart1'===activeTabId?'block':'none'}">
+</div>
   
   <style>
 	/* .tabs {           
@@ -291,6 +293,11 @@
 	#barchart-diagram {
 	  width: 100%;
 	  height: 90%;
+	}
+
+	#barchart-checkboxes {
+		width: 100%;
+		height: 10%;
 	}
   </style>
   

@@ -134,7 +134,7 @@
 
                 Distribution: Distribution of data in germany, with possible highlighting of e.g. bavaria.
 
-                Detail: Shows development of e.g. the unemployment rate of bavaria over the years 2017-2022.
+                Development: Shows development of e.g. the unemployment rate of bavaria over the years 2017-2022.
 
                 Comparison: Comparison between different means of public transportation in e.g. bavaria." />
                 </div>
@@ -148,7 +148,7 @@
 					</li>
 					<li>
 						<button on:click={() => handleTabChangeLeftViz('bar')} class:selected={selectedTabLeftViz === 'bar'}>
-							Detail
+							Development
 						</button>
 					</li>
 					<li>
@@ -285,7 +285,7 @@
 
 					Distribution: Distribution of e.g. transported passengers per Train between germany's federal states.
 
-					Detail: Shows development of e.g. transported passengers per train for bavaria from 2017-2022.
+					Development: Shows development of e.g. transported passengers per train for bavaria from 2017-2022.
 
 					Comparison: Shows e.g. number of transported passengers of all federal states in relation to bavaria." />
                 </div>
@@ -299,7 +299,7 @@
 					</li>
 					<li>
 						<button on:click={() => handleTabChangeRightViz('bar')} class:selected={selectedTabRightViz === 'bar'}>
-							Detail
+							Development
 						</button>
 					</li>
 					<li>
@@ -568,6 +568,7 @@
         display: flex;
         flex-direction: row;
         width: 100%;
+		margin-bottom: 5px;
     }
 
     .tab-buttons ul {
