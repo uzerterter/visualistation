@@ -225,11 +225,18 @@
                 return scaleBL.bandwidth();
             })
             .on('mouseover', function (event, x) {
+                // const stateAbbreviation = bl.find((item) => item.full === x.full)?.abbr;
+                const stateName = x.full;
                 const val = dataValues[bl.indexOf(x)];
-                const color = selectedRadioButton.color
+                const color = selectedRadioButton.color;
+
                 tt.transition().duration(0).style('opacity', 1).style('color', color);
-                const t = d3.format(',')(val.toFixed(2))+"%";
-                tt.html(val>0?`+${t}`:t);
+
+                const t = d3.format(',')(val.toFixed(2)) + "%";
+                const tooltipText = `${stateName}: ${val > 0 ? `+${t}` : t}`;
+
+                tt.html(tooltipText);
+
                 const rect = tt.node().getBoundingClientRect();
                 ttw = rect.width;
                 tth = rect.height;
