@@ -194,11 +194,11 @@
 		g.on('mouseover', (event, d) => {
 			tooltip.transition().duration(200).style('opacity', 0.9);
 			tooltip
-				.html(`${d.data[year]} €`)
+				.html(`${d.data.state}: ${d.data[year]} €`)
 				.style('left', event.pageX + 'px')
 				.style('top', event.pageY + 'px')
-				.style('height', '30px') // Set a fixed height or adjust as needed
-				.style('line-height', '30px'); // Center the text vertically within the reduced height
+				//.style('height', '50px') // Set a fixed height or adjust as needed
+				//.style('line-height', '50px'); // Center the text vertically within the reduced height
 		}).on('mouseout', () => {
 			tooltip.transition().duration(500).style('opacity', 0);
 		});
@@ -235,13 +235,5 @@
 		color: var(--colorscheme-blue);
 		font-size: 20px; /* You can adjust the font size as needed */
 		margin: 4px 2px;
-	}
-
-	:global(.tooltip) {
-		position: absolute;
-		text-align: center;
-		font: 12px sans-serif;
-		background: lightsteelblue;
-		pointer-events: none;
 	}
 </style>

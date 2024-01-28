@@ -206,7 +206,7 @@
 		g.on('mouseover', (event, d) => {
 			tooltip.transition().duration(200).style('opacity', 0.9);
 			tooltip
-				.html(`${d.data[year]} %`)
+				.html(`${d.data.state}: ${d.data[year]} %`)
 				.style('left', event.pageX + 'px')
 				.style('top', event.pageY + 'px')
 				.style('height', '30px') // Set a fixed height or adjust as needed
@@ -234,18 +234,5 @@
 		color: var(--colorscheme-blue);
 		font-size: 20px; /* You can adjust the font size as needed */
 		margin: 4px 2px;
-	}
-
-	:global(.tooltip) {
-		position: absolute;
-		text-align: center;
-		width: 60px;
-		height: 28px;
-		padding: 2px;
-		font: 12px sans-serif;
-		background: lightsteelblue;
-		border: 0px;
-		border-radius: 8px;
-		pointer-events: none;
 	}
 </style>
