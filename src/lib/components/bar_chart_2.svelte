@@ -111,14 +111,14 @@
         var parentDiv = document.getElementById(parentId)
 		var radioButtonsHeight = radioButtonsDivs.clientHeight;
 		var width = parentDiv.clientWidth;
-		var height = 0.95 * parentDiv.clientHeight - (radioButtonsHeight) - 70;
+		var height = 0.95 * parentDiv.clientHeight - 20;
 
         //console.log(parentDiv.clientWidth, parentDiv.clientHeight)
 
 		d3.select(svgLocal).selectAll('*').remove();
         //if(!stateName || stateName === "Deutschland") return; doppelt?
 
-        let pad = ({top: 0, right: 15, bottom: 30, left: 140});
+        let pad = ({top: 0, right: 15, bottom: 30, left: 45});
 
         if (dBl2 === 0) {
             const label = selectedRadioButton.label;
@@ -157,7 +157,12 @@
 			.domain([d3.min(dataValues), d3.max(dataValues)])
 			.range([0, width-pad.left-pad.right]);
             
-        const axisBL = d3.axisLeft(scaleBL).tickSizeOuter(0);
+        const axisBL = d3.axisLeft(scaleBL)
+            .tickSizeOuter(0)
+            .tickFormat((d) => {
+                const abbreviation = bl.find((item) => item.full === d)?.abbr;
+                return abbreviation || d; // Use abbreviation if found, else use full name
+            });
 		const axisValues = d3.axisBottom(scaleValues).tickSizeOuter(0);
         axisValues.tickFormat(x=>(x>0?`+${x}`:x)+"%");
 
@@ -277,7 +282,7 @@
 </script>
 
 <div bind:this={tooltip} class="tooltip" style="display: block"/>
-<div style="height:90%;display: {stateName!=='Deutschland'?'block':'none'}">
+<div style="height:100%;display: {stateName!=='Deutschland'?'block':'none'}">
     <div id="barchart-diagram">
         <!-- BAR CHART -->
         <svg bind:this={svgLocal} id="bar-chart" />
@@ -324,12 +329,12 @@ Please select a federal state on the map.
 
 	#barchart-diagram {
 		width: 100%;
-		height: 85%;
+		height: 90%;
 	}
 
 	#barchart-radio-buttons {
 		width: 100%;
-		height: 5%;
+		height: 10%;
 	}
 
 	/* Style for radio buttons */
