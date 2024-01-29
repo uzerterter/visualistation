@@ -22,7 +22,7 @@
 		</a>
 	</div>
 	<div>
-		<img src="{base}/Logo.png" alt="logo" />
+		<img src={base}/{`Logo.png`} alt="logo" />
 	</div>
 </div>
 

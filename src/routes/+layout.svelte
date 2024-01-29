@@ -8,7 +8,7 @@
     <nav class="navbar">
         <div class="navbar-content">
             <div class="logo">
-                <img src="{base}/Logo.png" alt="logo">
+                <img src={base}/{`Logo.png`} alt="logo">
                 <p>visuali-station</p>
             </div>
             <ul class="navbar-links">
