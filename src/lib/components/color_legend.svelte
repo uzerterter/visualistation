@@ -17,6 +17,15 @@
 
     // Define the gradient once in onMount()
     onMount(() => {
+
+        // let pointer = svg.append("line")
+        //     .attr("x1", 0)
+        //     .attr("x2", 0)
+        //     .attr("y1", height + 20)
+        //     .attr("y2", height + 30)
+        //     .style("stroke", "red") // Change the pointer color as needed
+        //     .style("stroke-width", 2);
+
         svg = d3.select("#color-legend")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
@@ -54,7 +63,7 @@
             .attr("x", width / 2)
             .attr("y", 55)
             .style("text-anchor", "middle")
-            .text("Einwohner pro Quadratkilometer");
+            .text("Inhabitants per square kilometer");
     });
 
     minPopulation.subscribe(value => {
@@ -73,6 +82,8 @@
             colorScale.domain([newMinPopulation, newMaxPopulation]);
         }
     });
+
+    
 
     function foo() {
     if (!svg || !colorScale || !axisScale) return;

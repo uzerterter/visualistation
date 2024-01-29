@@ -16,12 +16,14 @@
 	import BarChartEconomicUR from '../lib/components/bar_chart_economic_UR.svelte';
 	import BarChart_2 from '../lib/components/bar_chart_2.svelte';
 	import Info from '$lib/components/info.svelte';
+	import TestScale from '../lib/components/scale_test.svelte';
 
 	import { base } from '$app/paths';
 
 	let mapContainer;
 
 	import { selectedYear } from '$lib/components/timeline.svelte';
+	import ScaleTest from '../lib/components/scale_test.svelte';
 
 	let selectedYearValue;
 
@@ -44,7 +46,6 @@
 			showToprowContent = true;
 			stateFlag = stateName;
 		}
-		console.log(showToprowContent);
 	}
 
 	//pass the dropdown data centrally to the right vizualisation, exrtacted from barchart
@@ -97,7 +98,8 @@
 
 <div class="map-background" bind:this={mapContainer} id="map-parent">
 	<Map bind:container={mapContainer} on:stateClicked={handleStateClick} />
-	<ColorLegend />
+	<!-- <ColorLegend/> -->
+	<ScaleTest/>
 </div>
 
 
