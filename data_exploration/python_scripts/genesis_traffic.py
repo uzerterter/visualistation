@@ -37,10 +37,34 @@ genesis_traffic = genesis_traffic.astype(conversion_dict)
 final_genesis_traffic = genesis_traffic[["Jahr", "Art", "Bundesland"]].copy()
 
 # Calculate total number of companies across quarters and add it as a new column
-final_genesis_traffic["Anzahl_Unternehmen"] = (genesis_traffic['1. Quartal Unternehmen Anzahl'] +
-                                               genesis_traffic['2. Quartal Unternehmen Anzahl'] +
-                                               genesis_traffic['3. Quartal Unternehmen Anzahl'] +
-                                               genesis_traffic['4. Quartal Unternehmen Anzahl'])
+columns_to_max = ['1. Quartal Unternehmen Anzahl', '2. Quartal Unternehmen Anzahl', '3. Quartal Unternehmen Anzahl',
+                  '4. Quartal Unternehmen Anzahl']
+
+# Finding the maximum value for each group
+max_values = genesis_traffic.groupby(['Jahr', 'Art', 'Bundesland'])[
+    columns_to_max].max()
+
+max_values = max_values.max(axis=1)
+max_values = max_values.reset_index(level=['Jahr', 'Art', 'Bundesland'])
+print(max_values)
+
+for index, row in final_genesis_traffic.iterrows():
+    jahr_value = row["Jahr"]
+    art_value = row["Art"]
+    bundesland_value = row["Bundesland"]
+
+    matching_row = max_values[
+        (max_values["Jahr"] == jahr_value) &
+        (max_values["Art"] == art_value) &
+        (max_values["Bundesland"] == bundesland_value)
+        ]
+
+    if not matching_row.empty:
+        max_value = matching_row.iloc[0, -1]
+        final_genesis_traffic.at[index, "Anzahl_Unternehmen"] = max_value
+
+final_genesis_traffic['Anzahl_Unternehmen'] = final_genesis_traffic['Anzahl_Unternehmen'].astype(int)
+# %%
 
 # Calculate total transported persons across quarters and add it as a new column
 final_genesis_traffic["Befoerderte_Personen_in_1000"] = (genesis_traffic['1. Quartal Beförderte Personen 1000'] +
@@ -182,10 +206,10 @@ population_df = pd.read_csv(population)
 
 final_genesis_traffic["Relative_Befoerderte_Personen"] = final_genesis_traffic.apply(
     lambda x: round((x["Befoerderte_Personen_in_1000"] / get_EW(x["Jahr"], x["Bundesland"], population_df,
-                                                                "Einwohner"))*1000, 3), axis=1)
+                                                                "Einwohner")) * 1000, 3), axis=1)
 final_genesis_traffic["Relative_Personenkilometer"] = final_genesis_traffic.apply(
     lambda x: round((x["Personenkilometer_in_1000"] / get_EW(x["Jahr"], x["Bundesland"], population_df,
-                                                             "Einwohner"))*1000, 3), axis=1)
+                                                             "Einwohner")) * 1000, 3), axis=1)
 
 # %%
 # Save the final DataFrame to a CSV file
