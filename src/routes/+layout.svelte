@@ -13,8 +13,8 @@
             </div>
             <ul class="navbar-links">
                 {#each [
-                    { href: '/', label: 'home' },
-                    { href: '/team', label: 'team' },
+                    { href: '/', label: 'about' },
+                    { href: '/visualization', label: 'visualization' },
                     // Add more links as needed
                   ] as { href, label }}
                     <a href={base}{href} class:active={$page.route.id === href}>{label}</a>
@@ -42,7 +42,7 @@
     } */
 
     .navbar {
-        background-color: var(--colorscheme-grey);
+        background-color: var(--colorscheme-sand-light);
         width: 100%;
         height: 7vh;
         color: var(--colorscheme-blue);

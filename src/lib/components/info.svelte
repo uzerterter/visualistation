@@ -22,10 +22,10 @@
         border-color: var(--colorscheme-blue);
         border-radius: 50%;
         color: var(--colorscheme-blue);
-        font-weight: 800;
-        font-size: 3vh;
-        width: 4vh;
-        height: 4vh;
+        font-weight: 600;
+        font-size: 2.5vh;
+        width: 3vh;
+        height: 3vh;
     }
 
     button:hover {
