@@ -19,7 +19,7 @@
 			federal state for data presentation. Furthermore, users can seamlessly navigate through
 			different years using the bottom timeline.
 		</p>
-		<a href={`/visualization`}>
+		<a href="/visualization">
 			<button class="custom-button">GO TO VISUALIZATION</button>
 		</a>
 	</div>
