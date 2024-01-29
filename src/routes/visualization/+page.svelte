@@ -408,12 +408,12 @@
     }
 
     .left-viz {
-        margin-right: 4%;
+        margin-right: 10%;
 
     }
 
     .right-viz {
-        margin-left: 4%;
+        margin-left: 10%;
     }
 
     .center-viz {
@@ -440,7 +440,7 @@
     }
 
     .viz-border {
-        border: solid 3px;
+        border: solid 1px;
         border-radius: 15px; /* Add rounded borders */
         border-color: var(--colorscheme-blue);
     }
