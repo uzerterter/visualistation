@@ -1,6 +1,8 @@
 <script>
 	import '../styles/global.css';
 	import { base } from '$app/paths';
+
+	let logo = 'Logo';
 </script>
 
 <div class="background-image" />
@@ -22,7 +24,7 @@
 		</a>
 	</div>
 	<div>
-		<img src="{base}Logo.png" alt="logo" />
+		<img src={base}/{`${logo}.png`} alt="logo" />
 	</div>
 </div>
 
