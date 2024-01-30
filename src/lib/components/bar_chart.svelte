@@ -40,11 +40,18 @@
         	data: data.data.filter(item => item.Bundesland === stateName)
     	};
 	}
+
+	function hasValue(checkBox) {
+		let d = filteredData.data;
+		d = d.filter((entry) => entry.Jahr >= 2017);
+		d = d.filter((d) => d.Art === checkBox.orig);
+		return d.length !== 0
+	}
 	
 	let ready = false;
 	function updateGraph() {
 		if (!ready) return;
-
+		checkboxes = checkboxes // update for gray
 		let d = filteredData.data;
 
 		// Filter data for years starting from 2017
@@ -65,6 +72,17 @@
 
 		d3.select(svgLocal).selectAll('*').remove();
 
+		const pad = {left:50, right:10, top:10, bottom:30}
+		if (selectedCheckboxes.filter(c=>!hasValue(c)).length === selectedCheckboxes.length) {
+			const label = selectedCheckboxes.map(c=>c.label).join(", ")
+            d3.select(svgLocal).append("text")
+            .attr("x", pad.left + (width-pad.left-pad.right)/2)
+            .attr("y", (height-pad.bottom)/2)
+           	.attr("text-anchor", "middle")
+            .style('opacity', 0.75)
+            .text(`No ${label?label+" data":"data"}`);
+        }
+
 		const svg = d3
 			.select(svgLocal)
 			.attr('width', width)
@@ -75,12 +93,12 @@
 		const scaleYears = d3
 			.scaleBand()
 			.domain(years)
-			.range([0, width - 60])
+			.range([0, width-pad.left-pad.right])
 			.padding(0.1);
 		const scaleValues = d3
 			.scaleLinear()
 			.domain([maxVal, 0])
-			.range([0, height - 40]);
+			.range([0, height-pad.bottom-pad.top]);
 
 		const axisYears = d3.axisBottom(scaleYears).tickSizeOuter(0); // Remove outer ticks
 		const axisValues = d3.axisLeft(scaleValues).tickSizeOuter(0); // Remove outer ticks
@@ -102,14 +120,14 @@
 
 		svg
 			.append('g')
-			.attr('transform', `translate(50, ${height - 30})`)
+			.attr('transform', `translate(${pad.left}, ${height - pad.bottom})`)
 			.call(axisYears)
 			.selectAll('.tick text') // Select the text elements
 			.attr('class', (d) => `tick-text ${getClassForYear(d)}`);
 
 		svg
 			.append('g')
-			.attr('transform', 'translate(50,10)')
+			.attr('transform', `translate(${pad.left},${pad.top})`)
 			.call(axisValues)
 			.call((g) => g.selectAll('.tick line').attr('x2', width - 60)); // Extend tick lines to the right edge
 
@@ -322,11 +340,11 @@
 <div id="barchart-checkboxes" style="display: {'barchart1'===activeTabId?'block':'none'}">
 	<!-- CHECKBOXES-->
 	{#each checkboxes as c, i (c.id)}
-		<label>
+		<label style="opacity:{hasValue(c)?1:0.5}">
 			<input
 				type="checkbox"
 				value={c}
-				disabled={selectedCheckboxes.length === 1 && selectedCheckboxes[0] === c}
+				disabled={!hasValue(c) && !selectedCheckboxes.includes(c) || selectedCheckboxes.length === 1 && selectedCheckboxes[0] === c}
 				bind:group={selectedCheckboxes}
 				style="accent-color:{c.color};"
 			/>

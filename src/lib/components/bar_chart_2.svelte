@@ -28,6 +28,7 @@
         if (radioButtons.length === 1) {
             document.getElementById('barchart-radio-buttons').style.opacity=0
         }
+        radioButtons = radioButtons // update for gray
         await tick(); // otherwise layout does weird stuff?
                 
         if (!stateName || stateName === "Deutschland") return
@@ -285,6 +286,16 @@
     export async function updateLayout() {
         await updateGraph();
     }
+
+    function getDbl2(radioButton) {
+        const dBl = {...data, data: data.data.filter(item =>
+            item.Bundesland === stateName &&
+            item.Jahr === year &&
+            (!radioButton.orig ? true : (item.Art === radioButton.orig)))
+        }
+        const dBl2 = dBl.data.reduce((acc,cur) => acc + cur[selectedDropdownItem.orig], 0)
+        return dBl2
+    }
 	
 </script>
 
@@ -297,8 +308,9 @@
     <div id="barchart-radio-buttons" bind:this={radioButtonsDivs}>
         <!-- CHECKBOXES-->
         {#each radioButtons as c, i (c.id)}
-            <label>
+            <label style="opacity:{getDbl2(c)===0?0.5:1}">
                 <input
+                    disabled={getDbl2(c)===0}
                     type="radio"
                     value={c}
                     bind:group={selectedRadioButton}
