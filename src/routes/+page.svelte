@@ -3,6 +3,7 @@
 	import { base } from '$app/paths';
 
 	let logo = 'Logo';
+	let href = '/visualization';
 </script>
 
 <div class="background-image" />
@@ -19,7 +20,7 @@
 			federal state for data presentation. Furthermore, users can seamlessly navigate through
 			different years using the bottom timeline.
 		</p>
-		<a href={`${base}/visualization`} target="_blank">
+		<a href={base}{href} >
 			<button class="custom-button">GO TO VISUALIZATION</button>
 		</a>
 	</div>
