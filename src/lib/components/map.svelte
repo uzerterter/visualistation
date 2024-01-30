@@ -39,6 +39,7 @@ export let selectedState = writable(null);
 
     // Update value of that year for the scale
     selectedYearsValue.set(getDensity(pdMatrix, $selectedState, $selectedYear));
+    console.log(pdMatrix);
 
   }
 
