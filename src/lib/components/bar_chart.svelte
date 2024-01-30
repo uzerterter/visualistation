@@ -72,6 +72,13 @@
 
 		d3.select(svgLocal).selectAll('*').remove();
 
+		// deselect empty checkbox and re-update
+		const selectedWithoutVal = selectedCheckboxes.filter(c=>!hasValue(c));
+		if (selectedWithoutVal.length > 0 && selectedWithoutVal.length !== selectedCheckboxes.length) {
+			selectedCheckboxes = selectedCheckboxes.filter(c=>hasValue(c));
+			return updateGraph()
+		}
+
 		const pad = {left:50, right:10, top:10, bottom:30}
 		if (selectedCheckboxes.filter(c=>!hasValue(c)).length === selectedCheckboxes.length) {
 			const label = selectedCheckboxes.map(c=>c.label).join(", ")
