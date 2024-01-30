@@ -14,40 +14,20 @@
 	];
 	export let selectedDropdownItem = dropdownItems[1];
 
-	let selectedArt = 'Liniennahverkehr mit Eisenbahnen';
+	let selectedArt = 'Liniennahverkehr mit Straßenbahnen';
 	let currentYear = 2017;
 	let highlightedState = '';
-
-	export let isActive = false;
 	let ready = false;
 
+	export let isActive = false;
+
 	function handleToggle(art) {
-		if(!isActive) {	
-			return; }
+		if (!isActive) {
+			return;
+		}
 		selectedArt = art;
 		updateChart();
 	}
-
-	const customColors = [
-		'#1f77b4',
-		'#ff7f0e',
-		'#2ca02c',
-		'#d62728',
-		'#9467bd',
-		'#8c564b',
-		'#e377c2',
-		'#7f7f7f',
-		'#bcbd22',
-		'#17becf',
-		'#393b79',
-		'#637939',
-		'#8c6d31',
-		'#843c39',
-		'#7b4173',
-		'#bd9e39',
-		'#ad494a',
-		'#d6616b'
-	];
 
 	const abbreviations = {
 		'Baden-Württemberg': 'BW',
@@ -71,15 +51,24 @@
 	selectedYear.subscribe((value) => {
 		currentYear = value;
 		if (typeof window !== 'undefined') {
-			if(!isActive) {	
-			return; }
+			if (!isActive) {
+				return;
+			}
 			updateChart();
 		}
 	});
 
 	function updateChart() {
-		if(!isActive) {	
-			return; }
+		const outlineColor = 'var(--colorscheme-blue)';
+		const backgroundColor = 'var(--colorscheme-sand)';
+		const highlightedOutlineColor = 'var(--colorscheme-sand)';
+		const highlightedBackgroundColor = 'var(--colorscheme-blue)';
+
+		if (!isActive) {
+			return;
+		}
+
+		if (!ready) return;
 
 		const filteredData = data.data.filter(
 			(entry) =>
@@ -95,12 +84,15 @@
 
 		d3.select('#chart-container svg').remove();
 
-		var parentDiv = document.getElementById('doughnutchart-RightViz-parent');
-		var width = 0.8 * parentDiv.clientWidth;
-		var height = 0.8 * parentDiv.clientHeight;
-		var radius = Math.min(width, height) / 2;
+		const parentDiv = document.getElementById('doughnutchart-RightViz-parent');
+		const width = 0.8 * parentDiv.offsetWidth;
+		const height = 0.8 * parentDiv.offsetHeight;
+		const radius = Math.min(width, height) / 2;
 
-		const color = d3.scaleOrdinal(customColors);
+		if (width <= 0 || height <= 0) {
+			// Avoid creating the chart if width or height is zero
+			return;
+		}
 
 		const svg = d3
 			.select('#chart-container')
@@ -115,7 +107,10 @@
 			.outerRadius((d) => (d.data.state === highlightedState ? radius : radius - 10))
 			.innerRadius((d) => (d.data.state === highlightedState ? radius - 70 - 10 : radius - 70));
 
-		const pie = d3.pie().sort(null).value((d) => d.value);
+		const pie = d3
+			.pie()
+			.sort(null)
+			.value((d) => d.value);
 
 		const arcs = svg
 			.selectAll('.arc')
@@ -127,52 +122,75 @@
 		arcs
 			.append('path')
 			.attr('d', arc)
-			.attr('fill', (d, i) => color(i))
-			.on('mouseover', function (event, d) {
-				const hoveredValue = d.data.value;
-				displayValueInCenter(hoveredValue);
-			})
-			.on('mouseout', function () {
-				d3.select('#chart-container svg text.center-text').remove();
-			});
+			.attr('fill', (d) =>
+				d.data.state === highlightedState ? highlightedBackgroundColor : backgroundColor
+			)
+			.attr('stroke', (d) =>
+				d.data.state === highlightedState ? highlightedOutlineColor : outlineColor
+			)
+			.attr('stroke-width', 2); // Adjust the outline thickness if needed
 
 		arcs
 			.append('text')
 			.attr('transform', (d) => `translate(${arc.centroid(d)})`)
 			.attr('dy', '0.35em')
 			.attr('text-anchor', 'middle')
+			.style('fill', (d) =>
+				d.data.state === highlightedState ? highlightedOutlineColor : outlineColor
+			)
 			.text((d) => abbreviations[d.data.state]);
-	}
 
-	function displayValueInCenter(value) {
-		d3.select('#chart-container svg text.center-text').remove();
-
-		const svg = d3.select('#chart-container svg');
-		const width = +svg.attr('width');
-		const height = +svg.attr('height');
+		const titleText = highlightedState
+			? `${highlightedState}:\n${chartData.find((d) => d.state === highlightedState).value}`
+			: `${selectedDropdownItem.label}`;
 
 		svg
 			.append('text')
-			.attr('class', 'center-text')
 			.attr('text-anchor', 'middle')
-			.attr('dy', '0.35em')
-			.attr('x', width / 2)
-			.attr('y', height / 2)
-			.text(value)
-			.attr('fill', 'black');
+			.attr('x', 0)
+			.attr('y', '0')
+			.style('font-size', '18px')
+			.style('fill', '#333')
+			.selectAll('tspan')
+			.data(titleText.split('\n'))
+			.enter()
+			.append('tspan')
+			.attr('x', 0) // center horizontally
+			.attr('dy', (d, i) => `${i * 1.2}em`) // adjust line spacing
+			.text((d) => d);
+
+		const tooltip = d3.select('#chart-container').append('div').attr('class', 'tooltip').style('opacity', 0);
+
+
+		arcs
+			.on('mouseover', (event, d) => {
+				tooltip.transition().duration(200).style('opacity', 0.9);
+				tooltip
+					.html(`${d.data.state}: ${d.data.value}`)
+					.style('left', event.pageX + 'px')
+					.style('top', event.pageY + 'px')
+					.style('height', '30px')
+					.style('line-height', '30px');
+			})
+			.on('mouseout', () => {
+				tooltip.transition().duration(500).style('opacity', 0);
+			});
 	}
 
 	function handleResize() {
 		if (typeof window !== 'undefined') {
-			if(!isActive) {	
-			return; }
+			if (!isActive) {
+				return;
+			}
 			updateChart();
 		}
 	}
 
 	onMount(() => {
-		if(!isActive) {	
-			return; }
+		ready = true;
+		if (!isActive || !ready) {
+			return;
+		}
 		updateChart();
 		window.addEventListener('resize', handleResize);
 		return () => {
@@ -188,8 +206,9 @@
 			highlightedState = '';
 		}
 		if (typeof window !== 'undefined') {
-			if(!isActive) {	
-			return; }
+			if (!isActive) {
+				return;
+			}
 			updateChart();
 		}
 	});
@@ -199,16 +218,44 @@
 
 <!-- Radio buttons -->
 <div>
-	<input type="radio" id="train" name="transport" bind:group={selectedArt} value="Liniennahverkehr mit Eisenbahnen" on:change={() => handleToggle('Liniennahverkehr mit Eisenbahnen')} />
-	<label for="train">Train</label>
-
-	<input type="radio" id="tram" name="transport" bind:group={selectedArt} value="Liniennahverkehr mit Straßenbahnen" on:change={() => handleToggle('Liniennahverkehr mit Straßenbahnen')} />
+	<input
+		type="radio"
+		id="tram"
+		name="transport"
+		bind:group={selectedArt}
+		value="Liniennahverkehr mit Straßenbahnen"
+		on:change={() => handleToggle('Liniennahverkehr mit Straßenbahnen')}
+	/>
 	<label for="tram">Tram</label>
 
-	<input type="radio" id="bus" name="transport" bind:group={selectedArt} value="Liniennahverkehr mit Omnibussen" on:change={() => handleToggle('Liniennahverkehr mit Omnibussen')} />
+	<input
+		type="radio"
+		id="bus"
+		name="transport"
+		bind:group={selectedArt}
+		value="Liniennahverkehr mit Omnibussen"
+		on:change={() => handleToggle('Liniennahverkehr mit Omnibussen')}
+	/>
 	<label for="bus">Bus</label>
 
-	<input type="radio" id="total" name="total" bind:group={selectedArt} value="Liniennahverkehr insgesamt" on:change={() => handleToggle ('Liniennahverkehr insgesamt')} />
+	<input
+		type="radio"
+		id="train"
+		name="transport"
+		bind:group={selectedArt}
+		value="Liniennahverkehr mit Eisenbahnen"
+		on:change={() => handleToggle('Liniennahverkehr mit Eisenbahnen')}
+	/>
+	<label for="train">Train</label>
+
+	<input
+		type="radio"
+		id="total"
+		name="total"
+		bind:group={selectedArt}
+		value="Liniennahverkehr insgesamt"
+		on:change={() => handleToggle('Liniennahverkehr insgesamt')}
+	/>
 	<label for="total">Total</label>
 </div>
 

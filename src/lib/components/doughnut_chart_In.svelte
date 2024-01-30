@@ -40,27 +40,6 @@
 	let formattedData = transformData(realData);
 	let data = formattedData;
 
-	const customColors = [
-		'#1f77b4',
-		'#ff7f0e',
-		'#2ca02c',
-		'#d62728',
-		'#9467bd',
-		'#8c564b',
-		'#e377c2',
-		'#7f7f7f',
-		'#bcbd22',
-		'#17becf',
-		'#393b79',
-		'#637939',
-		'#8c6d31',
-		'#843c39',
-		'#7b4173',
-		'#bd9e39',
-		'#ad494a',
-		'#d6616b'
-	];
-
 	let currentYear = '2017';
 
 	let selectedYearValue = currentYear;
@@ -85,7 +64,7 @@
 
 	function handleResize() {
 		if (typeof window !== 'undefined') {
-			createDoughnutChart(data, currentYear);
+			createDoughnutChart(data, currentYear, highlightedState);
 		}
 	}
 
@@ -97,8 +76,13 @@
 		}
 	}
 
-	
 	function createDoughnutChart(data, year, highlightState) {
+
+		const outlineColor = 'var(--colorscheme-blue)';
+		const backgroundColor = 'var(--colorscheme-sand)';
+		const highlightedOutlineColor = 'var(--colorscheme-sand)';
+		const highlightedBackgroundColor = 'var(--colorscheme-blue)';
+
 		if (isActive === false) {
 			return;
 		}
@@ -133,7 +117,6 @@
 		var height = 0.8 * parentDiv.clientHeight;
 
 		var radius = Math.min(width, height) / 2;
-		const color = d3.scaleOrdinal(customColors);
 
 		const svg = d3
 			.select('#chart')
@@ -158,7 +141,13 @@
 		// Append paths for the pie pieces
 		g.append('path')
 			.attr('d', arc)
-			.style('fill', (d) => color(d.data.state));
+			.attr('fill', (d) =>
+				d.data.state === highlightedState ? highlightedBackgroundColor : backgroundColor
+			)
+			.attr('stroke', (d) =>
+				d.data.state === highlightedState ? highlightedOutlineColor : outlineColor
+			)
+			.attr('stroke-width', 2); // Adjust the outline thickness if needed
 
 		// Label positioning
 		const label = d3
@@ -168,27 +157,35 @@
 
 		// Append text labels
 		g.append('text')
-			.attr('transform', (d) => 'translate(' + label.centroid(d) + ')')
+			.attr('transform', (d) => `translate(${arc.centroid(d)})`)
 			.attr('dy', '0.35em')
-			.text((d) => abbreviations[d.data.state])
-			.style('text-anchor', 'middle')
-			.style('fill', '#fff');
+			.attr('text-anchor', 'middle')
+			.style('fill', (d) =>
+				d.data.state === highlightedState ? highlightedOutlineColor : outlineColor
+			)
+			.text((d) => abbreviations[d.data.state]);
 
-		// Append title
+		// Append title with dynamic content
+		const titleText = highlightState
+			? `${[highlightState]}:\n${data.find((d) => d.state === highlightState)[year]}€`
+			: 'Income Distribution\n in €';
+
 		svg
 			.append('text')
 			.attr('text-anchor', 'middle')
-			.attr('x', 0) // center horizontally
-			.attr('y', '0') // position the entire text block
-			.style('font-size', '20px')
+			.attr('x', 0)
+			.attr('y', '0')
+			.style('font-size', '18px')
 			.style('fill', '#333')
 			.selectAll('tspan')
-			.data(['Income Distribution', 'in €'])
+			.data(titleText.split('\n'))
 			.enter()
 			.append('tspan')
 			.attr('x', 0) // center horizontally
 			.attr('dy', (d, i) => `${i * 1.2}em`) // adjust line spacing
 			.text((d) => d);
+
+		// ... (existing code)
 
 		// Tooltip setup
 		const tooltip = d3.select('#chart').append('div').attr('class', 'tooltip').style('opacity', 0);
@@ -197,18 +194,20 @@
 		g.on('mouseover', (event, d) => {
 			tooltip.transition().duration(200).style('opacity', 0.9);
 			tooltip
-				.html(d.data.state + ': ' + d.data[year])
+				.html(`${d.data.state}: ${d.data[year]} €`)
 				.style('left', event.pageX + 'px')
-				.style('top', event.pageY - 28 + 'px');
+				.style('top', event.pageY + 'px')
+				//.style('height', '50px') // Set a fixed height or adjust as needed
+				//.style('line-height', '50px'); // Center the text vertically within the reduced height
 		}).on('mouseout', () => {
 			tooltip.transition().duration(500).style('opacity', 0);
 		});
 	}
 
-	onMount(() => {	
+	onMount(() => {
 		ready = true;
 		if (typeof window !== 'undefined') {
-			createDoughnutChart(data, currentYear);
+			createDoughnutChart(data, currentYear, highlightedState);
 		}
 
 		window.addEventListener('resize', handleResize);
@@ -236,18 +235,5 @@
 		color: var(--colorscheme-blue);
 		font-size: 20px; /* You can adjust the font size as needed */
 		margin: 4px 2px;
-	}
-
-	:global(.tooltip) {
-		position: absolute;
-		text-align: center;
-		width: 60px;
-		height: 28px;
-		padding: 2px;
-		font: 12px sans-serif;
-		background: lightsteelblue;
-		border: 0px;
-		border-radius: 8px;
-		pointer-events: none;
 	}
 </style>

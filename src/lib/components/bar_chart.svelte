@@ -40,11 +40,21 @@
         	data: data.data.filter(item => item.Bundesland === stateName)
     	};
 	}
+
+	function hasValue(checkBox) {
+		let d = filteredData.data;
+		d = d.filter((entry) => entry.Jahr >= 2017);
+		d = d.filter((d) => d.Art === checkBox.orig);
+		return d.length !== 0
+	}
+
+	let prevSelected = null
+	let prevState = null
 	
 	let ready = false;
 	function updateGraph() {
 		if (!ready) return;
-
+		checkboxes = checkboxes // update for gray
 		let d = filteredData.data;
 
 		// Filter data for years starting from 2017
@@ -65,6 +75,25 @@
 
 		d3.select(svgLocal).selectAll('*').remove();
 
+		// update: i rewrote it so it doesn't really deselect but just hides the bar, so that exploration still works
+		// deselect empty checkbox and re-update
+		/*const selectedWithoutVal = selectedCheckboxes.filter(c=>!hasValue(c));
+		if (selectedWithoutVal.length > 0 && selectedWithoutVal.length !== selectedCheckboxes.length) {
+			selectedCheckboxes = selectedCheckboxes.filter(c=>hasValue(c));
+			return updateGraph()
+		}*/
+
+		const pad = {left:50, right:10, top:10, bottom:30}
+		if (selectedCheckboxes.filter(c=>!hasValue(c)).length === selectedCheckboxes.length) {
+			const label = selectedCheckboxes.map(c=>c.label).join(", ")
+            d3.select(svgLocal).append("text")
+            .attr("x", pad.left + (width-pad.left-pad.right)/2)
+            .attr("y", (height-pad.bottom)/2)
+           	.attr("text-anchor", "middle")
+            .style('opacity', 0.75)
+            .text(`No ${label?label+" data":"data"}`);
+        }
+
 		const svg = d3
 			.select(svgLocal)
 			.attr('width', width)
@@ -75,12 +104,12 @@
 		const scaleYears = d3
 			.scaleBand()
 			.domain(years)
-			.range([0, width - 60])
+			.range([0, width-pad.left-pad.right])
 			.padding(0.1);
 		const scaleValues = d3
 			.scaleLinear()
 			.domain([maxVal, 0])
-			.range([0, height - 40]);
+			.range([0, height-pad.bottom-pad.top]);
 
 		const axisYears = d3.axisBottom(scaleYears).tickSizeOuter(0); // Remove outer ticks
 		const axisValues = d3.axisLeft(scaleValues).tickSizeOuter(0); // Remove outer ticks
@@ -102,14 +131,14 @@
 
 		svg
 			.append('g')
-			.attr('transform', `translate(50, ${height - 30})`)
+			.attr('transform', `translate(${pad.left}, ${height - pad.bottom})`)
 			.call(axisYears)
 			.selectAll('.tick text') // Select the text elements
 			.attr('class', (d) => `tick-text ${getClassForYear(d)}`);
 
 		svg
 			.append('g')
-			.attr('transform', 'translate(50,10)')
+			.attr('transform', `translate(${pad.left},${pad.top})`)
 			.call(axisValues)
 			.call((g) => g.selectAll('.tick line').attr('x2', width - 60)); // Extend tick lines to the right edge
 
@@ -142,10 +171,11 @@
 			return className;
 		}
 
-		for (const [i, c] of selectedCheckboxes.entries()) {
+		const selectedCheckboxesWithValue = selectedCheckboxes.filter(c=>hasValue(c))
+		for (const [i, c] of selectedCheckboxesWithValue.entries()) {
 			const g = svg.append('g');
 
-			const ww = scaleYears.bandwidth() / selectedCheckboxes.length;
+			const ww = scaleYears.bandwidth() / selectedCheckboxesWithValue.length;
 			g.selectAll('.bar')
 				.data(d)
 				.enter()
@@ -171,7 +201,7 @@
 				.attr('x', function (d) {
 					const x = scaleYears(d.Jahr);
 					const w = scaleYears.bandwidth();
-					return x + w / 2 + i * ww - (selectedCheckboxes.length * ww) / 2;
+					return x + w / 2 + i * ww - (selectedCheckboxesWithValue.length * ww) / 2;
 				})
 				.attr('y', function (d) {
 					return scaleValues(getValue(d)) + 10;
@@ -183,6 +213,60 @@
 		}
 		// Apply styling to the current year when updating graph
 		applyStylingToCurrentYear(selectedYearValue);
+
+		if (prevSelected !== null
+		    && selectedCheckboxes.filter(c=>!hasValue(c)).length>0
+			&& prevSelected.filter(c=>!hasValue(c)).length !== selectedCheckboxes.filter(c=>!hasValue(c)).length 
+			||
+			prevState !== stateName
+			&& selectedCheckboxes.filter(c=>!hasValue(c)).length>0
+			&& selectedCheckboxes.filter(c=>hasValue(c)).length>0
+		) {
+			const color = selectedCheckboxes.filter(c=>!hasValue(c)).length > 1 ? "black"
+				: selectedCheckboxes.filter(c=>!hasValue(c))[0].color
+			const label = selectedCheckboxes.filter(c=>!hasValue(c)).map(c=>c.label).join(", ")
+			const padding = 10;
+			const text = `No ${label ? label + " data" : "data"}`;
+			const textSize = 10;
+			d3.select(svgLocal).append("rect")
+				.attr("x", pad.left + (width - pad.left - pad.right) / 2 - textSize * text.length / 2 - padding)
+				.attr("y", (height - pad.bottom) / 2 - textSize / 2 - padding)
+				.attr("width", textSize * text.length + 2 * padding)
+				.attr("height", textSize + 2 * padding)
+				.style("fill", "white")
+				.style("stroke", "black")
+				.style("stroke-width", "1px")
+				.attr("rx", 10)
+				.attr("ry", 10)
+				.style("fill", "white")
+				.style("opacity", 0)
+				.transition()
+				.duration(300)
+				.style("opacity", 1)
+				.transition()
+				.delay(100)
+				.duration(300)
+				.style("opacity", 0)
+				.remove()
+			d3.select(svgLocal).append("text")
+				.attr("x", pad.left + (width - pad.left - pad.right) / 2)
+				.attr("y", (height - pad.bottom) / 2)
+				.attr("dy", "0.35em")
+				.attr("text-anchor", "middle")
+				.text(text)
+				.style("fill", color)
+				.style("opacity", 0)
+				.transition()
+				.duration(300)
+				.style("opacity", 1)
+				.transition()
+				.delay(100)
+				.duration(300)
+				.style("opacity", 0)
+				.remove()
+		}
+		prevSelected = selectedCheckboxes
+		prevState = stateName
 	}
 
 	// function toggleHighlighting() {
@@ -200,7 +284,7 @@
 		filterData();
 		ready = true;		
 		updateGraph();
-		applyStylingToCurrentYear(2017);
+		applyStylingToCurrentYear(selectedYearValue);
 		//const unsubscribe = selectedYear.subscribe((value) => console.log("jaaaaahr", value))
 
 		window.addEventListener('resize', handleResize);
@@ -217,6 +301,7 @@
 
 	let selectedYearClass = "";
 	let highlightingActive = false;
+	let bcDiag
 
 	function applyStylingToCurrentYear(selectedYearValue) {
 		if (!ready) return;
@@ -315,20 +400,21 @@
 
 <!-- BAR CHART 1 -->
 <div bind:this={tooltip} class="tooltip" style="display: {'barchart1'===activeTabId?'block':'none'}"/>
-<div id="barchart-diagram" style="display: {'barchart1'===activeTabId?'block':'none'}">
+<div bind:this={bcDiag} id="barchart-diagram" style="display: {'barchart1'===activeTabId?'block':'none'}">
 	<!-- BAR CHART -->
 	<svg bind:this={svgLocal} id="bar-chart" />
 </div>
 <div id="barchart-checkboxes" style="display: {'barchart1'===activeTabId?'block':'none'}">
 	<!-- CHECKBOXES-->
 	{#each checkboxes as c, i (c.id)}
-		<label>
+		<label style="opacity:{hasValue(c)?1:0.5}">
 			<input
 				type="checkbox"
 				value={c}
+				_disabled={!hasValue(c) && !selectedCheckboxes.includes(c) || selectedCheckboxes.length === 1 && selectedCheckboxes[0] === c}
 				disabled={selectedCheckboxes.length === 1 && selectedCheckboxes[0] === c}
 				bind:group={selectedCheckboxes}
-				style="accent-color:{c.color};"
+				style="accent-color:{!hasValue(c)?"gray":c.color};"
 			/>
 			{c.label}
 		</label>

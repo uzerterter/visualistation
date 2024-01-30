@@ -46,6 +46,9 @@ export let selectedState = writable(null);
   let opacityMatrix = calculateOpacityMatrix(populationDensityData);
 
   onMount(() => {
+    // reset for second switch from about page
+    minPercentage.set(2.8)
+    maxPercentage.set(11.2)
 
     var parentDiv = document.getElementById('map-parent');
     width = parentDiv.clientWidth;
@@ -399,10 +402,10 @@ export let selectedState = writable(null);
     stroke: #fff;
     stroke-width: 1.25px;
     transition: 0.5s;
+    cursor: pointer;
   }
   /* :global(.state.active) {
     fill: #003049 !important;
   } */
-
 
 </style>
