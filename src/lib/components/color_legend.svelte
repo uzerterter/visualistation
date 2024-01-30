@@ -60,7 +60,7 @@
             .style("text-anchor", "middle")
             .text("Inhabitants per square kilometer");
   
-        updateIndicator(currentValue);
+        updatepointer(currentValue);
     });
   
     minPopulation.subscribe(value => {
@@ -88,60 +88,77 @@
     });
   
     function foo() {
-      if (!svg || !colorScale || !axisScale) return;
+    if (!svg || !colorScale || !axisScale) return;
   
-      // Remove the old legend elements
-      svg.select(".axis").remove();
+    // Remove the old legend elements
+    svg.select(".axis").remove();
   
-      // Update the domain of the axis scale
-      axisScale.domain([newMinPopulation, newMaxPopulation]);
+    // Update the domain of the axis scale
+    axisScale.domain([newMinPopulation, newMaxPopulation]);
   
-      // Define a format with no decimal points
-      const tickFormat = d3.format(".0f");
+    // Define the axis with custom tick values
+    const axisBottom = d3.axisBottom(axisScale)
+                         .tickFormat(d3.format(".0f"));
   
-      // Redraw the axis with the new format
-      svg.append("g")
-          .attr("class", "axis")
-          .attr("transform", `translate(0,20)`)
-          .call(d3.axisBottom(axisScale).tickFormat(tickFormat));
+    if (currentValue != null) { // Aka if it is zoomed in on a federal state
   
-      updateIndicator();
+      // Only show min and max values when currentValue is null
+      axisBottom.tickValues([newMinPopulation, newMaxPopulation]);
     }
+  
+    // Redraw the axis with the new settings
+    svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", `translate(0,20)`)
+        .call(axisBottom);
+  
+    updatepointer();
+  }
+  
+  
   
     function updateSelectedYear() {
       if (!svg || currentValue === undefined) return;
   
       // Additional logic if needed when selectedYear changes
-      updateIndicator();
+      updatepointer();
     }
   
-    function updateIndicator() {
+    function updatepointer() {
+    if (!svg || currentValue === undefined) return;
   
-      if (currentValue == null) {
-        // Remove the old indicator line
-        svg.selectAll(".indicator").remove();
-      } else {
-        // Remove the old indicator line
-        svg.selectAll(".indicator").remove();
+    // Remove the old pointer line and text
+    svg.selectAll(".pointer, .pointer-text").remove();
   
-        // Add the new indicator line with adjusted height
-        const indicatorHeight = height - 48; // Adjust as needed to make the line shorter
-        const offset = (height - indicatorHeight) / 2; // Center the line vertically
+    if (currentValue != null) {
+      const pointerX = axisScale(currentValue);
+      const pointerHeight = height - 48; // Adjust as needed to make the line shorter
+      const offset = (height - pointerHeight) / 2; // Center the line vertically
   
+      // Add the new pointer line
+      svg.append("line")
+          .attr("class", "pointer")
+          .attr("x1", pointerX)
+          .attr("x2", pointerX)
+          .attr("y1", 0) // Start the line a bit lower
+          .attr("y2", offset + pointerHeight) // End the line before the bottom edge
+          .style("stroke", "red") // Change the pointer color as needed
+          .style("stroke-width", 2);
   
-        // Add the new indicator line
-        svg.append("line")
-            .attr("class", "indicator")
-            .attr("x1", axisScale(currentValue))
-            .attr("x2", axisScale(currentValue))
-            .attr("y1", 0) // Start the line a bit lower
-            .attr("y2", offset + indicatorHeight) // End the line before the bottom edge
-            .style("stroke", "red") // Change the pointer color as needed
-            .style("stroke-width", 2);
+      if (currentValue !== newMinPopulation && currentValue !== newMaxPopulation) {
+          // Add text label for the current value
+          svg.append("text")
+              .attr("class", "pointer-text")
+              .attr("x", pointerX)
+              .attr("y", offset + pointerHeight + 9) // Position below the line
+              .text(currentValue)
+              .attr("text-anchor", "middle") // Center the text on the line
+              .attr("font-size", "10px")
+              .attr("fill", "black"); // Or any color you prefer
       }
-  
-      
     }
+  }
+  
   
   </script>
   
