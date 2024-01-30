@@ -39,8 +39,9 @@ export let maxPercentage = writable(11.2);
   let opacityMatrix = calculateOpacityMatrix(unemploymentData);
 
   onMount(() => {
-
-    
+    // reset for second switch from about page
+    minPercentage.set(2.8)
+    maxPercentage.set(11.2)
 
     var parentDiv = document.getElementById('map-parent');
     width = parentDiv.clientWidth;
