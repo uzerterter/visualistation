@@ -205,8 +205,9 @@
 		svg.selectAll('.tick text').style('opacity', 0.75)
 
         const g = svg.append('g');
-        g.selectAll('.bar')
-            .data(bl)
+        const bar = g.selectAll('.bar')
+
+        bar.data(bl)
             .enter()
             .append('rect')
             .attr('class', 'bar')
@@ -221,6 +222,33 @@
             })
             .attr('width', function(d) {
                 return Math.abs(scaleValues(0) - scaleValues(dataValues[bl.indexOf(d)]));
+            })
+            .attr('height', function(d) {
+                return scaleBL.bandwidth();
+            })
+
+        // make small areas hover-able
+        const hoverPad = 16
+        bar.data(bl)
+            .enter()
+            .append('rect')
+            .attr('class', 'bar')
+            .attr('fill', "transparent")
+            .attr('transform', `translate(${pad.left}, 0)`)
+            .attr('x', function(d) {
+                const val = dataValues[bl.indexOf(d)];
+                const w = Math.abs(scaleValues(0) - scaleValues(val));
+                const hp = w <= hoverPad ? hoverPad : 0
+                return (val < 0 ? scaleValues(val) : scaleValues(0)) - hp/2;
+            })
+            .attr('y', function(d) {
+                return scaleBL(d.full)
+            })
+            .attr('width', function(d) {
+                const val = dataValues[bl.indexOf(d)];
+                const w = Math.abs(scaleValues(0) - scaleValues(val));
+                const hp = w <= hoverPad ? hoverPad : 0
+                return w + hp
             })
             .attr('height', function(d) {
                 return scaleBL.bandwidth();
