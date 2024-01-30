@@ -338,11 +338,11 @@
         {#each radioButtons as c, i (c.id)}
             <label style="opacity:{getDbl2(c)===0?0.5:1}">
                 <input
-                    disabled={getDbl2(c)===0}
+                    _disabled={getDbl2(c)===0}
                     type="radio"
                     value={c}
                     bind:group={selectedRadioButton}
-                    style="accent-color:{c.color};"
+                    style="accent-color:{getDbl2(c)===0?"gray":c.color};"
                 />
                 {c.label}
             </label>

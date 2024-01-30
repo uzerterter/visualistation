@@ -47,6 +47,9 @@
 		d = d.filter((d) => d.Art === checkBox.orig);
 		return d.length !== 0
 	}
+
+	let prevSelected = null
+	let prevState = null
 	
 	let ready = false;
 	function updateGraph() {
@@ -72,12 +75,13 @@
 
 		d3.select(svgLocal).selectAll('*').remove();
 
+		// update: i rewrote it so it doesn't really deselect but just hides the bar, so that exploration still works
 		// deselect empty checkbox and re-update
-		const selectedWithoutVal = selectedCheckboxes.filter(c=>!hasValue(c));
+		/*const selectedWithoutVal = selectedCheckboxes.filter(c=>!hasValue(c));
 		if (selectedWithoutVal.length > 0 && selectedWithoutVal.length !== selectedCheckboxes.length) {
 			selectedCheckboxes = selectedCheckboxes.filter(c=>hasValue(c));
 			return updateGraph()
-		}
+		}*/
 
 		const pad = {left:50, right:10, top:10, bottom:30}
 		if (selectedCheckboxes.filter(c=>!hasValue(c)).length === selectedCheckboxes.length) {
@@ -167,10 +171,11 @@
 			return className;
 		}
 
-		for (const [i, c] of selectedCheckboxes.entries()) {
+		const selectedCheckboxesWithValue = selectedCheckboxes.filter(c=>hasValue(c))
+		for (const [i, c] of selectedCheckboxesWithValue.entries()) {
 			const g = svg.append('g');
 
-			const ww = scaleYears.bandwidth() / selectedCheckboxes.length;
+			const ww = scaleYears.bandwidth() / selectedCheckboxesWithValue.length;
 			g.selectAll('.bar')
 				.data(d)
 				.enter()
@@ -196,7 +201,7 @@
 				.attr('x', function (d) {
 					const x = scaleYears(d.Jahr);
 					const w = scaleYears.bandwidth();
-					return x + w / 2 + i * ww - (selectedCheckboxes.length * ww) / 2;
+					return x + w / 2 + i * ww - (selectedCheckboxesWithValue.length * ww) / 2;
 				})
 				.attr('y', function (d) {
 					return scaleValues(getValue(d)) + 10;
@@ -208,6 +213,60 @@
 		}
 		// Apply styling to the current year when updating graph
 		applyStylingToCurrentYear(selectedYearValue);
+
+		if (prevSelected !== null
+		    && selectedCheckboxes.filter(c=>!hasValue(c)).length>0
+			&& prevSelected.filter(c=>!hasValue(c)).length !== selectedCheckboxes.filter(c=>!hasValue(c)).length 
+			||
+			prevState !== stateName
+			&& selectedCheckboxes.filter(c=>!hasValue(c)).length>0
+			&& selectedCheckboxes.filter(c=>hasValue(c)).length>0
+		) {
+			const color = selectedCheckboxes.filter(c=>!hasValue(c)).length > 1 ? "black"
+				: selectedCheckboxes.filter(c=>!hasValue(c))[0].color
+			const label = selectedCheckboxes.filter(c=>!hasValue(c)).map(c=>c.label).join(", ")
+			const padding = 10;
+			const text = `No ${label ? label + " data" : "data"}`;
+			const textSize = 10;
+			d3.select(svgLocal).append("rect")
+				.attr("x", pad.left + (width - pad.left - pad.right) / 2 - textSize * text.length / 2 - padding)
+				.attr("y", (height - pad.bottom) / 2 - textSize / 2 - padding)
+				.attr("width", textSize * text.length + 2 * padding)
+				.attr("height", textSize + 2 * padding)
+				.style("fill", "white")
+				.style("stroke", "black")
+				.style("stroke-width", "1px")
+				.attr("rx", 10)
+				.attr("ry", 10)
+				.style("fill", "white")
+				.style("opacity", 0)
+				.transition()
+				.duration(300)
+				.style("opacity", 1)
+				.transition()
+				.delay(100)
+				.duration(300)
+				.style("opacity", 0)
+				.remove()
+			d3.select(svgLocal).append("text")
+				.attr("x", pad.left + (width - pad.left - pad.right) / 2)
+				.attr("y", (height - pad.bottom) / 2)
+				.attr("dy", "0.35em")
+				.attr("text-anchor", "middle")
+				.text(text)
+				.style("fill", color)
+				.style("opacity", 0)
+				.transition()
+				.duration(300)
+				.style("opacity", 1)
+				.transition()
+				.delay(100)
+				.duration(300)
+				.style("opacity", 0)
+				.remove()
+		}
+		prevSelected = selectedCheckboxes
+		prevState = stateName
 	}
 
 	// function toggleHighlighting() {
@@ -242,6 +301,7 @@
 
 	let selectedYearClass = "";
 	let highlightingActive = false;
+	let bcDiag
 
 	function applyStylingToCurrentYear(selectedYearValue) {
 		if (!ready) return;
@@ -340,7 +400,7 @@
 
 <!-- BAR CHART 1 -->
 <div bind:this={tooltip} class="tooltip" style="display: {'barchart1'===activeTabId?'block':'none'}"/>
-<div id="barchart-diagram" style="display: {'barchart1'===activeTabId?'block':'none'}">
+<div bind:this={bcDiag} id="barchart-diagram" style="display: {'barchart1'===activeTabId?'block':'none'}">
 	<!-- BAR CHART -->
 	<svg bind:this={svgLocal} id="bar-chart" />
 </div>
@@ -351,9 +411,10 @@
 			<input
 				type="checkbox"
 				value={c}
-				disabled={!hasValue(c) && !selectedCheckboxes.includes(c) || selectedCheckboxes.length === 1 && selectedCheckboxes[0] === c}
+				_disabled={!hasValue(c) && !selectedCheckboxes.includes(c) || selectedCheckboxes.length === 1 && selectedCheckboxes[0] === c}
+				disabled={selectedCheckboxes.length === 1 && selectedCheckboxes[0] === c}
 				bind:group={selectedCheckboxes}
-				style="accent-color:{c.color};"
+				style="accent-color:{!hasValue(c)?"gray":c.color};"
 			/>
 			{c.label}
 		</label>
