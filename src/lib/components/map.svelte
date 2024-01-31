@@ -39,16 +39,18 @@ export let selectedState = writable(null);
 
     // Update value of that year for the scale
     selectedYearsValue.set(getDensity(pdMatrix, $selectedState, $selectedYear));
-    console.log(pdMatrix);
 
   }
 
   let opacityMatrix = calculateOpacityMatrix(populationDensityData);
 
   onMount(() => {
+
+    updateMapOpacities();
+
     // reset for second switch from about page
-    minPercentage.set(2.8)
-    maxPercentage.set(11.2)
+    minPopulation.set(69);
+    maxPopulation.set(4214);
 
     var parentDiv = document.getElementById('map-parent');
     width = parentDiv.clientWidth;
@@ -171,7 +173,6 @@ export let selectedState = writable(null);
           svg.on('.zoom', null);
 
       selectedYearsValue.set(getDensity(pdMatrix, $selectedState, $selectedYear));
-      console.log(getDensity(pdMatrix, d.properties.NAME_1, year));
     }    
   }
 
@@ -271,6 +272,8 @@ export let selectedState = writable(null);
     return PDOpacityMap[stateName] || 1; // Default opacity if state not in list or data not loaded yet
   }
 
+  
+
   function updateMapOpacities() {
     if (g) {
 
@@ -296,7 +299,6 @@ export let selectedState = writable(null);
         });
 
       } else {
-
 
         g.selectAll('.state')
           .each(function(d) {
@@ -366,7 +368,7 @@ export let selectedState = writable(null);
     return { states, years, matrix };
 }
 
-  // Usage:
+
   const pdMatrix = createPDMatrix(populationDensityData);
 
   function getDensity(matrixData, stateName, year) {
@@ -380,7 +382,6 @@ export let selectedState = writable(null);
 
   // Example query:
   const density = getDensity(pdMatrix, "Bayern", 2017);
-  console.log(density); // Outputs the EW_per_sqkm value for Bayern in 2017
 
 
 
