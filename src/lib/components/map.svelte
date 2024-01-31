@@ -5,11 +5,9 @@
 
 import { writable, derived } from 'svelte/store';
 
-export let minPopulation = writable(69);
-export let maxPopulation = writable(4214);
-export let selectedYearsValue = writable(null);
-export let selectedState = writable(null);
- 
+export let minPercentage = writable(2.8);
+export let maxPercentage = writable(11.2);
+
 </script>
 
 
@@ -17,16 +15,16 @@ export let selectedState = writable(null);
   import { onMount } from 'svelte';
   import * as d3 from 'd3'; 
   import trafficData from '$lib/data/final_genesis_traffic.json';
+  import unemploymentData from '$lib/data/unemployment_rate.json';
   import { createEventDispatcher } from 'svelte';
   import { selectedYear } from '$lib/components/timeline.svelte'; // Import the selectedYear store
-  import populationDensityData from '$lib/data/population_density.json';
   
-  let width, height, geoPath, projection, normalizedOpacity, normalizedOpacity2;
+  let width, height, geoPath, projection, normalizedOpacity;
   let svg, g, zoom; // Define zoom and SVG selections
   let centroidMatrix = [];
   let focused = null; // Store the currently focused element
   let isMapInitialized = false; // Flag to track if the map is initialized
-  let PDOpacityMap = {};
+  let unemploymentOpacityMap = {};
   let year = 2017; // initial year for the map color coding
 
   const dispatch = createEventDispatcher();
@@ -34,7 +32,7 @@ export let selectedState = writable(null);
 
   $: if ($selectedYear && isMapInitialized) {
     year = $selectedYear;
-    getPDByYear(year);
+    getUnemploymentPercentagesByYear(year);
     updateMapOpacities();
 
     // Update value of that year for the scale
@@ -42,7 +40,7 @@ export let selectedState = writable(null);
 
   }
 
-  let opacityMatrix = calculateOpacityMatrix(populationDensityData);
+  let opacityMatrix = calculateOpacityMatrix(unemploymentData);
 
   onMount(() => {
 
@@ -101,10 +99,9 @@ export let selectedState = writable(null);
     isMapInitialized = true;
 
     // Initial call to set opacities based on the default year
-    getPDByYear(year);
+    getUnemploymentPercentagesByYear(year);
 
   });
-
 
   function getProjection(collection) {
     const bounds = d3.geoBounds(collection),
@@ -130,51 +127,51 @@ export let selectedState = writable(null);
 
   function clickState(d, i) {
     if (isZoomedIn) {
-
-      // If already zoomed in, reset the zoom
-      resetZoom();
-
-      // Update value of that year for the scale
-      selectedYearsValue.set(null);
-
-      minPopulation.set(69);
-      maxPopulation.set(4214);
-      selectedState.set(null);
-      dispatch('stateClicked', { stateName: null });
-
-      // Remove any existing state labels
-      g.selectAll('.state-label').remove();
+        // If already zoomed in, reset the zoom
+        resetZoom();
+        minPercentage.set(2.8);
+        maxPercentage.set(11.2);
+        dispatch('stateClicked', { stateName: null });
     } else {
-      // Logic for zooming in
-      focused = d;
-      isZoomedIn = true;
-      dispatch('stateClicked', { stateName: d.properties.NAME_1 });
-      selectedState.set(d.properties.NAME_1);
+        // Logic for zooming in
+        focused = d;
+        isZoomedIn = true;
+        dispatch('stateClicked', { stateName: d.properties.NAME_1 });
 
-      // Update map opacities
-      updateMapOpacities();
+        const { stateRow } = createUnemploymentMatrixForState(unemploymentData, d.properties.NAME_1);
+        minPercentage.set(Math.min(...stateRow.filter(val => val !== null)));
+        maxPercentage.set(Math.max(...stateRow.filter(val => val !== null)));
 
-      // Update value of that year for the scale
-      selectedYearsValue.set(getDensity(pdMatrix, $selectedState, $selectedYear));
 
-      // Update the domain of minPopulation and maxPopulation for the focused state
-      const { stateRow } = createPDDataForState(populationDensityData, d.properties.NAME_1);
-      minPopulation.set(Math.min(...stateRow.filter(val => val !== null)));
-      maxPopulation.set(Math.max(...stateRow.filter(val => val !== null)));
+        // Set opacity for the focused state based on the matrix
+        const focusedOpacity = opacityMatrix[d.properties.NAME_1][year];
+        g.selectAll('.state')
+          .transition().duration(500)
+          .style('opacity', (_, j) => i === j ? focusedOpacity : 0);
 
-      const centroid = centroidMatrix[i];
-      const k = getZoomFactor(d.properties.NAME_1);
-      const transform = d3.zoomIdentity.translate(width / 2, height / 2).scale(k).translate(-centroid[0], -centroid[1]);
+        const centroid = centroidMatrix[i];
+        if (!centroid) {
+            console.error('No centroid found for feature at index:', i);
+            return;
+        }
 
-      svg.transition()
-        .duration(1000)
-        .call(zoom.transform, transform);
-            
-          svg.on('.zoom', null);
+        const [x, y] = centroid;
+        const k = getZoomFactor(d.properties.NAME_1);
 
-      selectedYearsValue.set(getDensity(pdMatrix, $selectedState, $selectedYear));
+        // Compute the translation and scale to center the centroid
+        const transform = d3.zoomIdentity
+            .translate(width / 2, height / 2)
+            .scale(k)
+            .translate(-x, -y);
+
+        svg.transition()
+            .duration(1000)
+            .call(zoom.transform, transform);
+
+        // Disable zoom and drag behavior when zoomed in
+        svg.on('.zoom', null); // Remove existing zoom handlers
     }    
-  }
+}
 
 
   function resetZoom() {
@@ -190,12 +187,8 @@ export let selectedState = writable(null);
     svg.transition()
       .duration(1000)
       .call(zoom.transform, d3.zoomIdentity);  
-
-    // Remove any state labels
-    g.selectAll('.state-label').remove();
       
     updateMapOpacities();
-
     
   }
 
@@ -222,65 +215,62 @@ export let selectedState = writable(null);
     return zoomFactors[stateName] || 1; // Default zoom factor if state not listed
   }
 
+  function getUnemploymentPercentagesByYear(year) {
+  const startYear = 2017;
+  const endYear = 2022;
 
-  function getPDByYear(year) {
-    const startYear = 2017;
-    const endYear = 2022;
+  // Filter data for the specified year and within the range of 2017 to 2022
+  let filteredData = unemploymentData.data.filter(entry => 
+    entry.Jahr === year && entry.Jahr >= startYear && entry.Jahr <= endYear
+  );
 
-    selectedYearsValue.set(100);
+  // Sort the filtered data alphabetically by Bundesland
+  const sortedData = filteredData.sort((a, b) => a.Bundesland.localeCompare(b.Bundesland));
 
-    // Filter data for the specified year and within the range of 2017 to 2022
-    let filteredData = populationDensityData.data.filter(entry => 
-      entry.Jahr === year && entry.Jahr >= startYear && entry.Jahr <= endYear
-    );
+  // Extract only the 'Prozent' values from the sorted data
+  const unemploymentPercentages = sortedData.map(entry => entry.Prozent);
 
-    // Sort the filtered data alphabetically by Bundesland
-    const sortedData = filteredData.sort((a, b) => a.Bundesland.localeCompare(b.Bundesland));
+  unemploymentPercentages.forEach((percentage, index) => {
+    normalizedOpacity = mapPercentageToMap(percentage);
+    // Now, you have the percentage value and the corresponding opacity value
+    unemploymentOpacityMap[sortedData[index].Bundesland] = normalizedOpacity;
+  });
 
-    // Extract only the 'EW_per_sqkm' values from the sorted data
-    const populationDensities = sortedData.map(entry => entry.EW_per_sqkm);
+  return unemploymentPercentages;
+}
 
 
-    populationDensities.forEach((populationDensity, index) => {
-      normalizedOpacity = mappopulationDensityToMap(populationDensity);
-      // Now, you have the populationDensity value and the corresponding opacity value
-      PDOpacityMap[sortedData[index].Bundesland] = normalizedOpacity;
-    });
 
-    return populationDensities;
-  }
-
-  function createPDDataForState(populationDensityData, stateName) {
+  function createUnemploymentMatrixForState(unemploymentData, stateName) {
     const startYear = 2017;
     const endYear = 2022;
     
     // Filter years to include only those between 2017 and 2022
-    const years = [...new Set(populationDensityData.data.map(entry => entry.Jahr))]
+    const years = [...new Set(unemploymentData.data.map(entry => entry.Jahr))]
                     .filter(year => year >= startYear && year <= endYear)
                     .sort();
 
     // Create a row for the specified state with filtered years
     let stateRow = years.map(year => {
-        let entry = populationDensityData.data.find(e => e.Bundesland === stateName && e.Jahr === year);
-        return entry ? entry.EW_per_sqkm : null; // Use null for missing data
+        let entry = unemploymentData.data.find(e => e.Bundesland === stateName && e.Jahr === year);
+        return entry ? entry.Prozent : null; // Use null for missing data
     });
+
 
     return { stateName, years, stateRow };
   }
 
+
   function getStateOpacity(stateName) {
-    return PDOpacityMap[stateName] || 1; // Default opacity if state not in list or data not loaded yet
+    return unemploymentOpacityMap[stateName] || 1; // Default opacity if state not in list or data not loaded yet
   }
 
   
 
   function updateMapOpacities() {
     if (g) {
-
       if (isZoomedIn && focused) {
-
-        const { stateRow } = createPDDataForState(populationDensityData, focused.properties.NAME_1);
-
+        const { stateRow } = createUnemploymentMatrixForState(unemploymentData, focused.properties.NAME_1);
 
         // Find min and max values for the focused state
         const min = Math.min(...stateRow.filter(val => val !== null));
@@ -289,9 +279,9 @@ export let selectedState = writable(null);
         g.selectAll('.state')
         .style('opacity', d => {
           if (d === focused) {
-            // Find the population density for the focused state in the selected year
-            const populationDensity = populationDensityData.data.find(entry => entry.Jahr === year && entry.Bundesland === d.properties.NAME_1)?.EW_per_sqkm || min; // Use min as a fallback
-            const opacity = mappopulationDensityToState(populationDensity, min, max);
+            // Find the unemployment percentage for the focused state in the selected year
+            const percentage = unemploymentData.data.find(entry => entry.Jahr === year && entry.Bundesland === d.properties.NAME_1)?.Prozent || min; // Use min as a fallback
+            const opacity = mapPercentageToState(percentage, min, max);
 
             return opacity;
           }
@@ -312,39 +302,42 @@ export let selectedState = writable(null);
     }
   }
 
-  function mappopulationDensityToMap(populationDensity) {
+
+
+  function mapPercentageToMap(percentage) {
     let minOpacity = 0.1;
     let maxOpacity = 1;
-    return minOpacity + ((populationDensity - $minPopulation) * (maxOpacity - minOpacity)) / ($maxPopulation - $minPopulation);
+    return minOpacity + ((percentage - $minPercentage) * (maxOpacity - minOpacity)) / ($maxPercentage - $minPercentage);
   }
 
-  function mappopulationDensityToState(populationDensity, min, max) {
+  function mapPercentageToState(percentage, min, max) {
     if (min === max) return 1; // Avoid division by zero if min and max are equal
     const minOpacity = 0.1;
-    const maxOpacity = 1; 
-    return minOpacity + ((populationDensity - min) * (maxOpacity - minOpacity)) / (max - min);
+    const maxOpacity = 1;
+    return minOpacity + ((percentage - min) * (maxOpacity - minOpacity)) / (max - min);
   }
 
-  function calculateOpacityMatrix(populationDensityData) {
-    const startYear = 2017;
-    const endYear = 2022; // Adjust this if you have data for more years
-    const states = Array.from(new Set(populationDensityData.data.map(entry => entry.Bundesland))).sort();
-    const opacityMatrix = {};
+  
 
-    states.forEach(state => {
-      opacityMatrix[state] = {};
-      for (let year = startYear; year <= endYear; year++) {
-        const entry = populationDensityData.data.find(e => e.Bundesland === state && e.Jahr === year);
+  function calculateOpacityMatrix(unemploymentData) {
+  const startYear = 2017;
+  const endYear = 2022; // Adjust this if you have data for more years
+  const states = Array.from(new Set(unemploymentData.data.map(entry => entry.Bundesland))).sort();
+  const opacityMatrix = {};
 
-        const populationDensity = entry ? entry.EW_per_sqkm : null; // Use null for missing data
-        if (populationDensity !== null) {
-          const opacity = mappopulationDensityToOpacity(populationDensity);
-          opacityMatrix[state][year] = opacity;
-        } else {
-          opacityMatrix[state][year] = null; // No data for this state-year
-        }
+  states.forEach(state => {
+    opacityMatrix[state] = {};
+    for (let year = startYear; year <= endYear; year++) {
+      const entry = unemploymentData.data.find(e => e.Bundesland === state && e.Jahr === year);
+      const percentage = entry ? entry.Prozent : null; // Use null for missing data
+      if (percentage !== null) {
+        const opacity = mapPercentageToOpacity(percentage);
+        opacityMatrix[state][year] = opacity;
+      } else {
+        opacityMatrix[state][year] = null; // No data for this state-year
       }
-    });
+    }
+  });
 
     return opacityMatrix;
   }
