@@ -99,17 +99,23 @@ export let selectedState = writable(null);
       .attr('d', geoPath)
       .style('opacity', d => getStateOpacity(d.properties.NAME_1))
       .on('mouseover', (event, d) => { 
-        // Show tooltip on mouseover
-        tooltip.style.display = 'block';
-        tooltip.textContent = (d.properties.NAME_1 + ": " + getDensity(pdMatrix, d.properties.NAME_1, $selectedYear)); // Set tooltip content
-        const rect = tt.node().getBoundingClientRect();
-        ttw = rect.width;
-        tth = rect.height;
-        moveTooltip(event);
+        if ($selectedYearsValue == null) {
+          // Show tooltip on mouseover only when selectedYearsValue is not null
+          const tooltip = document.querySelector('.tooltip');
+          tooltip.style.display = 'block';
+          tooltip.textContent = (d.properties.NAME_1 + ": " + getDensity(pdMatrix, d.properties.NAME_1, $selectedYear)); // Set tooltip content
+          const rect = tt.node().getBoundingClientRect();
+          ttw = rect.width;
+          tth = rect.height;
+          moveTooltip(event);
+        }
       })
       .on('mousemove', function (event) {
-        tooltip.style.left = ('left', event.pageX + 10 + 'px'); 
-        tooltip.style.top = ('top', event.pageY - 60 + 'px');
+        if ($selectedYearsValue == null) {
+          tooltip.style.left = ('left', event.pageX + 10 + 'px'); 
+          tooltip.style.top = ('top', event.pageY - 60 + 'px');
+        }
+        
       })
       .on('mouseout', () => {
         // Hide tooltip on mouseout
