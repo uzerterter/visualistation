@@ -260,7 +260,7 @@
 		bind:group={selectedArt}
 		value="Liniennahverkehr mit Eisenbahnen"
 		on:change={() => handleToggle('Liniennahverkehr mit Eisenbahnen')}
-		style="accent-color: var(--colorscheme-blue)"
+		style="accent-color: var(--colorscheme-yellow)"
 	/>
 	<label 
 		for="Train">Train</label>
@@ -272,7 +272,7 @@
 		bind:group={selectedArt}
 		value="Liniennahverkehr insgesamt"
 		on:change={() => handleToggle('Liniennahverkehr insgesamt')}
-		style="accent-color: var(--colorscheme-yellow)"
+		style="accent-color: var(--colorscheme-blue)"
 	/>
 	<label 
 		for="Total">Total</label>
