@@ -180,8 +180,8 @@
 					.html(`${d.data.state}: ${d.data.value}`)
 					.style('left', event.pageX + 'px')
 					.style('top', event.pageY + 'px')
-					.style('height', '30px')
-					.style('line-height', '30px');
+					// .style('height', '30px')
+					// .style('line-height', '30px');
 			})
 			.on('mouseout', () => {
 				tooltip.transition().duration(500).style('opacity', 0);
