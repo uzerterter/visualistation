@@ -189,7 +189,7 @@
 			.attr('text-anchor', 'middle')
 			.attr('x', 0)
 			.attr('y', '0')
-			.style('font-size', '18px')
+			.style('font-size', '16px')
 			.style('fill', '#333')
 			.selectAll('tspan')
 			.data(titleText.split('\n'))
