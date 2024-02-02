@@ -209,8 +209,8 @@
 				.html(`${d.data.state}: ${d.data[year]} %`)
 				.style('left', event.pageX + 'px')
 				.style('top', event.pageY + 'px')
-				.style('height', '30px') // Set a fixed height or adjust as needed
-				.style('line-height', '30px'); // Center the text vertically within the reduced height
+				// .style('height', '30px') // Set a fixed height or adjust as needed
+				// .style('line-height', '30px'); // Center the text vertically within the reduced height
 		}).on('mouseout', () => {
 			tooltip.transition().duration(500).style('opacity', 0);
 		});
