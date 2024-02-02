@@ -1,5 +1,8 @@
 <!-- MapComponent.svelte -->
-<div id="map"></div>
+<div id="map">
+  <!-- Tooltip element -->
+  <div class="tooltip" style="display: none;"></div>
+</div>
 
 <script context="module">
 
@@ -86,16 +89,36 @@ export let selectedState = writable(null);
         centroidMatrix[index] = centroid; // Store the centroid as [x, y]
       });
 
-      g.selectAll('path')
-        .data(collection.features)
-        .join('path')
-        .attr('class', 'state')
-        .attr('d', geoPath)
-        .style('opacity', d => getStateOpacity(d.properties.NAME_1))
-        .on('click', (event, d) => {
-          const i = collection.features.indexOf(d);
-          clickState(d, i);
-        });
+    // Select the tooltip element
+    const tooltip = document.querySelector('.tooltip');
+
+    g.selectAll('path')
+      .data(collection.features)
+      .join('path')
+      .attr('class', 'state')
+      .attr('d', geoPath)
+      .style('opacity', d => getStateOpacity(d.properties.NAME_1))
+      .on('mouseover', (event, d) => { 
+        // Show tooltip on mouseover
+        tooltip.style.display = 'block';
+        tooltip.textContent = (d.properties.NAME_1 + ": " + getDensity(pdMatrix, d.properties.NAME_1, $selectedYear)); // Set tooltip content
+        const rect = tt.node().getBoundingClientRect();
+        ttw = rect.width;
+        tth = rect.height;
+        moveTooltip(event);
+      })
+      .on('mousemove', function (event) {
+        tooltip.style.left = ('left', event.pageX + 10 + 'px'); 
+        tooltip.style.top = ('top', event.pageY - 60 + 'px');
+      })
+      .on('mouseout', () => {
+        // Hide tooltip on mouseout
+        tooltip.style.display = 'none';
+      })
+      .on('click', (event, d) => {
+        const i = collection.features.indexOf(d);
+        clickState(d, i);
+      });
     });
     // After setting up the map, set the flag to true
     isMapInitialized = true;
@@ -104,6 +127,10 @@ export let selectedState = writable(null);
     getPDByYear(year);
 
   });
+
+  function moveTooltip(event) {
+		tooltip.style('left', `${event.pageX - ttw / 2}px`).style('top', `${event.pageY - tth - 10}px`);
+	  }
 
 
   function getProjection(collection) {
@@ -406,8 +433,18 @@ export let selectedState = writable(null);
     transition: 0.5s;
     cursor: pointer;
   }
-  /* :global(.state.active) {
-    fill: #003049 !important;
-  } */
+  
+  /* Tooltip styles */
+  
+  .tooltip {
+    position: absolute;
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #000;
+    padding: 10px;
+    border-radius: 8px;
+    pointer-events: none; /* Allow interaction with underlying map elements */
+    z-index: 9999; /* Ensure tooltip appears above the map */
+  }
 
 </style>
