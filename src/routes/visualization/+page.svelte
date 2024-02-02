@@ -48,7 +48,7 @@
 	}
 
 	let radioButtonsLeft = [
-		{ color: 'var(--colorscheme-blue)' },
+		{ color: 'var(--colorscheme-blue)' }
 	];
 
 	let radioButtonsRight = [
@@ -71,9 +71,9 @@
 	let selectedTabRightViz = 'bar'; // Default tab for right vizualisation
 
 	const dataOptions = [
-		{ label: 'Average annual brutto employee income', value: incomeData, orig: "Income" },
-		{ label: 'Unemployment rate of Germany', value: unimploymentData, orig: "Prozent" }
-	];	
+		{ label: 'Average annual gross income', value: incomeData, orig: 'Income' },
+		{ label: 'Unemployment rate', value: unimploymentData, orig: 'Prozent' }
+	];
 
 	function handleDataChange() {
 		console.log(selectedData);
@@ -103,6 +103,46 @@
 			isActiveRightViz = false;
 		}
 	}
+
+	const defaultTooltipLeft = (
+		'This Chart displays economic data, e.g. unemployment- or income rates for each federal state in germany.\n' +
+		'\n' +
+		'                Distribution: Distribution of data in germany, with possible highlighting of e.g. bavaria.\n' +
+		'\n' +
+		'                Development: Shows development of e.g. the unemployment rate of bavaria over the years 2017-2022.\n' +
+		'\n' +
+		'                Comparison: Comparison between different means of public transportation in e.g. bavaria.'
+	);
+
+	const defaultTooltipRight = (
+		"This Chart displays public transportation data, e.g. number of transported passengers or passenger kilometers.\n" +
+		"You can choose between Train, Tram, Bus or Total - which is the sum of all transportation possibilities.\n" +
+		"\n" +
+		"Distribution: Distribution of e.g. transported passengers per Train between germany's federal states.\n" +
+		"\n" +
+		"Development: Shows development of e.g. transported passengers per train for bavaria from 2017-2022.\n" +
+		"\n" +
+		"Comparison: Shows e.g. number of transported passengers of all federal states in relation to bavaria."
+	);
+
+	const stateSensitiveTooltipRight = (
+		"This Chart displays public transportation data, e.g. number of transported passengers or passenger kilometers.\n" +
+		"You can choose between Train, Tram, Bus or Total - which is the sum of all transportation possibilities.\n" +
+		"\n" +
+		"Distribution: Distribution of e.g. transported passengers per Train in " + {stateName} + ".\n" +
+		"\n" +
+		"Development: Shows development of e.g. transported passengers per train for " + {stateName} + " in " + {selectedYear} + ".\n" +
+		"\n" +
+		"Comparison: Shows e.g. number of transported passengers of all federal states in relation to " + {stateName} +"."
+	);
+
+	function pickTooltip(stateName) {
+		if (stateName !== "Deutschland") {
+			return stateSensitiveTooltipRight;
+		} else {
+			return defaultTooltipRight;
+		}
+	}
 </script>
 
 
@@ -125,19 +165,19 @@
 						{/each}
 					</select>
 				</div>
-                <div class="toprowCurrentStateNameContainer">
-                    <h4>{stateName}</h4>
-                </div>
-                <div class="toprowTooltipContainer">
-                    <Info
-					title="This Chart displays economic data, e.g. unemployment- or income rates for each federal state in germany.
+				<div class="toprowCurrentStateNameContainer">
+					<h4>{stateName}</h4>
+				</div>
+				<div class="toprowTooltipContainer">
+					<Info
+						title="This Chart displays economic data, e.g. unemployment- or income rates for each federal state in germany.
 
                 Distribution: Distribution of data in germany, with possible highlighting of e.g. bavaria.
 
                 Development: Shows development of e.g. the unemployment rate of bavaria over the years 2017-2022.
 
                 Comparison: Comparison between different means of public transportation in e.g. bavaria." />
-                </div>
+				</div>
 			</div>
 			<div class="tab-buttons">
 				<ul>
@@ -170,8 +210,8 @@
 					</div>
 					<div class="bar-chart-container" id="barchart2-leftViz-parent" style="display: none;">
 						<BarChart_2 data={incomeData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
-											selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
+												dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+												selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
 					</div>
 				{:else if selectedData === unimploymentData}
 					<div id="doughnutchart-parent">
@@ -183,8 +223,8 @@
 					</div>
 					<div class="bar-chart-container" id="barchart2-leftViz-parent" style="display: none;">
 						<BarChart_2 data={unimploymentData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
-											selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
+												dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+												selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
 					</div>
 				{/if}
 			{/if}
@@ -200,8 +240,8 @@
 					</div>
 					<div class="bar-chart-container" id="barchart2-leftViz-parent" style="display: none;">
 						<BarChart_2 data={incomeData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
-											selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
+												dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+												selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
 					</div>
 				{:else if selectedData === unimploymentData}
 					<div id="doughnutchart-parent" style="display: none;">
@@ -213,8 +253,8 @@
 					</div>
 					<div class="bar-chart-container" id="barchart2-leftViz-parent" style="display: none;">
 						<BarChart_2 data={unimploymentData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
-											selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
+												dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+												selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
 					</div>
 				{/if}
 			{/if}
@@ -230,8 +270,8 @@
 					</div>
 					<div class="bar-chart-container" id="barchart2-leftViz-parent">
 						<BarChart_2 data={incomeData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
-											selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
+												dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+												selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
 					</div>
 				{:else if selectedData === unimploymentData}
 					<div id="doughnutchart-parent" style="display: none;">
@@ -243,8 +283,8 @@
 					</div>
 					<div class="bar-chart-container" id="barchart2-leftViz-parent">
 						<BarChart_2 data={unimploymentData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
-											selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
+												dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+												selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
 					</div>
 				{/if}
 			{/if}
@@ -275,20 +315,13 @@
 						{/each}
 					</select>
 				</div>
-                <div class="toprowCurrentStateNameContainer">
-                    <h4>{stateName}</h4>
-                </div>
-                <div class="toprowTooltipContainer">
-                    <Info
-					title="This Chart displays public transportation data, e.g. number of transported passengers or passenger kilometers.
-					You can choose between Train, Tram, Bus or Total - which is the sum of all transportation possibilities.
-
-					Distribution: Distribution of e.g. transported passengers per Train between germany's federal states.
-
-					Development: Shows development of e.g. transported passengers per train for bavaria from 2017-2022.
-
-					Comparison: Shows e.g. number of transported passengers of all federal states in relation to bavaria." />
-                </div>
+				<div class="toprowCurrentStateNameContainer">
+					<h4>{stateName}</h4>
+				</div>
+				<div class="toprowTooltipContainer">
+					<Info
+						title={pickTooltip(stateName)} />
+				</div>
 			</div>
 			<div class="tab-buttons">
 				<ul>
@@ -391,11 +424,11 @@
         z-index: 2;
     }
 
-		.center-viz {
+    .center-viz {
         width: 30%;
         height: 60vh;
         z-index: 2;
-		}
+    }
 
     .left-viz, .right-viz {
         float: left;
@@ -567,7 +600,7 @@
         display: flex;
         flex-direction: row;
         width: 100%;
-		margin-bottom: 5px;
+        margin-bottom: 5px;
     }
 
     .tab-buttons ul {
@@ -600,7 +633,7 @@
         width: 80%;
         margin: auto;
         margin-bottom: 0px;
-        justify-content: center; 
+        justify-content: center;
         cursor: pointer;
     }
 
