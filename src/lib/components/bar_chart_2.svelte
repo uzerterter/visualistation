@@ -394,5 +394,9 @@ Please select a federal state on the map.
 		margin-right: 1px;
 	}
 
+    input[type='radio'] {
+		cursor: pointer;
+	}
+
 	
 </style>
