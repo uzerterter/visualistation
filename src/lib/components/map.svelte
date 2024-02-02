@@ -451,6 +451,7 @@ export let selectedState = writable(null);
     border-radius: 8px;
     pointer-events: none; /* Allow interaction with underlying map elements */
     z-index: 9999; /* Ensure tooltip appears above the map */
+    height: auto;
   }
 
 </style>

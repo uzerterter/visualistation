@@ -170,7 +170,7 @@
 			.attr('dy', (d, i) => `${i * 1.2}em`) // adjust line spacing
 			.text((d) => d);
 
-		const tooltip = d3.select('#chart-container').append('div').attr('class', 'tooltip').style('opacity', 0);
+		const tooltip = d3.select('#chart-container').append('div').attr('class', 'hover-tooltip').style('opacity', 0);
 
 
 		arcs

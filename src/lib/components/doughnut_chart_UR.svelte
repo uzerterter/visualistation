@@ -200,7 +200,7 @@
 			.text((d) => d);
 
 		// Tooltip setup
-		const tooltip = d3.select('#chart').append('div').attr('class', 'tooltip').style('opacity', 0);
+		const tooltip = d3.select('#chart').append('div').attr('class', 'hover-tooltip').style('opacity', 0);
 
 		// Tooltip mouseover event
 		g.on('mouseover', (event, d) => {

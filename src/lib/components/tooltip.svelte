@@ -70,6 +70,7 @@
         z-index: 9999;
         width: fit-content;
         block-size: fit-content;
+		height: auto;
     }
 
     .tooltip-content {

@@ -246,7 +246,7 @@
   </div> -->
   
   <!-- BAR CHART 1 -->
-  <div bind:this={tooltip} class="tooltip" style="display: {'barchart1'===activeTabId?'block':'none'}"/>
+  <div bind:this={tooltip} class="hover-tooltip" style="display: {'barchart1'===activeTabId?'block':'none'}"/>
   <div id="barchart-diagram" style="display: {'barchart1'===activeTabId?'block':'none'}">
 	<!-- BAR CHART -->
 	<svg bind:this={svgLocal} id="bar-chart" />
@@ -285,7 +285,7 @@
 	  border-bottom-color: #444;
 	} */
   
-	.tooltip {
+	.hover-tooltip {
 	  position: absolute;
 	  opacity: 0;
 	  pointer-events: none;
