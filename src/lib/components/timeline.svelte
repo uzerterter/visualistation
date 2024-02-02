@@ -208,7 +208,7 @@
 	}
 
 	button {
-		transform: translateY(-20%);
+		transform: translateY(-40%);
 		padding: 8px 12px;
 		border: none;
 		border-radius: 20px;
