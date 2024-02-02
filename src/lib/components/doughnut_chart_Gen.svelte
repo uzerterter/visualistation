@@ -1,5 +1,3 @@
-<!-- MyDoughnutChart.svelte -->
-
 <script>
 	import { onMount, afterUpdate } from 'svelte';
 	import * as d3 from 'd3';
@@ -18,6 +16,7 @@
 	let currentYear = 2017;
 	let highlightedState = '';
 	let ready = false;
+	let chartDataItem = '';
 
 	export let isActive = false;
 
@@ -46,6 +45,13 @@
 		'Sachsen-Anhalt': 'ST',
 		'Schleswig-Holstein': 'SH',
 		Thüringen: 'TH'
+	};
+
+	const radioLabels = {
+		'Liniennahverkehr mit Straßenbahnen': 'Tram',
+		'Liniennahverkehr mit Omnibussen': 'Bus',
+		'Liniennahverkehr mit Eisenbahnen': 'Train',
+		'Liniennahverkehr insgesamt': 'Total'
 	};
 
 	selectedYear.subscribe((value) => {
@@ -81,6 +87,7 @@
 			value: entry[selectedDropdownItem.orig],
 			state: entry.Bundesland
 		}));
+
 
 		d3.select('#chart-container svg').remove();
 
@@ -140,9 +147,13 @@
 			)
 			.text((d) => abbreviations[d.data.state]);
 
-		const titleText = highlightedState
-			? `${highlightedState}:\n${chartData.find((d) => d.state === highlightedState).value}`
-			: `${selectedDropdownItem.label}`;
+		chartDataItem = chartData.find((d) => d.state === highlightedState);
+		// console.log(chartDataItem);
+		// console.log(radioLabels[selectedArt]);
+
+		const titleText = highlightedState && chartDataItem !== undefined
+			? `${highlightedState}:\n${chartDataItem.value}`
+			: `${highlightedState ? highlightedState + ':\nNo ' + radioLabels[selectedArt]  +  ' Data' : selectedDropdownItem.label !== 'No Data' ? selectedDropdownItem.label : 'No Data'}`;
 
 		svg
 			.append('text')
@@ -220,43 +231,51 @@
 <div>
 	<input
 		type="radio"
-		id="tram"
+		id="Tram"
 		name="transport"
 		bind:group={selectedArt}
 		value="Liniennahverkehr mit Straßenbahnen"
 		on:change={() => handleToggle('Liniennahverkehr mit Straßenbahnen')}
+		style="accent-color: var(--colorscheme-red)"
 	/>
-	<label for="tram">Tram</label>
+	<label
+		for="Tram">Tram</label>
 
 	<input
 		type="radio"
-		id="bus"
+		id="Bus"
 		name="transport"
 		bind:group={selectedArt}
 		value="Liniennahverkehr mit Omnibussen"
 		on:change={() => handleToggle('Liniennahverkehr mit Omnibussen')}
+		style="accent-color: var(--colorscheme-orange)"
 	/>
-	<label for="bus">Bus</label>
+	<label 
+		for="Bus">Bus</label>
 
 	<input
 		type="radio"
-		id="train"
+		id="Train"
 		name="transport"
 		bind:group={selectedArt}
 		value="Liniennahverkehr mit Eisenbahnen"
 		on:change={() => handleToggle('Liniennahverkehr mit Eisenbahnen')}
+		style="accent-color: var(--colorscheme-blue)"
 	/>
-	<label for="train">Train</label>
+	<label 
+		for="Train">Train</label>
 
 	<input
 		type="radio"
-		id="total"
+		id="Total"
 		name="total"
 		bind:group={selectedArt}
 		value="Liniennahverkehr insgesamt"
 		on:change={() => handleToggle('Liniennahverkehr insgesamt')}
+		style="accent-color: var(--colorscheme-yellow)"
 	/>
-	<label for="total">Total</label>
+	<label 
+		for="Total">Total</label>
 </div>
 
 <style>
@@ -264,4 +283,9 @@
 	input[type='radio'] {
 		cursor: pointer;
 	}
+
 </style>
+
+
+
+
