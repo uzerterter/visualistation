@@ -14,6 +14,7 @@
             <ul class="navbar-links">
                 {#each [
                     { href: '/', label: 'about' },
+                    { href: '/team', label: 'team' },
                     { href: '/visualization', label: 'visualization' },
                     // Add more links as needed
                   ] as { href, label }}
