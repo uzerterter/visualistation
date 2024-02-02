@@ -24,7 +24,7 @@ body {
 	/* font-size: 0.8vw; */
 }
 
-.tooltip {
+.hover-tooltip {
 	text-align: center;
 	width: auto;
 	height: 20px;
