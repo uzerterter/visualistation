@@ -84,22 +84,14 @@
 
 	function handleTabChangeLeftViz(tab) {
 		selectedTabLeftViz = tab;
-		if (tab === 'doughnut') {
-			isActiveLeftViz = true;
-		} else {
-			isActiveLeftViz = false;
-		}
+		isActiveLeftViz = tab === 'doughnut';
 	}
 
 	let isActiveRightViz = true;
 
 	function handleTabChangeRightViz(tab) {
 		selectedTabRightViz = tab;
-		if (tab === 'doughnut') {
-			isActiveRightViz = true;
-		} else {
-			isActiveRightViz = false;
-		}
+		isActiveRightViz = tab === 'doughnut';
 	}
 
 	function pickTooltip(stateName, direction) {
