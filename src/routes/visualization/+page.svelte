@@ -35,7 +35,7 @@
 
 	function handleStateClick(event) {
 		stateName = event.detail.stateName || 'Deutschland';
-		if (stateName == 'Deutschland') {
+		if (stateName === 'Deutschland') {
 			setTimeout(() => {
 				showToprowContent = false;
 				stateFlag = stateName;
@@ -77,8 +77,6 @@
 
 	function handleDataChange() {
 		console.log(selectedData);
-		// Handle the change of selected data
-		// You can perform additional actions here if needed
 	}
 
 	// Function to handle tab change
@@ -86,7 +84,7 @@
 
 	function handleTabChangeLeftViz(tab) {
 		selectedTabLeftViz = tab;
-		if (tab == 'doughnut') {
+		if (tab === 'doughnut') {
 			isActiveLeftViz = true;
 		} else {
 			isActiveLeftViz = false;
@@ -97,7 +95,7 @@
 
 	function handleTabChangeRightViz(tab) {
 		selectedTabRightViz = tab;
-		if (tab == 'doughnut') {
+		if (tab === 'doughnut') {
 			isActiveRightViz = true;
 		} else {
 			isActiveRightViz = false;
@@ -114,31 +112,30 @@
 		'                Comparison: Comparison between different means of public transportation in e.g. bavaria.'
 	);
 
-	const defaultTooltipRight = (
-		"This Chart displays public transportation data, e.g. number of transported passengers or passenger kilometers.\n" +
-		"You can choose between Train, Tram, Bus or Total - which is the sum of all transportation possibilities.\n" +
-		"\n" +
-		"Distribution: Distribution of e.g. transported passengers per Train between germany's federal states.\n" +
-		"\n" +
-		"Development: Shows development of e.g. transported passengers per train for bavaria from 2017-2022.\n" +
-		"\n" +
-		"Comparison: Shows e.g. number of transported passengers of all federal states in relation to bavaria."
-	);
-
-	const stateSensitiveTooltipRight = (
-		"This Chart displays public transportation data, e.g. number of transported passengers or passenger kilometers.\n" +
-		"You can choose between Train, Tram, Bus or Total - which is the sum of all transportation possibilities.\n" +
-		"\n" +
-		"Distribution: Distribution of e.g. transported passengers per Train in " + {stateName} + ".\n" +
-		"\n" +
-		"Development: Shows development of e.g. transported passengers per train for " + {stateName} + " in " + {selectedYear} + ".\n" +
-		"\n" +
-		"Comparison: Shows e.g. number of transported passengers of all federal states in relation to " + {stateName} +"."
-	);
-
 	function pickTooltip(stateName) {
-		if (stateName !== "Deutschland") {
-			return stateSensitiveTooltipRight;
+		let selectedState = stateName.toString();
+		const stateSensitiveTooltipRight = (
+			"This Chart displays public transportation data, e.g. number of transported passengers or passenger kilometers.\n" +
+			"You can choose between Train, Tram, Bus or Total - which is the sum of all transportation possibilities.\n" +
+			"\n" +
+			"Distribution: Distribution of e.g. transported passengers per Train in " + selectedState + ".\n" +
+			"\n" +
+			"Development: Shows development of e.g. transported passengers per train for " + selectedState + " in " + selectedYear.toString() + ".\n" +
+			"\n" +
+			"Comparison: Shows e.g. number of transported passengers of all federal states in relation to " + selectedState +"."
+		);
+		const defaultTooltipRight = (
+			"This Chart displays public transportation data, e.g. number of transported passengers or passenger kilometers.\n" +
+			"You can choose between Train, Tram, Bus or Total - which is the sum of all transportation possibilities.\n" +
+			"\n" +
+			"Distribution: Distribution of e.g. transported passengers per Train between germany's federal states.\n" +
+			"\n" +
+			"Development: Shows development of e.g. transported passengers per train for bavaria from 2017-2022.\n" +
+			"\n" +
+			"Comparison: Shows e.g. number of transported passengers of all federal states in relation to bavaria."
+		);
+		if (selectedState !== "Deutschland") {
+			return  stateSensitiveTooltipRight;
 		} else {
 			return defaultTooltipRight;
 		}
@@ -435,7 +432,6 @@
         display: flex;
         flex-direction: column;
         margin-top: 10vh;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
     }
@@ -632,7 +628,7 @@
         padding: .75em .5em;
         width: 80%;
         margin: auto;
-        margin-bottom: 0px;
+        margin-bottom: 0;
         justify-content: center;
         cursor: pointer;
     }
