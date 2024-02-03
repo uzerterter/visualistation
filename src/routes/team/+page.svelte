@@ -6,12 +6,12 @@
 		{
 			name: "Lara",
 			description: "Media Informatics | Product Owner",
-			image: "lara.png"
+			image: "Lara.png"
 		},
 		{
 			name: "Linus",
 			description: "Computer Science | Design & Concept",
-			image: "linus.png"
+			image: "Linus.png"
 		},
         {
 			name: "Andrian",
@@ -21,7 +21,7 @@
         {
 			name: "Ludwig",
 			description: "Human Computer Interaction | Scrum Master",
-			image: "ludwig.png"
+			image: "Ludwig.png"
 		},
         {
 			name: "Rebecca",
