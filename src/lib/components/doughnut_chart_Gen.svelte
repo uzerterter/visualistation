@@ -170,7 +170,7 @@
 			.attr('dy', (d, i) => `${i * 1.2}em`) // adjust line spacing
 			.text((d) => d);
 
-		const tooltip = d3.select('#chart-container').append('div').attr('class', 'tooltip').style('opacity', 0);
+		const tooltip = d3.select('#chart-container').append('div').attr('class', 'hover-tooltip').style('opacity', 0);
 
 
 		arcs
@@ -180,8 +180,8 @@
 					.html(`${d.data.state}: ${d.data.value}`)
 					.style('left', event.pageX + 'px')
 					.style('top', event.pageY + 'px')
-					.style('height', '30px')
-					.style('line-height', '30px');
+					// .style('height', '30px')
+					// .style('line-height', '30px');
 			})
 			.on('mouseout', () => {
 				tooltip.transition().duration(500).style('opacity', 0);
@@ -260,7 +260,7 @@
 		bind:group={selectedArt}
 		value="Liniennahverkehr mit Eisenbahnen"
 		on:change={() => handleToggle('Liniennahverkehr mit Eisenbahnen')}
-		style="accent-color: var(--colorscheme-blue)"
+		style="accent-color: var(--colorscheme-yellow)"
 	/>
 	<label 
 		for="Train">Train</label>
@@ -272,7 +272,7 @@
 		bind:group={selectedArt}
 		value="Liniennahverkehr insgesamt"
 		on:change={() => handleToggle('Liniennahverkehr insgesamt')}
-		style="accent-color: var(--colorscheme-yellow)"
+		style="accent-color: var(--colorscheme-blue)"
 	/>
 	<label 
 		for="Total">Total</label>

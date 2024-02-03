@@ -58,7 +58,7 @@
             .range([0, height - 40]);
   
 	  const axisYears = d3.axisBottom(scaleYears).tickSizeOuter(0); // Remove outer ticks
-	  const axisValues = d3.axisLeft(scaleValues).tickSizeOuter(0); // Remove outer ticks
+	  const axisValues = d3.axisLeft(scaleValues).tickSizeOuter(0).tickFormat(d => d + '%'); // Remove outer ticks
   
 	  function moveTooltip(event) {
 		tt.style('left', `${event.pageX - ttw / 2}px`).style('top', `${event.pageY - tth - 10}px`);
@@ -128,7 +128,7 @@
 		.on('mouseover', function (event, x) {
 		  const color = 'var(--colorscheme-blue)';
 		  tt.transition().duration(0).style('opacity', 1).style('color', color);
-		  tt.html(d3.format(',')(x.Prozent));
+		  tt.html(d3.format(',')(x.Prozent)  + '%');
 		  const rect = tt.node().getBoundingClientRect();
 		  ttw = rect.width;
 		  tth = rect.height;
@@ -246,7 +246,7 @@
   </div> -->
   
   <!-- BAR CHART 1 -->
-  <div bind:this={tooltip} class="tooltip" style="display: {'barchart1'===activeTabId?'block':'none'}"/>
+  <div bind:this={tooltip} class="hover-tooltip" style="display: {'barchart1'===activeTabId?'block':'none'}"/>
   <div id="barchart-diagram" style="display: {'barchart1'===activeTabId?'block':'none'}">
 	<!-- BAR CHART -->
 	<svg bind:this={svgLocal} id="bar-chart" />
@@ -285,7 +285,7 @@
 	  border-bottom-color: #444;
 	} */
   
-	.tooltip {
+	.hover-tooltip {
 	  position: absolute;
 	  opacity: 0;
 	  pointer-events: none;
