@@ -46,7 +46,7 @@
 		{/each}
 	</div>
 	<div class="headline-container">
-		<h1>MEET OUR TEAM</h1>
+		<h1>MEET THE TEAM</h1>
 	</div>
 </div>
 
@@ -101,7 +101,7 @@
 	}
 
 	.team-member img {
-		max-width: 100px;
+		max-width: 125px;
 		height: auto;
 		border-radius: 50%;
 		margin-right: 20px;
