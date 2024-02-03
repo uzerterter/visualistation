@@ -5,28 +5,28 @@
 	let teamMembers = [
 		{
 			name: "Lara",
-			description: "Description for Team Member 1",
-			image: "Lara.png"
+			description: "Media Informatics | Product Owner",
+			image: "lara.png"
 		},
 		{
 			name: "Linus",
-			description: "Description for Team Member 2",
-			image: "Linus.png"
+			description: "Computer Science | Design & Concept",
+			image: "linus.png"
 		},
         {
 			name: "Andrian",
-			description: "Description for Team Member 2",
-			image: "team_member_2.jpg"
+			description: "Computer Science | Lead Developer",
+			image: "andrian.png"
 		},
         {
 			name: "Ludwig",
-			description: "Description for Team Member 2",
-			image: "Ludwig.png"
+			description: "Human Computer Interaction | Scrum Master",
+			image: "ludwig.png"
 		},
         {
 			name: "Rebecca",
-			description: "Description for Team Member 2",
-			image: "team_member_2.jpg"
+			description: "Human Computer Interaction | Data Scientist",
+			image: "rebecca.png"
 		},
 		// Add more team members as needed
 	];
@@ -37,7 +37,7 @@
 	<div class="team-members">
 		{#each teamMembers as member (member.name)}
 			<div class="team-member">
-				<img src={base}/{`${member.name}.png`} alt={member.name} />
+				<img src={base}/{`${member.image}`} alt={member.name} />
 				<div class="member-info">
 					<h2>{member.name}</h2>
 					<p>{member.description}</p>
@@ -78,6 +78,7 @@
 
 	.team-members {
 		width: 50%; /* 50% of the container width */
+		padding-top: 3%;
 	}
 
 	.headline-container {
