@@ -31,6 +31,9 @@ export let selectedState = writable(null);
   let isMapInitialized = false; // Flag to track if the map is initialized
   let PDOpacityMap = {};
   let year = 2017; // initial year for the map color coding
+  let ttw = 0;
+  let tth = 0;
+  let tooltip = null;
 
   const dispatch = createEventDispatcher();
   export const stateData = {...trafficData, data: trafficData.data.filter(v => v.Bundesland === 'Bayern')};
@@ -90,7 +93,7 @@ export let selectedState = writable(null);
       });
 
     // Select the tooltip element
-    const tooltip = document.querySelector('.tooltip');
+    tooltip = document.querySelector('.tooltip');
 
     g.selectAll('path')
       .data(collection.features)
@@ -104,9 +107,9 @@ export let selectedState = writable(null);
           const tooltip = document.querySelector('.tooltip');
           tooltip.style.display = 'block';
           tooltip.textContent = (d.properties.NAME_1 + ": " + getDensity(pdMatrix, d.properties.NAME_1, $selectedYear)); // Set tooltip content
-          const rect = tooltip.node().getBoundingClientRect();
-          let ttw = rect.width;
-          let tth = rect.height;
+          const rect = tooltip.getBoundingClientRect();
+          ttw = rect.width;
+          tth = rect.height;
           moveTooltip(event);
         }
       })
@@ -342,7 +345,7 @@ export let selectedState = writable(null);
           .style('opacity', d => opacityMatrix[d.properties.NAME_1][year]);
       }
     } else {
-
+      console.log('g is not defined');
     }
   }
 
