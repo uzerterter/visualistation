@@ -102,43 +102,30 @@
 		}
 	}
 
-	const defaultTooltipLeft = (
-		'This Chart displays economic data, e.g. unemployment- or income rates for each federal state in germany.\n' +
-		'\n' +
-		'                Distribution: Distribution of data in germany, with possible highlighting of e.g. bavaria.\n' +
-		'\n' +
-		'                Development: Shows development of e.g. the unemployment rate of bavaria over the years 2017-2022.\n' +
-		'\n' +
-		'                Comparison: Comparison between different means of public transportation in e.g. bavaria.'
-	);
-
-	function pickTooltip(stateName) {
+	function pickTooltip(stateName, direction) {
 		let selectedState = stateName.toString();
 		const stateSensitiveTooltipRight = (
 			"This Chart displays public transportation data, e.g. number of transported passengers or passenger kilometers.\n" +
 			"You can choose between Train, Tram, Bus or Total - which is the sum of all transportation possibilities.\n" +
 			"\n" +
-			"Distribution: Distribution of e.g. transported passengers per Train in " + selectedState + ".\n" +
+			"Distribution: Distribution of transportation data in " + selectedState + ".\n" +
 			"\n" +
-			"Development: Shows development of e.g. transported passengers per train for " + selectedState + " in " + selectedYear.toString() + ".\n" +
+			"Development: Shows development of transportation data for " + selectedState + " from 2017 - 2022.\n" +
 			"\n" +
-			"Comparison: Shows e.g. number of transported passengers of all federal states in relation to " + selectedState +"."
+			"Comparison: Direct comparison of transportation data between federal states and " + selectedState + "."
 		);
-		const defaultTooltipRight = (
-			"This Chart displays public transportation data, e.g. number of transported passengers or passenger kilometers.\n" +
-			"You can choose between Train, Tram, Bus or Total - which is the sum of all transportation possibilities.\n" +
+		const stateSensitiveTooltipLeft = (
+			"This Chart displays economic data for " + stateName + ".\n" +
 			"\n" +
-			"Distribution: Distribution of e.g. transported passengers per Train between germany's federal states.\n" +
+			"Distribution: Overview over economical factors of " + selectedState + ", the highlighted state below.\n" +
 			"\n" +
-			"Development: Shows development of e.g. transported passengers per train for bavaria from 2017-2022.\n" +
+			"Development: Shows development of e.g. the unemployment rate in " + selectedState + " over the years 2017-2022.\n" +
 			"\n" +
-			"Comparison: Shows e.g. number of transported passengers of all federal states in relation to bavaria."
+			"Comparison: Direct comparison of economical factors between federal states and " + selectedState + "."
 		);
-		if (selectedState !== "Deutschland") {
-			return  stateSensitiveTooltipRight;
-		} else {
-			return defaultTooltipRight;
-		}
+		if (direction === 'left') {
+			return stateSensitiveTooltipLeft;
+		} else return stateSensitiveTooltipRight;
 	}
 </script>
 
@@ -167,13 +154,7 @@
 				</div>
 				<div class="toprowTooltipContainer">
 					<Info
-						title="This Chart displays economic data, e.g. unemployment- or income rates for each federal state in germany.
-
-                Distribution: Distribution of data in germany, with possible highlighting of e.g. bavaria.
-
-                Development: Shows development of e.g. the unemployment rate of bavaria over the years 2017-2022.
-
-                Comparison: Comparison between different means of public transportation in e.g. bavaria." />
+						title={pickTooltip(stateName, "left")} />
 				</div>
 			</div>
 			<div class="tab-buttons">
@@ -317,7 +298,7 @@
 				</div>
 				<div class="toprowTooltipContainer">
 					<Info
-						title={pickTooltip(stateName)} />
+						title={pickTooltip(stateName, 'right')} />
 				</div>
 			</div>
 			<div class="tab-buttons">
