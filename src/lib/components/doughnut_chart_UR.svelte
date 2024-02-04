@@ -206,7 +206,7 @@
 		g.on('mouseover', (event, d) => {
 			tooltip.transition().duration(200).style('opacity', 0.9);
 			tooltip
-				.html(`${d.data.state}: ${d.data[year]} %`)
+				.html(`${d.data.state}: ${d.data[year]}%`)
 				.style('left', event.pageX + 'px')
 				.style('top', event.pageY + 'px')
 				// .style('height', '30px') // Set a fixed height or adjust as needed
