@@ -164,17 +164,29 @@
 
 		arcs
 			.on('mouseover', (event, d) => {
-				tooltip.transition().duration(200).style('opacity', 0.9);
+				tooltip.transition().duration(200).style('opacity', 1.0);
 				tooltip
 					.html(`${d.data.state}: ${d.data.value}`)
 					.style('left', event.pageX + 'px')
 					.style('top', event.pageY + 'px')
-					.style('height', '30px')
-					.style('line-height', '30px');
+			})
+			.on('mousemove', function (event) {
+			moveTooltip(event);
 			})
 			.on('mouseout', () => {
 				tooltip.transition().duration(500).style('opacity', 0);
+			})
+			.on('click', (event, d) => {
 			});
+
+			function moveTooltip(event) {
+				const ttw = tooltip.node().offsetWidth;
+				const tth = tooltip.node().offsetHeight;
+				const x = event.pageX - ttw / 2;
+				const y = event.pageY - tth - 10;
+				
+				tooltip.style('left', x + 'px').style('top', y + 'px');
+			}
 	}
 
 	function handleResize() {
@@ -263,5 +275,16 @@
 	/* Add your styles here if needed */
 	input[type='radio'] {
 		cursor: pointer;
+	}
+
+	#chart-container .tooltip {
+		position: absolute;
+		background-color: #fff;
+		color: #000;
+		border: 1px solid #000;
+		padding: 10px;
+		border-radius: 8px;
+		pointer-events: none; /* Allow interaction with underlying map elements */
+		z-index: 9999; /* Ensure tooltip appears above the map */
 	}
 </style>

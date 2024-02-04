@@ -107,15 +107,13 @@ export let selectedState = writable(null);
           const rect = tt.node().getBoundingClientRect();
           ttw = rect.width;
           tth = rect.height;
-          moveTooltip(event);
         }
       })
       .on('mousemove', function (event) {
         if ($selectedYearsValue == null) {
-          tooltip.style.left = ('left', event.pageX + 10 + 'px'); 
-          tooltip.style.top = ('top', event.pageY - 60 + 'px');
+          tooltip.style.left = ('left', event.pageX - 70 + 'px'); 
+          tooltip.style.top = ('top', event.pageY - 120 + 'px');
         }
-        
       })
       .on('mouseout', () => {
         // Hide tooltip on mouseout
@@ -134,9 +132,6 @@ export let selectedState = writable(null);
 
   });
 
-  function moveTooltip(event) {
-		tooltip.style('left', `${event.pageX - ttw / 2}px`).style('top', `${event.pageY - tth - 10}px`);
-	  }
 
 
   function getProjection(collection) {
@@ -215,7 +210,7 @@ export let selectedState = writable(null);
     // Reset opacity of all states
     g.selectAll('.state')
       // .transition().duration(500)
-      .style('opacity', d => getStateOpacity(d.properties.NAME_1));
+      .style('opacity', d => getStateOpacity(d.properties.NAME_1))
 
     focused = null;
     isZoomedIn = false;
