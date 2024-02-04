@@ -309,7 +309,7 @@
 
 	let genesisTrafficLink = {
 		title: 'Public Transportation',
-		name: 'Company, passengers transported and passenger kilometers per Federal state, quarters and type of transport',
+		name: 'Company, passengers transported and passenger kilometers per federal state, quarters and type of transport',
 		link: 'https://www-genesis.destatis.de/genesis//online?operation=table&code=46181-0015&bypass=true&levelindex=0&levelid=1697718366080#abreadcrumb'
 	};
 
@@ -331,9 +331,7 @@
 			<div class="title-container-2">
 				<h2 class="h2" style="margin-bottom: 1.5vh">{genesisTrafficLink.title}</h2>
 			</div>
-			<div class="row-text">
-				<a href={genesisTrafficLink.link} class="link">{genesisTrafficLink.name}</a>
-			</div>
+			<a href={genesisTrafficLink.link} class="link">{genesisTrafficLink.name}</a>
 		</div>
 	</div>
 </div>
@@ -398,7 +396,4 @@
         margin-left: 5vh;
     }
 
-
-    .row-text {
-    }
 </style>
