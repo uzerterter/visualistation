@@ -16,6 +16,7 @@
                     { href: '/', label: 'about' },
                     { href: '/team', label: 'team' },
                     { href: '/visualization', label: 'visualization' },
+                    { href: '/sources', label: 'sources' },
                     // Add more links as needed
                   ] as { href, label }}
                     <a href={base}{href} class:active={$page.route.id === href}>{label}</a>
