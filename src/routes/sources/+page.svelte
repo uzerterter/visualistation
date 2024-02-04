@@ -308,49 +308,44 @@
 	];
 
 	let genesisTrafficLink = {
-		name: "Genesis Traffic",
-		link: "https://example.com/genesis-traffic",
+		title: 'Public Transportation',
+		name: 'Company, passengers transported and passenger kilometers per Federal state, quarters and type of transport',
+		link: 'https://www-genesis.destatis.de/genesis//online?operation=table&code=46181-0015&bypass=true&levelindex=0&levelid=1697718366080#abreadcrumb'
 	};
 
 </script>
 
-<div class="background-image" />
 <div class="sources-container">
 	<div id="main">
 		{#each columnData as column (column.id)}
 			<div class="column">
 				<div class="title-container">
-					<h2>{column.title}</h2>
+					<h2 class="h2">{column.title}</h2>
 				</div>
 				{#each column.links as { name, link }}
 					<a href={link} class="link">{name}</a>
 				{/each}
 			</div>
 		{/each}
+		<div class="genesis-row">
+			<div class="title-container-2">
+				<h2 class="h2" style="margin-bottom: 1.5vh">{genesisTrafficLink.title}</h2>
+			</div>
+			<div class="row-text">
+				<a href={genesisTrafficLink.link} class="link">{genesisTrafficLink.name}</a>
+			</div>
+		</div>
 	</div>
 </div>
 
 <style>
-    .background-image {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 60vw;
-        height: 100vh;
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-color: var(--colorscheme-sand-light);
-        opacity: 0.1;
-        z-index: -1;
-    }
 
     .sources-container {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-left: 10vh; /* Adjust padding as needed */
-        padding-right: 10vh; /* Adjust padding as needed */
+        padding-left: 10vh;
+        padding-right: 10vh;
         padding-top: 5vh;
         position: relative;
     }
@@ -371,7 +366,12 @@
         margin-bottom: 3vh;
     }
 
-    .column h2 {
+    .title-container-2 {
+        height: 5vh;
+        margin-bottom: 1.5vh;
+    }
+
+    .h2 {
         color: var(--colorscheme-blue);
         font-size: 1.2em;
     }
@@ -387,5 +387,18 @@
         text-decoration-line: underline;
         text-decoration-thickness: 0.2vh;
         text-decoration-color: var(--colorscheme-orange);
+    }
+
+    .genesis-row {
+        border-radius: 2vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        grid-column: span 4;
+        margin-left: 5vh;
+    }
+
+
+    .row-text {
     }
 </style>
