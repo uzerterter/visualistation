@@ -35,7 +35,7 @@
 
 	function handleStateClick(event) {
 		stateName = event.detail.stateName || 'Deutschland';
-		if (stateName == 'Deutschland') {
+		if (stateName === 'Deutschland') {
 			setTimeout(() => {
 				showToprowContent = false;
 				stateFlag = stateName;
@@ -48,7 +48,7 @@
 	}
 
 	let radioButtonsLeft = [
-		{ color: 'var(--colorscheme-blue)' },
+		{ color: 'var(--colorscheme-blue)' }
 	];
 
 	let radioButtonsRight = [
@@ -79,14 +79,12 @@
 	let selectedTabRightViz = 'bar'; // Default tab for right vizualisation
 
 	const dataOptions = [
-		{ label: 'Average annual brutto employee income', value: incomeData, orig: "Income" },
-		{ label: 'Unemployment rate of Germany', value: unimploymentData, orig: "Prozent" }
-	];	
+		{ label: 'Average annual gross income', value: incomeData, orig: 'Income' },
+		{ label: 'Unemployment rate', value: unimploymentData, orig: 'Prozent' }
+	];
 
 	function handleDataChange() {
 		console.log(selectedData);
-		// Handle the change of selected data
-		// You can perform additional actions here if needed
 	}
 
 	// Function to handle tab change
@@ -94,22 +92,40 @@
 
 	function handleTabChangeLeftViz(tab) {
 		selectedTabLeftViz = tab;
-		if (tab == 'doughnut') {
-			isActiveLeftViz = true;
-		} else {
-			isActiveLeftViz = false;
-		}
+		isActiveLeftViz = tab === 'doughnut';
 	}
 
 	let isActiveRightViz = true;
 
 	function handleTabChangeRightViz(tab) {
 		selectedTabRightViz = tab;
-		if (tab == 'doughnut') {
-			isActiveRightViz = true;
-		} else {
-			isActiveRightViz = false;
-		}
+		isActiveRightViz = tab === 'doughnut';
+	}
+
+	function pickTooltip(stateName, direction) {
+		let selectedState = stateName.toString();
+		const stateSensitiveTooltipRight = (
+			'This Chart displays public transportation data, e.g. number of transported passengers or passenger kilometers.\n' +
+			'You can choose between Train, Tram, Bus or Total - which is the sum of all transportation possibilities.\n' +
+			'\n' +
+			'Distribution: Distribution of transportation data in ' + selectedState + '.\n' +
+			'\n' +
+			'Development: Shows development of transportation data for ' + selectedState + ' from 2017 - 2022.\n' +
+			'\n' +
+			'Comparison: Direct comparison of transportation data between federal states and ' + selectedState + '.'
+		);
+		const stateSensitiveTooltipLeft = (
+			'This Chart displays economic data for ' + stateName + '.\n' +
+			'\n' +
+			'Distribution: Overview over economical factors of ' + selectedState + ', the highlighted state below.\n' +
+			'\n' +
+			'Development: Shows development of e.g. the unemployment rate in ' + selectedState + ' over the years 2017-2022.\n' +
+			'\n' +
+			'Comparison: Direct comparison of economical factors between federal states and ' + selectedState + '.'
+		);
+		if (direction === 'left') {
+			return stateSensitiveTooltipLeft;
+		} else return stateSensitiveTooltipRight;
 	}
 </script>
 
@@ -133,19 +149,13 @@
 						{/each}
 					</select>
 				</div>
-                <div class="toprowCurrentStateNameContainer">
-                    <h4>{stateName}</h4>
-                </div>
-                <div class="toprowTooltipContainer">
-                    <Info
-					title="This Chart displays economic data, e.g. unemployment- or income rates for each federal state in germany.
-
-                Distribution: Distribution of data in germany, with possible highlighting of e.g. bavaria.
-
-                Development: Shows development of e.g. the unemployment rate of bavaria over the years 2017-2022.
-
-                Comparison: Comparison between different means of public transportation in e.g. bavaria." />
-                </div>
+				<div class="toprowCurrentStateNameContainer">
+					<h4>{stateName}</h4>
+				</div>
+				<div class="toprowTooltipContainer">
+					<Info
+						title={pickTooltip(stateName, "left")} />
+				</div>
 			</div>
 			<div class="tab-buttons">
 				<ul>
@@ -283,20 +293,13 @@
 						{/each}
 					</select>
 				</div>
-                <div class="toprowCurrentStateNameContainer">
-                    <h4>{stateName}</h4>
-                </div>
-                <div class="toprowTooltipContainer">
-                    <Info
-					title="This Chart displays public transportation data, e.g. number of transported passengers or passenger kilometers.
-					You can choose between Train, Tram, Bus or Total - which is the sum of all transportation possibilities.
-
-					Distribution: Distribution of e.g. transported passengers per Train between germany's federal states.
-
-					Development: Shows development of e.g. transported passengers per train for bavaria from 2017-2022.
-
-					Comparison: Shows e.g. number of transported passengers of all federal states in relation to bavaria." />
-                </div>
+				<div class="toprowCurrentStateNameContainer">
+					<h4>{stateName}</h4>
+				</div>
+				<div class="toprowTooltipContainer">
+					<Info
+						title={pickTooltip(stateName, "right")}/>
+				</div>
 			</div>
 			<div class="tab-buttons">
 				<ul>
@@ -377,7 +380,6 @@
 	</div>
 </div>
 
-
 <style>
 
     #main {
@@ -390,7 +392,7 @@
         height: 70vh;
         display: flex;
         /* justify-content: center;
-        align-items: center; */
+				align-items: center; */
     }
 
     .left-viz, .right-viz {
@@ -399,11 +401,11 @@
         z-index: 2;
     }
 
-		.center-viz {
+    .center-viz {
         width: 30%;
         height: 60vh;
         z-index: 2;
-		}
+    }
 
     .left-viz, .right-viz {
         float: left;
@@ -511,7 +513,7 @@
         height: 66%;
         width: 22%;
         /* margin-left: auto;
-        margin-right: auto; */
+				margin-right: auto; */
         overflow: hidden;
         display: flex;
         align-items: center;
@@ -575,7 +577,7 @@
         display: flex;
         flex-direction: row;
         width: 100%;
-		margin-bottom: 5px;
+        margin-bottom: 5px;
     }
 
     .tab-buttons ul {
@@ -608,7 +610,7 @@
         width: 80%;
         margin: auto;
         margin-bottom: 0px;
-        justify-content: center; 
+        justify-content: center;
         cursor: pointer;
     }
 
@@ -626,4 +628,6 @@
     .tab-buttons button:hover {
         border-bottom: 2px solid var(--colorscheme-blue);
     }
+
+
 </style>
