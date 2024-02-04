@@ -21,7 +21,7 @@
         {
 			name: "Ludwig",
 			description: "Human Computer Interaction | Scrum Master",
-			image: "Ludwig.png"
+			image: "Ludwig.jpg"
 		},
         {
 			name: "Rebecca",
