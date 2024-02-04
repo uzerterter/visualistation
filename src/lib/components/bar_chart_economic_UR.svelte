@@ -123,7 +123,7 @@
 		.data(d)
 		.enter()
 		.append('rect')
-		.attr('fill', 'var(--colorscheme-blue)')
+		.attr('fill', 'var(--colorscheme-left2)')
 		.attr('transform', `translate(50, 0)`)
 		.on('mouseover', function (event, x) {
 		  const color = 'var(--colorscheme-blue)';

@@ -1,11 +1,15 @@
 /* Variables for the installation */
 :root {
 	--colorscheme-blue: #003049;
-	--colorscheme-red: #d62828;
+	--colorscheme-red: #BE2323;
+	/* --colorscheme-red: #CF2626; */
+	/* --colorscheme-red: #d62828; */
 	--colorscheme-orange: #f77f00;
 	--colorscheme-yellow: #fcbf49;
 	--colorscheme-sand: #eae2b7;
 	--colorscheme-grey: #f5f5f5;
+	--colorscheme-left1: #762900;
+	--colorscheme-left2: #7A5FA5;
 	--colorscheme-sand-light: rgb(254, 250, 239);
 }
 
