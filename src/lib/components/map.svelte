@@ -38,6 +38,32 @@ export let selectedState = writable(null);
   const dispatch = createEventDispatcher();
   export const stateData = {...trafficData, data: trafficData.data.filter(v => v.Bundesland === 'Bayern')};
 
+
+  function getTranslation(stateName) {
+
+    const translations = {
+      'Baden-Württemberg': { translateX: 0, translateY: 30 },
+      'Bayern': { translateX: 0, translateY: 27 },
+      'Berlin': { translateX: 0, translateY: 5 },
+      'Brandenburg': { translateX: 0, translateY: 20 },
+      'Bremen': { translateX: 0, translateY: 3 },
+      'Hamburg': { translateX: 0, translateY: 5 },
+      'Hessen': { translateX: 0, translateY: 20 },
+      'Mecklenburg-Vorpommern': { translateX: 0, translateY: 25 },
+      'Niedersachsen': { translateX: 0, translateY: 20 },
+      'Nordrhein-Westfalen': { translateX: 0, translateY: 23 },
+      'Rheinland-Pfalz': { translateX: 0, translateY: 20 },
+      'Saarland': { translateX: 0, translateY: 5 },
+      'Sachsen': { translateX: 0, translateY: 20 },
+      'Sachsen-Anhalt': { translateX: 0, translateY: 20 },
+      'Schleswig-Holstein': { translateX: 0, translateY: 18 },
+      'Thüringen': { translateX: 0, translateY: 20 },
+    };
+
+  return translations[stateName] || { translateX: 0, translateY: 0 };
+}
+
+
   $: if ($selectedYear && isMapInitialized) {
     year = $selectedYear;
     getPDByYear(year);
@@ -201,7 +227,19 @@ export let selectedState = writable(null);
 
       const centroid = centroidMatrix[i];
       const k = getZoomFactor(d.properties.NAME_1);
-      const transform = d3.zoomIdentity.translate(width / 2, height / 2).scale(k).translate(-centroid[0], -centroid[1]);
+
+      const translation = getTranslation(d.properties.NAME_1);
+      const transform = d3.zoomIdentity
+        .translate(width / 2, height / 2)
+        .scale(k)
+        .translate(-centroid[0] + translation.translateX, -centroid[1] + translation.translateY);
+
+
+      // const translateX = 0; // Adjust this value based on your needs
+      // const translateY = 15; // Adjust this value based on your needs
+      // const transform = d3.zoomIdentity.translate(width / 2, height / 2).scale(k).translate(-centroid[0] + translateX, -centroid[1] + translateY);
+
+      // const transform = d3.zoomIdentity.translate(width / 2, height / 2).scale(k).translate(-centroid[0], -centroid[1]);
 
       svg.transition()
         .duration(1000)

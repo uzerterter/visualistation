@@ -123,10 +123,10 @@
 		.data(d)
 		.enter()
 		.append('rect')
-		.attr('fill', 'var(--colorscheme-blue)')
+		.attr('fill', 'var(--colorscheme-left1)')
 		.attr('transform', `translate(50, 0)`)
 		.on('mouseover', function (event, x) {
-		  const color = 'var(--colorscheme-blue)';
+		  const color = 'var(--colorscheme-left1)';
 		  tt.transition().duration(0).style('opacity', 1).style('color', color);
 		  tt.html(d3.format(',')(x.Income) + '€');
 		  const rect = tt.node().getBoundingClientRect();

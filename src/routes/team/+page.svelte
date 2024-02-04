@@ -72,7 +72,7 @@
 		justify-content: space-between;
 		padding-left: 20vh; /* Adjust padding as needed */
 		padding-right: 20vh; /* Adjust padding as needed */
-		padding-top: 5vh;
+		padding-top: 4vh;
 		position: relative;
 	}
 

@@ -272,7 +272,7 @@
 		bind:group={selectedArt}
 		value="Liniennahverkehr insgesamt"
 		on:change={() => handleToggle('Liniennahverkehr insgesamt')}
-		style="accent-color: var(--colorscheme-blue)"
+		style="accent-color: var(--colorscheme-total)"
 	/>
 	<label 
 		for="Total">Total</label>
