@@ -132,134 +132,132 @@
 	<!-- Three equally sized empty divs that take a third of the width of #main each -->
 
 	<div class="visualizations">
-		<div class="left-viz">
-			<div class="viz-border">
-				<div id="left-viz-toprow">
-					<div id="left-viz-dropdown">
-						<select bind:value={selectedData} on:change={handleDataChange}>
-							{#each dataOptions as option (option.value)}
-								<option value={option.value}>{option.label}</option>
-							{/each}
-						</select>
-					</div>
-					<div class="toprowCurrentStateNameContainer">
-						<h4>{stateName}</h4>
-					</div>
-					<div class="toprowTooltipContainer">
-						<Info
-							title={pickTooltip(stateName, "left")} />
-					</div>
+		<div class="left-viz viz-border">
+			<div id="left-viz-toprow">
+				<div id="left-viz-dropdown">
+					<select bind:value={selectedData} on:change={handleDataChange}>
+						{#each dataOptions as option (option.value)}
+							<option value={option.value}>{option.label}</option>
+						{/each}
+					</select>
 				</div>
-				<div class="tab-buttons">
-					<ul>
-						<li>
-							<button on:click={() => handleTabChangeLeftViz('doughnut')}
-											class:selected={selectedTabLeftViz === 'doughnut'}>Distribution
-							</button>
-						</li>
-						<li>
-							<button on:click={() => handleTabChangeLeftViz('bar')} class:selected={selectedTabLeftViz === 'bar'}>
-								Development
-							</button>
-						</li>
-						<li>
-							<button on:click={() => handleTabChangeLeftViz('bar2')} class:selected={selectedTabLeftViz === 'bar2'}>
-								Comparison
-							</button>
-						</li>
-					</ul>
+				<div class="toprowCurrentStateNameContainer">
+					<h4>{stateName}</h4>
 				</div>
-				<!-- Content based on selected tab -->
-				{#if selectedTabLeftViz === 'doughnut'}
-					{#if selectedData === incomeData}
-						<div id="doughnutchart-parent">
-							<DoughnutChartIN realData={incomeData} stateName={stateName} isActive={isActiveLeftViz} />
-						</div>
-						<div class="bar-chart-container" id="barchart-leftViz-parent" style="display: none;">
-							<BarChartEconomicIN data={incomeData} stateName={stateName} selectedYearValue={selectedYearValue}
-																	year={selectedYearValue} />
-						</div>
-						<div class="bar-chart-container" id="barchart2-leftViz-parent" style="display: none;">
-							<BarChart_2 data={incomeData} stateName={stateName} year={selectedYearValue}
-													dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
-													selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
-						</div>
-					{:else if selectedData === unimploymentData}
-						<div id="doughnutchart-parent">
-							<DoughnutChartUR realData={unimploymentData} stateName={stateName} isActive={isActiveLeftViz} />
-						</div>
-						<div class="bar-chart-container" id="barchart-leftViz-parent" style="display: none;">
-							<BarChartEconomicUR data={unimploymentData} stateName={stateName} selectedYearValue={selectedYearValue}
-																	year={selectedYearValue} />
-						</div>
-						<div class="bar-chart-container" id="barchart2-leftViz-parent" style="display: none;">
-							<BarChart_2 data={unimploymentData} stateName={stateName} year={selectedYearValue}
-													dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
-													selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
-						</div>
-					{/if}
-				{/if}
-				{#if selectedTabLeftViz === 'bar'}
-					<!-- Bitte verzeiht mir für diesen Workaround :_) -->
-					{#if selectedData === incomeData}
-						<div id="doughnutchart-parent" style="display: none;">
-							<DoughnutChartIN realData={incomeData} stateName={stateName} isActive={isActiveLeftViz} />
-						</div>
-						<div class="bar-chart-container" id="barchart-leftViz-parent">
-							<BarChartEconomicIN data={incomeData} stateName={stateName} selectedYearValue={selectedYearValue}
-																	year={selectedYearValue} />
-						</div>
-						<div class="bar-chart-container" id="barchart2-leftViz-parent" style="display: none;">
-							<BarChart_2 data={incomeData} stateName={stateName} year={selectedYearValue}
-													dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
-													selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
-						</div>
-					{:else if selectedData === unimploymentData}
-						<div id="doughnutchart-parent" style="display: none;">
-							<DoughnutChartUR realData={unimploymentData} stateName={stateName} isActive={isActiveLeftViz} />
-						</div>
-						<div class="bar-chart-container" id="barchart-leftViz-parent">
-							<BarChartEconomicUR data={unimploymentData} stateName={stateName} selectedYearValue={selectedYearValue}
-																	year={selectedYearValue} />
-						</div>
-						<div class="bar-chart-container" id="barchart2-leftViz-parent" style="display: none;">
-							<BarChart_2 data={unimploymentData} stateName={stateName} year={selectedYearValue}
-													dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
-													selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
-						</div>
-					{/if}
-				{/if}
-				{#if selectedTabLeftViz === 'bar2'}
-					<!-- Bitte verzeiht mir für diesen Workaround :_) -->
-					{#if selectedData === incomeData}
-						<div id="doughnutchart-parent" style="display: none;">
-							<DoughnutChartIN realData={incomeData} stateName={stateName} isActive={isActiveLeftViz} />
-						</div>
-						<div class="bar-chart-container" id="barchart-leftViz-parent" style="display: none;">
-							<BarChartEconomicIN data={incomeData} stateName={stateName} selectedYearValue={selectedYearValue}
-																	year={selectedYearValue} />
-						</div>
-						<div class="bar-chart-container" id="barchart2-leftViz-parent">
-							<BarChart_2 data={incomeData} stateName={stateName} year={selectedYearValue}
-													dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
-													selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
-						</div>
-					{:else if selectedData === unimploymentData}
-						<div id="doughnutchart-parent" style="display: none;">
-							<DoughnutChartUR realData={unimploymentData} stateName={stateName} isActive={isActiveLeftViz} />
-						</div>
-						<div class="bar-chart-container" id="barchart-leftViz-parent" style="display: none;">
-							<BarChartEconomicUR data={unimploymentData} stateName={stateName} selectedYearValue={selectedYearValue}
-																	year={selectedYearValue} />
-						</div>
-						<div class="bar-chart-container" id="barchart2-leftViz-parent">
-							<BarChart_2 data={unimploymentData} stateName={stateName} year={selectedYearValue}
-													dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
-													selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
-						</div>
-					{/if}
-				{/if}
+				<div class="toprowTooltipContainer">
+					<Info
+						title={pickTooltip(stateName, "left")} />
+				</div>
 			</div>
+			<div class="tab-buttons">
+				<ul>
+					<li>
+						<button on:click={() => handleTabChangeLeftViz('doughnut')}
+										class:selected={selectedTabLeftViz === 'doughnut'}>Distribution
+						</button>
+					</li>
+					<li>
+						<button on:click={() => handleTabChangeLeftViz('bar')} class:selected={selectedTabLeftViz === 'bar'}>
+							Development
+						</button>
+					</li>
+					<li>
+						<button on:click={() => handleTabChangeLeftViz('bar2')} class:selected={selectedTabLeftViz === 'bar2'}>
+							Comparison
+						</button>
+					</li>
+				</ul>
+			</div>
+			<!-- Content based on selected tab -->
+			{#if selectedTabLeftViz === 'doughnut'}
+				{#if selectedData === incomeData}
+					<div id="doughnutchart-parent">
+						<DoughnutChartIN realData={incomeData} stateName={stateName} isActive={isActiveLeftViz} />
+					</div>
+					<div class="bar-chart-container" id="barchart-leftViz-parent" style="display: none;">
+						<BarChartEconomicIN data={incomeData} stateName={stateName} selectedYearValue={selectedYearValue}
+																year={selectedYearValue} />
+					</div>
+					<div class="bar-chart-container" id="barchart2-leftViz-parent" style="display: none;">
+						<BarChart_2 data={incomeData} stateName={stateName} year={selectedYearValue}
+												dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+												selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
+					</div>
+				{:else if selectedData === unimploymentData}
+					<div id="doughnutchart-parent">
+						<DoughnutChartUR realData={unimploymentData} stateName={stateName} isActive={isActiveLeftViz} />
+					</div>
+					<div class="bar-chart-container" id="barchart-leftViz-parent" style="display: none;">
+						<BarChartEconomicUR data={unimploymentData} stateName={stateName} selectedYearValue={selectedYearValue}
+																year={selectedYearValue} />
+					</div>
+					<div class="bar-chart-container" id="barchart2-leftViz-parent" style="display: none;">
+						<BarChart_2 data={unimploymentData} stateName={stateName} year={selectedYearValue}
+												dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+												selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
+					</div>
+				{/if}
+			{/if}
+			{#if selectedTabLeftViz === 'bar'}
+				<!-- Bitte verzeiht mir für diesen Workaround :_) -->
+				{#if selectedData === incomeData}
+					<div id="doughnutchart-parent" style="display: none;">
+						<DoughnutChartIN realData={incomeData} stateName={stateName} isActive={isActiveLeftViz} />
+					</div>
+					<div class="bar-chart-container" id="barchart-leftViz-parent">
+						<BarChartEconomicIN data={incomeData} stateName={stateName} selectedYearValue={selectedYearValue}
+																year={selectedYearValue} />
+					</div>
+					<div class="bar-chart-container" id="barchart2-leftViz-parent" style="display: none;">
+						<BarChart_2 data={incomeData} stateName={stateName} year={selectedYearValue}
+												dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+												selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
+					</div>
+				{:else if selectedData === unimploymentData}
+					<div id="doughnutchart-parent" style="display: none;">
+						<DoughnutChartUR realData={unimploymentData} stateName={stateName} isActive={isActiveLeftViz} />
+					</div>
+					<div class="bar-chart-container" id="barchart-leftViz-parent">
+						<BarChartEconomicUR data={unimploymentData} stateName={stateName} selectedYearValue={selectedYearValue}
+																year={selectedYearValue} />
+					</div>
+					<div class="bar-chart-container" id="barchart2-leftViz-parent" style="display: none;">
+						<BarChart_2 data={unimploymentData} stateName={stateName} year={selectedYearValue}
+												dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+												selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
+					</div>
+				{/if}
+			{/if}
+			{#if selectedTabLeftViz === 'bar2'}
+				<!-- Bitte verzeiht mir für diesen Workaround :_) -->
+				{#if selectedData === incomeData}
+					<div id="doughnutchart-parent" style="display: none;">
+						<DoughnutChartIN realData={incomeData} stateName={stateName} isActive={isActiveLeftViz} />
+					</div>
+					<div class="bar-chart-container" id="barchart-leftViz-parent" style="display: none;">
+						<BarChartEconomicIN data={incomeData} stateName={stateName} selectedYearValue={selectedYearValue}
+																year={selectedYearValue} />
+					</div>
+					<div class="bar-chart-container" id="barchart2-leftViz-parent">
+						<BarChart_2 data={incomeData} stateName={stateName} year={selectedYearValue}
+												dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+												selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
+					</div>
+				{:else if selectedData === unimploymentData}
+					<div id="doughnutchart-parent" style="display: none;">
+						<DoughnutChartUR realData={unimploymentData} stateName={stateName} isActive={isActiveLeftViz} />
+					</div>
+					<div class="bar-chart-container" id="barchart-leftViz-parent" style="display: none;">
+						<BarChartEconomicUR data={unimploymentData} stateName={stateName} selectedYearValue={selectedYearValue}
+																year={selectedYearValue} />
+					</div>
+					<div class="bar-chart-container" id="barchart2-leftViz-parent">
+						<BarChart_2 data={unimploymentData} stateName={stateName} year={selectedYearValue}
+												dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+												selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
+					</div>
+				{/if}
+			{/if}
 		</div>
 
 		<div class="center-viz">
@@ -276,101 +274,95 @@
 
 		</div>
 
-		<div class="right-viz">
-			<div class="viz-border">
-				<div id="right-viz-toprow">
-					<div id="right-viz-dropdown">
-						<select bind:value={selectedDropdownItemRightViz}>
-							{#each dropdownItemsRightViz as d}
-								<option value={d}>
-									{d.label}
-								</option>
-							{/each}
-						</select>
-					</div>
-					<div class="toprowCurrentStateNameContainer">
-						<h4>{stateName}</h4>
-					</div>
-					<div class="toprowTooltipContainer">
-						<Info
-							title={pickTooltip(stateName, 'right')} />
-					</div>
+		<div class="right-viz viz-border">
+			<div id="right-viz-toprow">
+				<div id="right-viz-dropdown">
+					<select bind:value={selectedDropdownItemRightViz}>
+						{#each dropdownItemsRightViz as d}
+							<option value={d}>
+								{d.label}
+							</option>
+						{/each}
+					</select>
 				</div>
-				<div class="tab-buttons">
-					<ul>
-						<li>
-							<button on:click={() => handleTabChangeRightViz('doughnut')}
-											class:selected={selectedTabRightViz === 'doughnut'}>Distribution
-							</button>
-						</li>
-						<li>
-							<button on:click={() => handleTabChangeRightViz('bar')} class:selected={selectedTabRightViz === 'bar'}>
-								Development
-							</button>
-						</li>
-						<li>
-							<button on:click={() => handleTabChangeRightViz('bar2')} class:selected={selectedTabRightViz === 'bar2'}>
-								Comparison
-							</button>
-						</li>
-					</ul>
+				<div class="toprowCurrentStateNameContainer">
+					<h4>{stateName}</h4>
 				</div>
-				{#if selectedTabRightViz === 'doughnut'}
-					<div id="doughnutchart-RightViz-parent">
-						<DoughnutChartGE data={originalData} stateName={stateName}
-														 selectedDropdownItem={selectedDropdownItemRightViz}
-														 isActive={isActiveRightViz} />
-					</div>
-					<div class="bar-chart-container" id="barchart-parent" style="display: none;">
-						<BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue}
-											year={selectedYearValue}
-											dropdownItems={dropdownItemsRightViz} selectedDropdownItem={selectedDropdownItemRightViz} />
-					</div>
-					<!-- BAR CHART 2 -->
-					<div id="barchart2-parent" style="display: none;">
-						<BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}
-												dropdownItems={dropdownItemsRightViz} radioButtons={radioButtonsRight}
-												parentId="barchart2-parent"
-												selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
-					</div>
-				{/if}
-				{#if selectedTabRightViz === 'bar'}
-					<!-- Bitte verzeiht mir für diesen Workaround :_) -->
-					<div id="doughnutchart-RightViz-parent" style="display: none;">
-						<DoughnutChartGE data={originalData} stateName={stateName} isActive={isActiveRightViz} />
-					</div>
-					<div class="bar-chart-container" id="barchart-parent">
-						<BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue}
-											year={selectedYearValue}
-											dropdownItems={dropdownItemsRightViz} selectedDropdownItem={selectedDropdownItemRightViz} />
-					</div>
-					<!-- BAR CHART 2 -->
-					<div id="barchart2-parent" style="display: none;">
-						<BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}
-												dropdownItems={dropdownItemsRightViz} radioButtons={radioButtonsRight}
-												parentId="barchart2-parent"
-												selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
-					</div>
-				{/if}
-				{#if selectedTabRightViz === 'bar2'}
-					<!-- Bitte verzeiht mir für diesen Workaround :_) -->
-					<div id="doughnutchart-RightViz-parent" style="display: none;">
-						<DoughnutChartGE data={originalData} stateName={stateName} isActive={isActiveRightViz} />
-					</div>
-					<div class="bar-chart-container" id="barchart-parent" style="display: none;">
-						<BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue}
-											year={selectedYearValue}
-											dropdownItems={dropdownItemsRightViz} selectedDropdownItem={selectedDropdownItemRightViz} />
-					</div>
-					<!-- BAR CHART 2 -->
-					<div class="bar-chart-container" id="barchart2-parent">
-						<BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}
-												dropdownItems={dropdownItemsRightViz} radioButtons={radioButtonsRight}
-												parentId="barchart2-parent"
-												selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
-					</div>
-				{/if}
+				<div class="toprowTooltipContainer">
+					<Info
+						title={pickTooltip(stateName, "right")}/>
+				</div>
 			</div>
+			<div class="tab-buttons">
+				<ul>
+					<li>
+						<button on:click={() => handleTabChangeRightViz('doughnut')}
+										class:selected={selectedTabRightViz === 'doughnut'}>Distribution
+						</button>
+					</li>
+					<li>
+						<button on:click={() => handleTabChangeRightViz('bar')} class:selected={selectedTabRightViz === 'bar'}>
+							Development
+						</button>
+					</li>
+					<li>
+						<button on:click={() => handleTabChangeRightViz('bar2')} class:selected={selectedTabRightViz === 'bar2'}>
+							Comparison
+						</button>
+					</li>
+				</ul>
+			</div>
+			{#if selectedTabRightViz === 'doughnut'}
+				<div id="doughnutchart-RightViz-parent">
+					<DoughnutChartGE data={originalData} stateName={stateName} selectedDropdownItem={selectedDropdownItemRightViz}
+													 isActive={isActiveRightViz} />
+				</div>
+				<div class="bar-chart-container" id="barchart-parent" style="display: none;">
+					<BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue}
+										year={selectedYearValue}
+										dropdownItems={dropdownItemsRightViz} selectedDropdownItem={selectedDropdownItemRightViz} />
+				</div>
+				<!-- BAR CHART 2 -->
+				<div id="barchart2-parent" style="display: none;">
+					<BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}
+											dropdownItems={dropdownItemsRightViz} radioButtons={radioButtonsRight} parentId="barchart2-parent"
+											selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
+				</div>
+			{/if}
+			{#if selectedTabRightViz === 'bar'}
+				<!-- Bitte verzeiht mir für diesen Workaround :_) -->
+				<div id="doughnutchart-RightViz-parent" style="display: none;">
+					<DoughnutChartGE data={originalData} stateName={stateName} isActive={isActiveRightViz} />
+				</div>
+				<div class="bar-chart-container" id="barchart-parent">
+					<BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue}
+										year={selectedYearValue}
+										dropdownItems={dropdownItemsRightViz} selectedDropdownItem={selectedDropdownItemRightViz} />
+				</div>
+				<!-- BAR CHART 2 -->
+				<div id="barchart2-parent" style="display: none;">
+					<BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}
+											dropdownItems={dropdownItemsRightViz} radioButtons={radioButtonsRight} parentId="barchart2-parent"
+											selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
+				</div>
+			{/if}
+			{#if selectedTabRightViz === 'bar2'}
+				<!-- Bitte verzeiht mir für diesen Workaround :_) -->
+				<div id="doughnutchart-RightViz-parent" style="display: none;">
+					<DoughnutChartGE data={originalData} stateName={stateName} isActive={isActiveRightViz} />
+				</div>
+				<div class="bar-chart-container" id="barchart-parent" style="display: none;">
+					<BarChart data={originalData} stateName={stateName} selectedYearValue={selectedYearValue}
+										year={selectedYearValue}
+										dropdownItems={dropdownItemsRightViz} selectedDropdownItem={selectedDropdownItemRightViz} />
+				</div>
+				<!-- BAR CHART 2 -->
+				<div class="bar-chart-container" id="barchart2-parent">
+					<BarChart_2 data={originalData} stateName={stateName} year={selectedYearValue}
+											dropdownItems={dropdownItemsRightViz} radioButtons={radioButtonsRight} parentId="barchart2-parent"
+											selectedDropdownItem={selectedDropdownItemRightViz}></BarChart_2>
+				</div>
+			{/if}
 		</div>
 	</div>
 	<div class="timeline">
@@ -379,7 +371,6 @@
 		</div>
 	</div>
 </div>
-
 
 <style>
 
@@ -400,16 +391,27 @@
         width: 35%;
         height: 60vh;
         z-index: 2;
+    }
+
+    .center-viz {
+        width: 30%;
+        height: 60vh;
+        z-index: 2;
+    }
+
+    .left-viz, .right-viz {
         float: left;
         display: flex;
         flex-direction: column;
         margin-top: 10vh;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
     }
 
     .left-viz {
         margin-right: 10%;
+
     }
 
     .right-viz {
@@ -417,8 +419,6 @@
     }
 
     .center-viz {
-        width: 30%;
-        height: 60vh;
         z-index: 0;
         pointer-events: none;
         float: left;
@@ -442,8 +442,6 @@
     }
 
     .viz-border {
-        width: 100%;
-        height: 100%;
         border: solid 1px;
         border-radius: 15px; /* Add rounded borders */
         border-color: var(--colorscheme-blue);
@@ -452,7 +450,7 @@
     .bar-chart-container, #barchart-leftViz-parent, #barchart2-leftViz-parent, #barchart-parent, #barchart2-parent {
         background-color: transparent;
         width: 95%;
-        height: 76%;
+        height: 95%;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -462,7 +460,7 @@
     #doughnutchart-parent, #doughnutchart-RightViz-parent {
         background-color: transparent;
         width: 95%;
-        height: 76%;
+        height: 95%;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -530,7 +528,7 @@
         justify-content: space-between;
         align-items: center;
         height: 10%;
-        width: 95%;
+        width: 100%;
         padding: 1%;
         margin: 1%;
     }
@@ -603,7 +601,7 @@
         padding: .75em .5em;
         width: 80%;
         margin: auto;
-        margin-bottom: 0;
+        margin-bottom: 0px;
         justify-content: center;
         cursor: pointer;
     }
@@ -622,5 +620,6 @@
     .tab-buttons button:hover {
         border-bottom: 2px solid var(--colorscheme-blue);
     }
+
 
 </style>
