@@ -35,7 +35,7 @@
 
 	function handleStateClick(event) {
 		stateName = event.detail.stateName || 'Deutschland';
-		if (stateName == 'Deutschland') {
+		if (stateName === 'Deutschland') {
 			setTimeout(() => {
 				showToprowContent = false;
 				stateFlag = stateName;
@@ -48,14 +48,22 @@
 	}
 
 	let radioButtonsLeft = [
-		{ color: 'var(--colorscheme-blue)' },
+		{ color: 'var(--colorscheme-blue)' }
 	];
 
 	let radioButtonsRight = [
 		{ id: 6, label: 'Tram', orig: 'Liniennahverkehr mit Straßenbahnen', color: 'var(--colorscheme-red)' },
 		{ id: 7, label: 'Bus', orig: 'Liniennahverkehr mit Omnibussen', color: 'var(--colorscheme-orange)' },
-		{ id: 8, label: 'Train', orig: 'Liniennahverkehr mit Eisenbahnen', color: 'var(--colorscheme-blue)' },
-		{ id: 9, label: 'Total', orig: 'Liniennahverkehr insgesamt', color: 'var(--colorscheme-yellow)' }
+		{ id: 8, label: 'Train', orig: 'Liniennahverkehr mit Eisenbahnen', color: 'var(--colorscheme-yellow)' },
+		{ id: 9, label: 'Total', orig: 'Liniennahverkehr insgesamt', color: 'var(--colorscheme-total)' },
+	];
+
+	let radioButtonsLeftIN = [
+		{color: 'var(--colorscheme-left1)' },
+	];
+
+	let radioButtonsLeftUR = [
+		{color: 'var(--colorscheme-left2)' },
 	];
 
 	//pass the dropdown data centrally to the right vizualisation, exrtacted from barchart
@@ -71,14 +79,12 @@
 	let selectedTabRightViz = 'bar'; // Default tab for right vizualisation
 
 	const dataOptions = [
-		{ label: 'Average annual brutto employee income', value: incomeData, orig: "Income" },
-		{ label: 'Unemployment rate of Germany', value: unimploymentData, orig: "Prozent" }
-	];	
+		{ label: 'Average annual gross income', value: incomeData, orig: 'Income' },
+		{ label: 'Unemployment rate', value: unimploymentData, orig: 'Prozent' }
+	];
 
 	function handleDataChange() {
 		console.log(selectedData);
-		// Handle the change of selected data
-		// You can perform additional actions here if needed
 	}
 
 	// Function to handle tab change
@@ -86,22 +92,40 @@
 
 	function handleTabChangeLeftViz(tab) {
 		selectedTabLeftViz = tab;
-		if (tab == 'doughnut') {
-			isActiveLeftViz = true;
-		} else {
-			isActiveLeftViz = false;
-		}
+		isActiveLeftViz = tab === 'doughnut';
 	}
 
 	let isActiveRightViz = true;
 
 	function handleTabChangeRightViz(tab) {
 		selectedTabRightViz = tab;
-		if (tab == 'doughnut') {
-			isActiveRightViz = true;
-		} else {
-			isActiveRightViz = false;
-		}
+		isActiveRightViz = tab === 'doughnut';
+	}
+
+	function pickTooltip(stateName, direction) {
+		let selectedState = stateName.toString();
+		const stateSensitiveTooltipRight = (
+			'This Chart displays public transportation data, e.g. number of transported passengers or passenger kilometers.\n' +
+			'You can choose between Train, Tram, Bus or Total - which is the sum of all transportation possibilities.\n' +
+			'\n' +
+			'Distribution: Distribution of transportation data in ' + selectedState + '.\n' +
+			'\n' +
+			'Development: Shows development of transportation data for ' + selectedState + ' from 2017 - 2022.\n' +
+			'\n' +
+			'Comparison: Direct comparison of transportation data between federal states and ' + selectedState + '.'
+		);
+		const stateSensitiveTooltipLeft = (
+			'This Chart displays economic data for ' + stateName + '.\n' +
+			'\n' +
+			'Distribution: Overview over economical factors of ' + selectedState + ', the highlighted state below.\n' +
+			'\n' +
+			'Development: Shows development of e.g. the unemployment rate in ' + selectedState + ' over the years 2017-2022.\n' +
+			'\n' +
+			'Comparison: Direct comparison of economical factors between federal states and ' + selectedState + '.'
+		);
+		if (direction === 'left') {
+			return stateSensitiveTooltipLeft;
+		} else return stateSensitiveTooltipRight;
 	}
 </script>
 
@@ -125,19 +149,13 @@
 						{/each}
 					</select>
 				</div>
-                <div class="toprowCurrentStateNameContainer">
-                    <h4>{stateName}</h4>
-                </div>
-                <div class="toprowTooltipContainer">
-                    <Info
-					title="This Chart displays economic data, e.g. unemployment- or income rates for each federal state in germany.
-
-                Distribution: Distribution of data in germany, with possible highlighting of e.g. bavaria.
-
-                Development: Shows development of e.g. the unemployment rate of bavaria over the years 2017-2022.
-
-                Comparison: Comparison between different means of public transportation in e.g. bavaria." />
-                </div>
+				<div class="toprowCurrentStateNameContainer">
+					<h4>{stateName}</h4>
+				</div>
+				<div class="toprowTooltipContainer">
+					<Info
+						title={pickTooltip(stateName, "left")} />
+				</div>
 			</div>
 			<div class="tab-buttons">
 				<ul>
@@ -170,7 +188,7 @@
 					</div>
 					<div class="bar-chart-container" id="barchart2-leftViz-parent" style="display: none;">
 						<BarChart_2 data={incomeData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+											dropdownItems={null} radioButtons={radioButtonsLeftIN} parentId="barchart2-leftViz-parent"
 											selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
 					</div>
 				{:else if selectedData === unimploymentData}
@@ -183,7 +201,7 @@
 					</div>
 					<div class="bar-chart-container" id="barchart2-leftViz-parent" style="display: none;">
 						<BarChart_2 data={unimploymentData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+											dropdownItems={null} radioButtons={radioButtonsLeftUR} parentId="barchart2-leftViz-parent"
 											selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
 					</div>
 				{/if}
@@ -200,7 +218,7 @@
 					</div>
 					<div class="bar-chart-container" id="barchart2-leftViz-parent" style="display: none;">
 						<BarChart_2 data={incomeData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+											dropdownItems={null} radioButtons={radioButtonsLeftIN} parentId="barchart2-leftViz-parent"
 											selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
 					</div>
 				{:else if selectedData === unimploymentData}
@@ -213,7 +231,7 @@
 					</div>
 					<div class="bar-chart-container" id="barchart2-leftViz-parent" style="display: none;">
 						<BarChart_2 data={unimploymentData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+											dropdownItems={null} radioButtons={radioButtonsLeftUR} parentId="barchart2-leftViz-parent"
 											selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
 					</div>
 				{/if}
@@ -230,7 +248,7 @@
 					</div>
 					<div class="bar-chart-container" id="barchart2-leftViz-parent">
 						<BarChart_2 data={incomeData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+											dropdownItems={null} radioButtons={radioButtonsLeftIN} parentId="barchart2-leftViz-parent"
 											selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
 					</div>
 				{:else if selectedData === unimploymentData}
@@ -243,7 +261,7 @@
 					</div>
 					<div class="bar-chart-container" id="barchart2-leftViz-parent">
 						<BarChart_2 data={unimploymentData} stateName={stateName} year={selectedYearValue}
-											dropdownItems={null} radioButtons={radioButtonsLeft} parentId="barchart2-leftViz-parent"
+											dropdownItems={null} radioButtons={radioButtonsLeftUR} parentId="barchart2-leftViz-parent"
 											selectedDropdownItem={dataOptions.filter(o=>o.value===selectedData)[0]}></BarChart_2>
 					</div>
 				{/if}
@@ -275,20 +293,13 @@
 						{/each}
 					</select>
 				</div>
-                <div class="toprowCurrentStateNameContainer">
-                    <h4>{stateName}</h4>
-                </div>
-                <div class="toprowTooltipContainer">
-                    <Info
-					title="This Chart displays public transportation data, e.g. number of transported passengers or passenger kilometers.
-					You can choose between Train, Tram, Bus or Total - which is the sum of all transportation possibilities.
-
-					Distribution: Distribution of e.g. transported passengers per Train between germany's federal states.
-
-					Development: Shows development of e.g. transported passengers per train for bavaria from 2017-2022.
-
-					Comparison: Shows e.g. number of transported passengers of all federal states in relation to bavaria." />
-                </div>
+				<div class="toprowCurrentStateNameContainer">
+					<h4>{stateName}</h4>
+				</div>
+				<div class="toprowTooltipContainer">
+					<Info
+						title={pickTooltip(stateName, "right")}/>
+				</div>
 			</div>
 			<div class="tab-buttons">
 				<ul>
@@ -369,7 +380,6 @@
 	</div>
 </div>
 
-
 <style>
 
     #main {
@@ -382,7 +392,7 @@
         height: 70vh;
         display: flex;
         /* justify-content: center;
-        align-items: center; */
+				align-items: center; */
     }
 
     .left-viz, .right-viz {
@@ -391,11 +401,11 @@
         z-index: 2;
     }
 
-		.center-viz {
+    .center-viz {
         width: 30%;
         height: 60vh;
         z-index: 2;
-		}
+    }
 
     .left-viz, .right-viz {
         float: left;
@@ -503,7 +513,7 @@
         height: 66%;
         width: 22%;
         /* margin-left: auto;
-        margin-right: auto; */
+				margin-right: auto; */
         overflow: hidden;
         display: flex;
         align-items: center;
@@ -567,7 +577,7 @@
         display: flex;
         flex-direction: row;
         width: 100%;
-		margin-bottom: 5px;
+        margin-bottom: 5px;
     }
 
     .tab-buttons ul {
@@ -600,7 +610,7 @@
         width: 80%;
         margin: auto;
         margin-bottom: 0px;
-        justify-content: center; 
+        justify-content: center;
         cursor: pointer;
     }
 
@@ -618,4 +628,6 @@
     .tab-buttons button:hover {
         border-bottom: 2px solid var(--colorscheme-blue);
     }
+
+
 </style>

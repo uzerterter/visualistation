@@ -327,7 +327,7 @@
 	
 </script>
 
-<div bind:this={tooltip} class="tooltip" style="display: block"/>
+<div bind:this={tooltip} class="hover-tooltip" style="display: block"/>
 <div style="height:100%;display: {stateName!=='Deutschland'?'block':'none'}">
     <div id="barchart-diagram">
         <!-- BAR CHART -->
@@ -360,7 +360,7 @@ Please select a federal state on the map.
 
 <style>
 
-	.tooltip {
+	.hover-tooltip {
 		position: absolute;
 		opacity: 0;
 		pointer-events: none;
@@ -392,6 +392,10 @@ Please select a federal state on the map.
 
 	input {
 		margin-right: 1px;
+	}
+
+    input[type='radio'] {
+		cursor: pointer;
 	}
 
 	

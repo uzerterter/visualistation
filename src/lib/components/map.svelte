@@ -12,18 +12,18 @@ export let minPopulation = writable(69);
 export let maxPopulation = writable(4214);
 export let selectedYearsValue = writable(null);
 export let selectedState = writable(null);
- 
+
 </script>
 
 
 <script >
   import { onMount } from 'svelte';
-  import * as d3 from 'd3'; 
+  import * as d3 from 'd3';
   import trafficData from '$lib/data/final_genesis_traffic.json';
   import { createEventDispatcher } from 'svelte';
   import { selectedYear } from '$lib/components/timeline.svelte'; // Import the selectedYear store
   import populationDensityData from '$lib/data/population_density.json';
-  
+
   let width, height, geoPath, projection, normalizedOpacity, normalizedOpacity2;
   let svg, g, zoom; // Define zoom and SVG selections
   let centroidMatrix = [];
@@ -31,9 +31,38 @@ export let selectedState = writable(null);
   let isMapInitialized = false; // Flag to track if the map is initialized
   let PDOpacityMap = {};
   let year = 2017; // initial year for the map color coding
+  let ttw = 0;
+  let tth = 0;
+  let tooltip = null;
 
   const dispatch = createEventDispatcher();
   export const stateData = {...trafficData, data: trafficData.data.filter(v => v.Bundesland === 'Bayern')};
+
+
+  function getTranslation(stateName) {
+
+    const translations = {
+      'Baden-Württemberg': { translateX: 0, translateY: 30 },
+      'Bayern': { translateX: 0, translateY: 27 },
+      'Berlin': { translateX: 0, translateY: 5 },
+      'Brandenburg': { translateX: 0, translateY: 20 },
+      'Bremen': { translateX: 0, translateY: 3 },
+      'Hamburg': { translateX: 0, translateY: 5 },
+      'Hessen': { translateX: 0, translateY: 20 },
+      'Mecklenburg-Vorpommern': { translateX: 0, translateY: 25 },
+      'Niedersachsen': { translateX: 0, translateY: 20 },
+      'Nordrhein-Westfalen': { translateX: 0, translateY: 23 },
+      'Rheinland-Pfalz': { translateX: 0, translateY: 20 },
+      'Saarland': { translateX: 0, translateY: 5 },
+      'Sachsen': { translateX: 0, translateY: 20 },
+      'Sachsen-Anhalt': { translateX: 0, translateY: 20 },
+      'Schleswig-Holstein': { translateX: 0, translateY: 18 },
+      'Thüringen': { translateX: 0, translateY: 20 },
+    };
+
+  return translations[stateName] || { translateX: 0, translateY: 0 };
+}
+
 
   $: if ($selectedYear && isMapInitialized) {
     year = $selectedYear;
@@ -58,7 +87,7 @@ export let selectedState = writable(null);
     var parentDiv = document.getElementById('map-parent');
     width = parentDiv.clientWidth;
     height = parentDiv.clientHeight;
-    
+
     svg = d3.select('#map').append('svg')
       .attr('width', width)
       .attr('height', height);
@@ -90,7 +119,7 @@ export let selectedState = writable(null);
       });
 
     // Select the tooltip element
-    const tooltip = document.querySelector('.tooltip');
+    tooltip = document.querySelector('.tooltip');
 
     g.selectAll('path')
       .data(collection.features)
@@ -98,13 +127,13 @@ export let selectedState = writable(null);
       .attr('class', 'state')
       .attr('d', geoPath)
       .style('opacity', d => getStateOpacity(d.properties.NAME_1))
-      .on('mouseover', (event, d) => { 
+      .on('mouseover', (event, d) => {
         if ($selectedYearsValue == null) {
           // Show tooltip on mouseover only when selectedYearsValue is not null
           const tooltip = document.querySelector('.tooltip');
           tooltip.style.display = 'block';
           tooltip.textContent = (d.properties.NAME_1 + ": " + getDensity(pdMatrix, d.properties.NAME_1, $selectedYear)); // Set tooltip content
-          const rect = tt.node().getBoundingClientRect();
+          const rect = tooltip.getBoundingClientRect();
           ttw = rect.width;
           tth = rect.height;
         }
@@ -193,16 +222,28 @@ export let selectedState = writable(null);
 
       const centroid = centroidMatrix[i];
       const k = getZoomFactor(d.properties.NAME_1);
-      const transform = d3.zoomIdentity.translate(width / 2, height / 2).scale(k).translate(-centroid[0], -centroid[1]);
+
+      const translation = getTranslation(d.properties.NAME_1);
+      const transform = d3.zoomIdentity
+        .translate(width / 2, height / 2)
+        .scale(k)
+        .translate(-centroid[0] + translation.translateX, -centroid[1] + translation.translateY);
+
+
+      // const translateX = 0; // Adjust this value based on your needs
+      // const translateY = 15; // Adjust this value based on your needs
+      // const transform = d3.zoomIdentity.translate(width / 2, height / 2).scale(k).translate(-centroid[0] + translateX, -centroid[1] + translateY);
+
+      // const transform = d3.zoomIdentity.translate(width / 2, height / 2).scale(k).translate(-centroid[0], -centroid[1]);
 
       svg.transition()
         .duration(1000)
         .call(zoom.transform, transform);
-            
+
           svg.on('.zoom', null);
 
       selectedYearsValue.set(getDensity(pdMatrix, $selectedState, $selectedYear));
-    }    
+    }
   }
 
 
@@ -218,14 +259,14 @@ export let selectedState = writable(null);
     // Reset the zoom transform
     svg.transition()
       .duration(1000)
-      .call(zoom.transform, d3.zoomIdentity);  
+      .call(zoom.transform, d3.zoomIdentity);
 
     // Remove any state labels
     g.selectAll('.state-label').remove();
-      
+
     updateMapOpacities();
 
-    
+
   }
 
   function getZoomFactor(stateName) {
@@ -259,7 +300,7 @@ export let selectedState = writable(null);
     selectedYearsValue.set(100);
 
     // Filter data for the specified year and within the range of 2017 to 2022
-    let filteredData = populationDensityData.data.filter(entry => 
+    let filteredData = populationDensityData.data.filter(entry =>
       entry.Jahr === year && entry.Jahr >= startYear && entry.Jahr <= endYear
     );
 
@@ -282,7 +323,7 @@ export let selectedState = writable(null);
   function createPDDataForState(populationDensityData, stateName) {
     const startYear = 2017;
     const endYear = 2022;
-    
+
     // Filter years to include only those between 2017 and 2022
     const years = [...new Set(populationDensityData.data.map(entry => entry.Jahr))]
                     .filter(year => year >= startYear && year <= endYear)
@@ -301,7 +342,7 @@ export let selectedState = writable(null);
     return PDOpacityMap[stateName] || 1; // Default opacity if state not in list or data not loaded yet
   }
 
-  
+
 
   function updateMapOpacities() {
     if (g) {
@@ -337,7 +378,7 @@ export let selectedState = writable(null);
           .style('opacity', d => opacityMatrix[d.properties.NAME_1][year]);
       }
     } else {
-
+      console.log('g is not defined');
     }
   }
 
@@ -350,7 +391,7 @@ export let selectedState = writable(null);
   function mappopulationDensityToState(populationDensity, min, max) {
     if (min === max) return 1; // Avoid division by zero if min and max are equal
     const minOpacity = 0.1;
-    const maxOpacity = 1; 
+    const maxOpacity = 1;
     return minOpacity + ((populationDensity - min) * (maxOpacity - minOpacity)) / (max - min);
   }
 
@@ -434,9 +475,9 @@ export let selectedState = writable(null);
     transition: 0.5s;
     cursor: pointer;
   }
-  
+
   /* Tooltip styles */
-  
+
   .tooltip {
     position: absolute;
     background-color: #fff;
@@ -446,6 +487,7 @@ export let selectedState = writable(null);
     border-radius: 8px;
     pointer-events: none; /* Allow interaction with underlying map elements */
     z-index: 9999; /* Ensure tooltip appears above the map */
+    height: auto;
   }
 
 </style>
