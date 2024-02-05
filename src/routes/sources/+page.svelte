@@ -54,7 +54,7 @@
 			link: 'https://de.statista.com/statistik/daten/studie/253204/umfrage/arbeitnehmerentgelt-je-arbeitnehmer-in-hessen/'
 		},
 		{
-			name: 'Nordrhein-Westfahlen',
+			name: 'Nordrhein-Westfalen',
 			link: 'https://de.statista.com/statistik/daten/studie/253207/umfrage/arbeitnehmerentgelt-je-arbeitnehmer-in-nordrhein-westfalen/'
 		},
 		{
@@ -125,7 +125,7 @@
 			link: 'https://de.statista.com/statistik/daten/studie/258107/umfrage/bevoelkerungsdichte-in-hessen/'
 		},
 		{
-			name: 'Nordrhein-Westfahlen',
+			name: 'Nordrhein-Westfalen',
 			link: 'https://de.statista.com/statistik/daten/studie/258069/umfrage/bevoelkerungsdichte-in-nordrhein-westfalen/'
 		},
 		{
@@ -196,7 +196,7 @@
 			link: 'https://de.statista.com/statistik/daten/studie/155150/umfrage/entwicklung-der-bevoelkerung-von-hessen-seit-1961/'
 		},
 		{
-			name: 'Nordrhein-Westfahlen',
+			name: 'Nordrhein-Westfalen',
 			link: 'https://de.statista.com/statistik/daten/studie/258069/umfrage/bevoelkerungsdichte-in-nordrhein-westfalen/'
 		},
 		{
@@ -267,7 +267,7 @@
 			link: 'https://de.statista.com/statistik/daten/studie/2514/umfrage/entwicklung-der-arbeitslosenquote-in-hessen-seit-1999/'
 		},
 		{
-			name: 'Nordrhein-Westfahlen',
+			name: 'Nordrhein-Westfalen',
 			link: 'https://de.statista.com/statistik/daten/studie/2513/umfrage/entwicklung-der-arbeitslosenquote-in-nordrhein-westfalen-seit-1999/'
 		},
 		{
